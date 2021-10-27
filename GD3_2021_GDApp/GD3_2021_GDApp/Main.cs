@@ -34,7 +34,7 @@ namespace GDApp
         }
 
         /// <summary>
-        /// Creates Time instance which can be used by game objects that want to slow down, or speed up, time
+        /// Creates Time instance which can be used by game objects that want to slow down, or speed up, time during the game
         /// </summary>
         private void InitializeTime()
         {
