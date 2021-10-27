@@ -16,21 +16,44 @@ namespace GDLibrary.Time
         #region Fields
 
         private static Time instance;       //singleton instance to allow global accessibility
-        private float elapsedGameTime;            //time between updates
+        private float deltaTime;            //time between updates
         private float totalGameTime;            //total elapsed time since start
         private float timeScale = 1;        //0-1 scale factor used to slow down time (e.g. slo-mo effects)
+        private long frameCount = 0;
 
         #endregion Fields
 
         #region Properties
 
-        public float TimeScale { get => timeScale; set => timeScale = value >= 0 ? value : 1; } //use to scale time for visual effects
+        /// <summary>
+        /// Scale at which time passes (0-1)
+        /// </summary>
+        public float TimeScale { get => timeScale; set => timeScale = value >= 0 ? value : 1; }
 
-        //note we can only GET the times below, we cannot set them
-        public float UnscaledElapsedGameTime => elapsedGameTime;        //returns unscaled time between updates in ms
-        public float UnscaledTotalTime => totalGameTime;        //returns unscaled total time since game started in ms
-        public float ElapsedGameTime => elapsedGameTime * timeScale;    //returns scaled time between updates in ms
-        public float TotalGameTime => totalGameTime * timeScale;    //returns scaled total time since game started in ms
+        /// <summary>
+        /// Unscaled interval in time from the last frame to the current one
+        /// </summary>
+        public float UnscaledDeltaTime => deltaTime;
+
+        /// <summary>
+        /// Scaled interval in time from the last frame to the current one
+        /// </summary>
+        public float DeltaTime => deltaTime * timeScale;
+
+        /// <summary>
+        /// Unscaled time since the game started
+        /// </summary>
+        public float UnscaledTotalTime => totalGameTime;
+
+        /// <summary>
+        /// Scaled time since the game started
+        /// </summary>
+        public float TotalGameTime => totalGameTime * timeScale;
+
+        /// <summary>
+        /// Count of frames since the game started
+        /// </summary>
+        public long FrameCount => frameCount;
 
         public static Time Instance
         {
@@ -61,10 +84,15 @@ namespace GDLibrary.Time
 
         #endregion Constructors
 
+        #region Update
+
         public override void Update(GameTime gameTime)
         {
-            elapsedGameTime = gameTime.ElapsedGameTime.Milliseconds;
+            frameCount++;
+            deltaTime = gameTime.ElapsedGameTime.Milliseconds;
             totalGameTime = (float)gameTime.TotalGameTime.TotalMilliseconds;
         }
+
+        #endregion Update
     }
 }
