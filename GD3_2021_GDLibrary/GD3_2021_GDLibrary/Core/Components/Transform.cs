@@ -21,28 +21,6 @@ namespace GDLibrary
 
         #region Properties
 
-        public Vector3 Scale
-        {
-            get
-            {
-                return localScale;
-            }
-        }
-        public Vector3 Rotation
-        {
-            get
-            {
-                return localRotation;
-            }
-        }
-        public Vector3 Translation
-        {
-            get
-            {
-                return localTranslation;
-            }
-        }
-
         //BUG - 28/10/21 - Does this need to be called before WorldMatrix?
         public Matrix RotationMatrix
         {
@@ -99,41 +77,41 @@ namespace GDLibrary
 
         #endregion Constructors
 
-        #region Modifiers - Scale, Rotation, Translation
+        #region Actions - Modify Scale, Rotation, Translation
 
-        public void Translate(float? x, float? y, float? z)
+        public void Scale(float? x, float? y, float? z)
         {
-            localTranslation.Add(x, y, z);
+            localScale.Add(x, y, z);
             isWorldDirty = true;
         }
 
-        public void Translate(Vector3 delta)
+        public void Scale(Vector3 delta)
         {
-            localTranslation.Add(delta);
+            localScale.Add(ref delta);
             isWorldDirty = true;
         }
 
-        public void Translate(ref Vector3 delta)
+        public void Scale(ref Vector3 delta)
         {
-            localTranslation.Add(ref delta);
+            localScale.Add(ref delta);
             isWorldDirty = true;
         }
 
-        public void SetTranslation(float? x, float? y, float? z)
+        public void SetScale(float? x, float? y, float? z)
         {
-            localTranslation.Set(x, y, z);
+            localScale.Set(x, y, z);
             isWorldDirty = true;
         }
 
-        public void SetTranslation(Vector3 translation)
+        public void SetScale(Vector3 scale)
         {
-            localTranslation.Set(translation);
+            localScale.Set(scale);
             isWorldDirty = true;
         }
 
-        public void SetTranslation(ref Vector3 translation)
+        public void SetScale(ref Vector3 scale)
         {
-            localTranslation.Set(ref translation);
+            localScale.Set(ref scale);
             isWorldDirty = true;
         }
 
@@ -181,42 +159,42 @@ namespace GDLibrary
             isWorldDirty = true;
         }
 
-        public void Scale(float? x, float? y, float? z)
+        public void Translate(float? x, float? y, float? z)
         {
-            localScale.Add(x, y, z);
+            localTranslation.Add(x, y, z);
             isWorldDirty = true;
         }
 
-        public void Scale(Vector3 delta)
+        public void Translate(Vector3 delta)
         {
-            localScale.Add(ref delta);
+            localTranslation.Add(delta);
             isWorldDirty = true;
         }
 
-        public void Scale(ref Vector3 delta)
+        public void Translate(ref Vector3 delta)
         {
-            localScale.Add(ref delta);
+            localTranslation.Add(ref delta);
             isWorldDirty = true;
         }
 
-        public void SetScale(float? x, float? y, float? z)
+        public void SetTranslation(float? x, float? y, float? z)
         {
-            localScale.Set(x, y, z);
+            localTranslation.Set(x, y, z);
             isWorldDirty = true;
         }
 
-        public void SetScale(Vector3 scale)
+        public void SetTranslation(Vector3 translation)
         {
-            localScale.Set(scale);
+            localTranslation.Set(translation);
             isWorldDirty = true;
         }
 
-        public void SetScale(ref Vector3 scale)
+        public void SetTranslation(ref Vector3 translation)
         {
-            localScale.Set(ref scale);
+            localTranslation.Set(ref translation);
             isWorldDirty = true;
         }
 
-        #endregion Modifiers - Scale, Rotation, Translation
+        #endregion Actions - Modify Scale, Rotation, Translation
     }
 }

@@ -1,28 +1,29 @@
-﻿using GDLibrary.Components;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace GDLibrary.Graphics
 {
-    public abstract class Mesh<T> : Component where T : struct, IVertexType
+    public abstract class Mesh<T> where T : struct, IVertexType
     {
         protected T[] vertices;
         protected ushort[] indices;
         protected VertexBuffer vertexBuffer;
         protected IndexBuffer indexBuffer;
 
-        public Mesh(GraphicsDevice device)
+        public Mesh()
         {
             CreateGeometry();
-            CreateBuffers(device);
+            CreateBuffers();
         }
         protected abstract void CreateGeometry();
 
-        private void CreateBuffers(GraphicsDevice device)
+        private void CreateBuffers()
         {
-            vertexBuffer = new VertexBuffer(device, typeof(T), vertices.Length, BufferUsage.WriteOnly);
+            var graphics = Application.GraphicsDevice;
+
+            vertexBuffer = new VertexBuffer(graphics, typeof(T), vertices.Length, BufferUsage.WriteOnly);
             vertexBuffer.SetData(vertices);
 
-            indexBuffer = new IndexBuffer(device, (IndexElementSize)sizeof(ushort), indices.Length, BufferUsage.WriteOnly);
+            indexBuffer = new IndexBuffer(graphics, (IndexElementSize)sizeof(ushort), indices.Length, BufferUsage.WriteOnly);
             indexBuffer.SetData(indices);
         }
     }

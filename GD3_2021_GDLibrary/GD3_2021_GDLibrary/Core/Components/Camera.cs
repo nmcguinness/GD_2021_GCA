@@ -1,10 +1,20 @@
-﻿using GDLibrary.Components;
-using GDLibrary.Type;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GDLibrary.Components
 {
+    /// <summary>
+    /// Used to set either a perspective or orthographic projection on the camera in the scene
+    /// </summary>
+    /// <see cref="GDLibrary.Components.Camera"/>
+    public enum CameraProjectionType
+    {
+        Perspective, Orthographic
+    }
+
+    /// <summary>
+    /// Stores the fields required to represent a Camera and provide frustum culling (using the BoundingFrustum)
+    /// </summary>
     public class Camera : Component
     {
         #region Fields

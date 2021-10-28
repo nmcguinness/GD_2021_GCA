@@ -36,13 +36,4 @@
     }
 
     /********************************************************************************************************/
-
-    /// <summary>
-    /// Used to set either a perspective or orthographic projection on the camera in the scene
-    /// </summary>
-    /// <see cref="GDLibrary.Components.Camera"/>
-    public enum CameraProjectionType
-    {
-        Perspective, Orthographic
-    }
 }

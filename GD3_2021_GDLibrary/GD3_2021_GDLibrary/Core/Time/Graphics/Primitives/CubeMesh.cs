@@ -8,12 +8,10 @@ namespace GDLibrary.Graphics
     /// </summary>
     public class CubeMesh : Mesh<VertexPositionNormalTexture>
     {
-        public CubeMesh(GraphicsDevice device) : base(device)
-        {
-        }
-
         protected override void CreateGeometry()
         {
+            #region Positions
+
             Vector3 topLeftFront = new Vector3(-0.5f, 0.5f, 0.5f);
             Vector3 bottomLeftFront = new Vector3(-0.5f, -0.5f, 0.5f);
             Vector3 topRightFront = new Vector3(0.5f, 0.5f, 0.5f);
@@ -23,7 +21,10 @@ namespace GDLibrary.Graphics
             Vector3 bottomLeftBack = new Vector3(-0.5f, -0.5f, -0.5f);
             Vector3 bottomRightBack = new Vector3(0.5f, -0.5f, -0.5f);
 
-            //Texture Positions
+            #endregion Positions
+
+            #region UVs
+
             Vector2 TtopLeftBack = new Vector2(0.0f, 0.0f);
             Vector2 TtopRightBack = new Vector2(1.0f, 0.0f);
             Vector2 TtopLeftFront = new Vector2(0.0f, 1.0f);
@@ -54,13 +55,18 @@ namespace GDLibrary.Graphics
             Vector2 leftBottomLeft = new Vector2(0.0f, 1.0f);
             Vector2 leftBottomRight = new Vector2(1.0f, 1.0f);
 
-            // Normals
+            #endregion UVs
+
+            #region Normals
+
             Vector3 frontNormal = new Vector3(0, 0, 1);
             Vector3 backNormal = new Vector3(0, 0, -1);
             Vector3 leftNormal = new Vector3(-1, 0, 0);
             Vector3 rightNormal = new Vector3(1, 0, 0);
             Vector3 topNormal = new Vector3(0, 1, 0);
             Vector3 bottomNormal = new Vector3(0, -1, 0);
+
+            #endregion Normals
 
             vertices = new VertexPositionNormalTexture[]
             {

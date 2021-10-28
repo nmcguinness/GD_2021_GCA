@@ -1,7 +1,8 @@
-﻿using GDLibrary.Time;
+﻿using GDLibrary;
+using GDLibrary.Inputs;
+using GDLibrary.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace GDApp
 {
@@ -14,59 +15,63 @@ namespace GDApp
 
         #endregion Fields
 
-        #region Constructors
+        #region Constructors - Scene manager, Application data, Screen
 
-        public Main()
+        public Main() : this("My Game Name", 640, 480)
+        {
+        }
+
+        /// <summary>
+        /// Creates the game by initializing graphics, scene manager, data, screen
+        /// </summary>
+        /// <param name="name">Name of the game</param>
+        /// <param name="width">Screen width</param>
+        /// <param name="height">Screen height</param>
+        /// <param name="isFullScreen">Fullscreen on/off</param>
+        /// <param name="isMouseVisible">Mouse visibible on/off</param>
+        public Main(string name, int width = 640, int height = 480, bool isFullScreen = false, bool isMouseVisible = true)
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = isMouseVisible;
+
+            //initialize scene manager
+
+            //initialize global application data
+            Application.Content = Content;
+            Application.GraphicsDevice = GraphicsDevice;
+            Application.GraphicsDeviceManager = _graphics;
+
+            //initialize screen
         }
 
-        #endregion Constructors
+        #endregion Constructors - Scene manager, Application data, Screen
 
-        #region Initialization
+        #region Initialization - Input, Scenes, Game Objects
 
         protected override void Initialize()
         {
-            InitializeScreen();
-            InitializeInput();
-            InitializeTime();
-            InitializeScene();
+            //initialize input
+            Input.Keys = new KeyboardComponent(this);
+            Input.Mouse = new MouseComponent(this);
+            Input.Gamepad = new GamepadComponent(this);
+
+            //add all components to component list so that they will be updated
+            Components.Add(Input.Keys);
+            Components.Add(Input.Mouse);
+            Components.Add(Input.Gamepad);
+            Components.Add(Time.GetInstance(this));
+
+            //add scene
+
+            //add game object(s) to scene, repeat for all game objects
+
+            //add scene to scenemanager, repeat for all scenes
+
             base.Initialize();
         }
 
-        /// <summary>
-        /// Initialize the game objects within the current scene including cameras, players, enemies, pickups etc
-        /// </summary>
-        private void InitializeScene()
-        {
-        }
-
-        /// <summary>
-        /// Initialize screen dimensions, mouse visibility, anti-aliasing etc
-        /// </summary>
-        private void InitializeScreen()
-        {
-        }
-
-        /// <summary>
-        /// Initialize entities to read from input devices
-        /// </summary>
-        private void InitializeInput()
-        {
-        }
-
-        /// <summary>
-        /// Creates Time instance which can be used by game objects that want to slow down, or speed up, time during the game
-        /// </summary>
-        private void InitializeTime()
-        {
-            //add time instance to the components list so that it will be updated
-            Components.Add(Time.GetInstance(this));
-        }
-
-        #endregion Initialization
+        #endregion Initialization - Input, Scenes, Game Objects
 
         #region Load & Unload Assets
 
@@ -86,9 +91,6 @@ namespace GDApp
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             base.Update(gameTime);
         }
 
