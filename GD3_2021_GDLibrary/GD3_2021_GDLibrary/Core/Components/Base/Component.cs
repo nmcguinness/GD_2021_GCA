@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace GDLibrary.Components
+﻿namespace GDLibrary.Components
 {
     /// <summary>
     /// A part of a game object e.g. Mesh, MeshRenderer, Camera, FirstPersonController
@@ -10,6 +8,7 @@ namespace GDLibrary.Components
         #region Fields
 
         protected GameObject gameObject;
+        protected Transform transform;
 
         #endregion Fields
 
@@ -22,6 +21,16 @@ namespace GDLibrary.Components
         }
 
         #endregion Properties
+
+        #region Constructors
+
+        public Component()
+        {
+            ///Cache the transform so that we can access in child components without double de-reference e.g. transform.LocalTranslation not gameObject.Transform.LocalTranslation
+            transform = gameObject.Transform;
+        }
+
+        #endregion Constructors
 
         #region Update
 

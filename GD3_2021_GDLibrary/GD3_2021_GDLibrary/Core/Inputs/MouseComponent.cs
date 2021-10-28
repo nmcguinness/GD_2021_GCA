@@ -3,11 +3,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GDLibrary.Inputs
 {
+    /// <summary>
+    /// Enumeration of possible mouse buttons
+    /// </summary>
     public enum MouseButton : sbyte
     {
         Left, Middle, Right, Any
     }
 
+    /// <summary>
+    /// Provides methods to obtain input from the mouse
+    /// </summary>
     public class MouseComponent : GameComponent
     {
         #region Fields

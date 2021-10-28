@@ -21,6 +21,28 @@ namespace GDLibrary
 
         #region Properties
 
+        public Vector3 LocalScale
+        {
+            get
+            {
+                return localScale;
+            }
+        }
+        public Vector3 LocalRotation
+        {
+            get
+            {
+                return localRotation;
+            }
+        }
+        public Vector3 LocalTranslation
+        {
+            get
+            {
+                return localTranslation;
+            }
+        }
+
         //BUG - 28/10/21 - Does this need to be called before WorldMatrix?
         public Matrix RotationMatrix
         {
