@@ -18,6 +18,7 @@
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\ModelRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\MeshRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\Renderer.cs" />

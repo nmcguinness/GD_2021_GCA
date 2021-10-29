@@ -11,14 +11,23 @@ namespace GDLibrary.Components
         #region Fields
 
         protected BoundingSphere boundingSphere;
+        protected BoundingBox boundingBox;
 
         #endregion Fields
+
+        #region Properties
+
+        protected BoundingSphere BoundingSphere { get; }
+        protected BoundingBox BoundingBox { get; }
+
+        #endregion Properties
 
         #region Constructors
 
         public Renderer()
         {
-            SetBoundingSphere();
+            boundingSphere = new BoundingSphere();
+            boundingBox = new BoundingBox();
         }
 
         #endregion Constructors
@@ -39,7 +48,7 @@ namespace GDLibrary.Components
         /// <summary>
         /// Compute the bounding sphere of mesh used for culling objects out of the camera frustum
         /// </summary>
-        public abstract void SetBoundingSphere();
+        public abstract void SetBoundingVolume();
 
         /// <summary>
         /// Draw the content of the mesh
@@ -47,5 +56,24 @@ namespace GDLibrary.Components
         public abstract void Draw(GraphicsDevice device);
 
         #endregion Actions - Bounding sphere, Draw
+
+        //public override int CompareTo(object obj)
+        //{
+        //    var renderer = obj as Renderer;
+        //    var material = renderer != null ? renderer.Material : null;
+
+        //    if (renderer == null)
+        //        return 1;
+
+        //    if (material == null || Material == null)
+        //        return base.CompareTo(obj);
+
+        //    if (Material._hasAlpha == material._hasAlpha)
+        //        return 0;
+        //    else if (Material._hasAlpha && !material._hasAlpha)
+        //        return 1;
+        //    else
+        //        return -1;
+        //}
     }
 }
