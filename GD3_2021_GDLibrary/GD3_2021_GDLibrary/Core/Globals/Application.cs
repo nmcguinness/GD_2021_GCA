@@ -12,6 +12,11 @@ namespace GDLibrary
     public class Application : IDisposable
     {
         /// <summary>
+        /// Gets or sets the main game
+        /// </summary>
+        public static Game Main { get; set; }
+
+        /// <summary>
         /// Gets or sets the content manager.
         /// </summary>
         public static ContentManager Content { get; set; }

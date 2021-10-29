@@ -15,35 +15,20 @@ namespace GDApp
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        /// <summary>
+        /// Stores all scenes (which means all game objects i.e. players, cameras, pickups, behaviours, controllers)
+        /// </summary>
+        private SceneManager sceneManager;
+
         #endregion Fields
 
         #region Constructors - Scene manager, Application data, Screen
 
-        public Main() : this("My Game Name", 640, 480)
+        public Main()
         {
-        }
-
-        /// <summary>
-        /// Creates the game by initializing graphics, scene manager, data, screen
-        /// </summary>
-        /// <param name="name">Name of the game</param>
-        /// <param name="width">Screen width</param>
-        /// <param name="height">Screen height</param>
-        /// <param name="isFullScreen">Fullscreen on/off</param>
-        /// <param name="isMouseVisible">Mouse visibible on/off</param>
-        public Main(string name, int width = 640, int height = 480, bool isFullScreen = false, bool isMouseVisible = true)
-        {
+            Window.Title = "My Game Name";
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = isMouseVisible;
-
-            //initialize scene manager and global application data
-            Application.Content = Content;
-            Application.GraphicsDevice = GraphicsDevice;
-            Application.GraphicsDeviceManager = _graphics;
-            Application.SceneManager = new SceneManager();
-
-            //initialize screen
         }
 
         #endregion Constructors - Scene manager, Application data, Screen
@@ -52,11 +37,22 @@ namespace GDApp
 
         protected override void Initialize()
         {
-            //initialize input
-            InitializeInput();
+            //instanciate scene manager to store all scenes
+            sceneManager = new SceneManager();
 
-            //add all components to component list so that they will be updated
-            InitializeCoreComponents();
+            //initialize global application data
+            Application.Main = this;
+            Application.Content = Content;
+            Application.GraphicsDevice = _graphics.GraphicsDevice;
+            Application.GraphicsDeviceManager = _graphics;
+            Application.SceneManager = sceneManager;
+
+            //initialize screen
+            var screen = Screen.GetInstance();
+            screen.Set(1280, 720, true, false);
+
+            //initialize input components
+            InitializeInput();
 
             //add scene
 
@@ -67,19 +63,21 @@ namespace GDApp
             base.Initialize();
         }
 
-        private void InitializeCoreComponents()
-        {
-            Components.Add(Input.Keys);
-            Components.Add(Input.Mouse);
-            Components.Add(Input.Gamepad);
-            Components.Add(Time.GetInstance(this));
-        }
-
+        /// <summary>
+        /// Instanciate input objects to allow us to access from any controller object in the game and store reference to input objects to allow us to access from any controller object in the game
+        /// </summary>
         private void InitializeInput()
         {
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
+
+            //add all input components to component list so that they will be updated
+            //Q. what would happen is we commented out these lines?
+            Components.Add(Input.Keys);
+            Components.Add(Input.Mouse);
+            Components.Add(Input.Gamepad);
+            Components.Add(Time.GetInstance(this));
         }
 
         #endregion Initialization - Input, Scenes, Game Objects
@@ -102,7 +100,12 @@ namespace GDApp
 
         protected override void Update(GameTime gameTime)
         {
+            //allow the system to update first
             base.Update(gameTime);
+
+            //then update everything in the game
+            //Q. what would happen is we commented out this line?
+            sceneManager.Update();
         }
 
         protected override void Draw(GameTime gameTime)

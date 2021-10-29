@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Globals\Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Inputs\GamepadComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\SceneManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Screen\Screen.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Inputs\KeyboardComponent.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Inputs\MouseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Objects\GameObject.cs" />
