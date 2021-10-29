@@ -1,7 +1,6 @@
-﻿using GDLibrary.Components;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace GDLibrary
+namespace GDLibrary.Components
 {
     /// <summary>
     /// Store and manage transform operations e.g. translation, rotation and scale

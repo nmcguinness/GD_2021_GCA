@@ -1,8 +1,10 @@
 ﻿using GDLibrary;
+using GDLibrary.Core;
 using GDLibrary.Inputs;
 using GDLibrary.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDApp
 {
@@ -35,12 +37,11 @@ namespace GDApp
             Content.RootDirectory = "Content";
             IsMouseVisible = isMouseVisible;
 
-            //initialize scene manager
-
-            //initialize global application data
+            //initialize scene manager and global application data
             Application.Content = Content;
             Application.GraphicsDevice = GraphicsDevice;
             Application.GraphicsDeviceManager = _graphics;
+            Application.SceneManager = new SceneManager();
 
             //initialize screen
         }
@@ -52,15 +53,10 @@ namespace GDApp
         protected override void Initialize()
         {
             //initialize input
-            Input.Keys = new KeyboardComponent(this);
-            Input.Mouse = new MouseComponent(this);
-            Input.Gamepad = new GamepadComponent(this);
+            InitializeInput();
 
             //add all components to component list so that they will be updated
-            Components.Add(Input.Keys);
-            Components.Add(Input.Mouse);
-            Components.Add(Input.Gamepad);
-            Components.Add(Time.GetInstance(this));
+            InitializeCoreComponents();
 
             //add scene
 
@@ -69,6 +65,21 @@ namespace GDApp
             //add scene to scenemanager, repeat for all scenes
 
             base.Initialize();
+        }
+
+        private void InitializeCoreComponents()
+        {
+            Components.Add(Input.Keys);
+            Components.Add(Input.Mouse);
+            Components.Add(Input.Gamepad);
+            Components.Add(Time.GetInstance(this));
+        }
+
+        private void InitializeInput()
+        {
+            Input.Keys = new KeyboardComponent(this);
+            Input.Mouse = new MouseComponent(this);
+            Input.Gamepad = new GamepadComponent(this);
         }
 
         #endregion Initialization - Input, Scenes, Game Objects

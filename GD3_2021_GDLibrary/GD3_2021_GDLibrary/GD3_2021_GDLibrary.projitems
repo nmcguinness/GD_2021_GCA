@@ -18,18 +18,19 @@
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\MeshRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\Renderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Globals\Application.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Camera\Camera.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\Component.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Component.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Globals\Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Inputs\GamepadComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\SceneManager.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Inputs\KeyboardComponent.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Inputs\MouseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Objects\GameObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\Transform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\QuaternionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\Vector3Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Graphics\Primitives\CubeMesh.cs" />

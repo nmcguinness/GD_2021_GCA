@@ -1,5 +1,6 @@
 ﻿using GDLibrary.Components;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace GDLibrary
@@ -7,13 +8,14 @@ namespace GDLibrary
     /// <summary>
     /// Base object in the game scene
     /// </summary>
-    public class GameObject
+    public class GameObject : IDisposable
     {
         #region Fields
 
         private static readonly int DEFAULT_COMPONENT_LIST_SIZE = 4;    //typical minimum number of components added to a GameObject
         protected Transform transform;                                  //stores S, R, T of GameObject to generate the world matrix
         protected List<Component> components;                           //a list of all attached components
+        private bool isInitialized;
 
         #endregion Fields
 
@@ -39,8 +41,32 @@ namespace GDLibrary
 
         #endregion Constructors
 
+        #region Initialization
+
+        /// <summary>
+        /// Called when the game object is run in the first update
+        /// </summary>
+        public virtual void Initialize()
+        {
+            if (!isInitialized)
+            {
+                isInitialized = true;
+
+                //TODO - Add sort IComparable in each component
+                components.Sort();
+
+                for (int i = 0; i < components.Count; i++)
+                    components[i].Start();
+            }
+        }
+
+        #endregion Initialization
+
         #region Update
 
+        /// <summary>
+        /// Called each update to call an update on all components of the game object
+        /// </summary>
         public virtual void Update()
         {
             for (int i = 0; i < components.Count; i++)
@@ -119,5 +145,15 @@ namespace GDLibrary
         }
 
         #endregion Add & Get Components
+
+        #region Housekeeping
+
+        public virtual void Dispose()
+        {
+            foreach (Component component in components)
+                component.Dispose();
+        }
+
+        #endregion Housekeeping
     }
 }

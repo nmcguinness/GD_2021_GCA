@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GDLibrary.Core;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -26,10 +27,16 @@ namespace GDLibrary
         public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
 
         /// <summary>
+        /// Gets or sets the scene manager.
+        /// </summary>
+        public static SceneManager SceneManager { get; internal set; }
+
+        /// <summary>
         /// Called when we exit the application.
         /// </summary>
         public void Dispose()
         {
+            //TODO - do we need to do anything here that isnt done in SceneManager, Scene, GameObject, or Component Dispose() method calls?
             throw new NotImplementedException();
         }
     }
