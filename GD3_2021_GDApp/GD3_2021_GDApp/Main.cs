@@ -4,7 +4,6 @@ using GDLibrary.Inputs;
 using GDLibrary.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace GDApp
 {
@@ -22,34 +21,35 @@ namespace GDApp
 
         #endregion Fields
 
-        #region Constructors - Scene manager, Application data, Screen
+        #region Constructors
 
         public Main()
         {
-            Window.Title = "My Game Name";
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
-        #endregion Constructors - Scene manager, Application data, Screen
+        #endregion Constructors
 
-        #region Initialization - Input, Scenes, Game Objects
+        #region Initialization - Scene manager, Application data, Screen, Input, Scenes, Game Objects
 
         protected override void Initialize()
         {
+            //set game title
+            Window.Title = "My Game Name";
+
             //instanciate scene manager to store all scenes
             sceneManager = new SceneManager();
 
             //initialize global application data
             Application.Main = this;
             Application.Content = Content;
-            Application.GraphicsDevice = _graphics.GraphicsDevice;
+            Application.GraphicsDevice = _graphics.GraphicsDevice; //TODO - is this necessary?
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
 
-            //initialize screen
-            var screen = Screen.GetInstance();
-            screen.Set(1280, 720, true, false);
+            //instanciate screen (singleton) and set resolution etc
+            Screen.GetInstance().Set(1280, 720, true, false);
 
             //initialize input components
             InitializeInput();
@@ -68,6 +68,7 @@ namespace GDApp
         /// </summary>
         private void InitializeInput()
         {
+            //instanciate input components and store reference in Input for global access
             Input.Keys = new KeyboardComponent(this);
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
@@ -80,7 +81,7 @@ namespace GDApp
             Components.Add(Time.GetInstance(this));
         }
 
-        #endregion Initialization - Input, Scenes, Game Objects
+        #endregion Initialization - Scene manager, Application data, Screen, Input, Scenes, Game Objects
 
         #region Load & Unload Assets
 
