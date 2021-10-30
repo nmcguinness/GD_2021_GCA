@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace GDLibrary.Components
 {
@@ -7,14 +8,48 @@ namespace GDLibrary.Components
     /// </summary>
     public class Transform : Component
     {
+        #region Events
+
+        public event Action PropertyChanged = null;
+
+        #endregion Events
+
         #region Fields
 
-        private Matrix worldMatrix = Matrix.Identity;   //used to draw the game object that this transform is associated with
+        /// <summary>
+        /// Used to render any visible game object (i.e. with MeshRenderer or ModelRenderer)
+        /// </summary>
+        private Matrix worldMatrix = Matrix.Identity;
+
+        /// <summary>
+        /// Used to calculate the World matrix and also to calculate the target for a Camera
+        /// </summary>
         private Matrix rotationMatrix = Matrix.Identity;
+
+        /// <summary>
+        /// Scale relative to the parent transform
+        /// </summary>
         private Vector3 localScale;
+
+        /// <summary>
+        /// Rotation relative to the parent transform
+        /// </summary>
         private Vector3 localRotation;
+
+        /// <summary>
+        /// Translation relative to the parent transform
+        /// </summary>
         private Vector3 localTranslation;
-        private bool isWorldDirty = true;                    //set to true so the worldMatrix is calculated the first time we create a transform
+
+        /// <summary>
+        /// Set to true if the translation, rotation, or scale change which affect World matrix
+        /// </summary>
+        private bool isWorldDirty = true;
+
+        /// <summary>
+        /// Set to true if the rotation changes
+        /// </summary>
+        private bool isRotationDirty = true;
 
         #endregion Fields
 
@@ -27,6 +62,7 @@ namespace GDLibrary.Components
                 return localScale;
             }
         }
+
         public Vector3 LocalRotation
         {
             get
@@ -34,6 +70,7 @@ namespace GDLibrary.Components
                 return localRotation;
             }
         }
+
         public Vector3 LocalTranslation
         {
             get
@@ -42,11 +79,16 @@ namespace GDLibrary.Components
             }
         }
 
-        //BUG - 28/10/21 - Does this need to be called before WorldMatrix?
         public Matrix RotationMatrix
         {
             get
             {
+                if (isRotationDirty)
+                {
+                    rotationMatrix = Matrix.CreateFromYawPitchRoll(localRotation.Y, localRotation.X, localRotation.Z);
+                    isRotationDirty = false;
+                }
+
                 return rotationMatrix;
             }
         }
@@ -57,12 +99,10 @@ namespace GDLibrary.Components
             {
                 if (isWorldDirty)
                 {
-                    rotationMatrix = Matrix.CreateFromYawPitchRoll(localRotation.Y, localRotation.X, localRotation.Z);
-
                     worldMatrix = Matrix.Identity
                         * Matrix.CreateScale(localScale)
-                            * rotationMatrix
-                                * Matrix.CreateTranslation(localTranslation);
+                            * Matrix.CreateFromYawPitchRoll(localRotation.Y, localRotation.X, localRotation.Z)
+                                    * Matrix.CreateTranslation(localTranslation);
                     isWorldDirty = false;
                 }
 
@@ -100,120 +140,234 @@ namespace GDLibrary.Components
 
         #region Actions - Modify Scale, Rotation, Translation
 
+        /// <summary>
+        /// Increases/decreases scale by adding/removing individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void Scale(float? x, float? y, float? z)
         {
             localScale.Add(x, y, z);
             isWorldDirty = true;
         }
 
-        public void Scale(Vector3 delta)
-        {
-            localScale.Add(ref delta);
-            isWorldDirty = true;
-        }
-
+        /// <summary>
+        /// Increases/decreases scale by adding/removing Vector3 passed by reference
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void Scale(ref Vector3 delta)
         {
             localScale.Add(ref delta);
             isWorldDirty = true;
         }
 
+        /// <summary>
+        /// Increases/decreases scale by adding/removing Vector3 passed by value
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Scale(Vector3 delta)
+        {
+            Scale(ref delta);
+        }
+
+        /// <summary>
+        /// Increases/decreases rotation by adding/removing individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Rotate(float? x, float? y, float? z)
+        {
+            localRotation.Add(x, y, z);
+            isWorldDirty = true;
+            isRotationDirty = true;
+            PropertyChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Increases/decreases rotation by adding/removing Vector3 passed by reference
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Rotate(ref Vector3 delta)
+        {
+            localRotation.Add(ref delta);
+            isWorldDirty = true;
+            isRotationDirty = true;
+            PropertyChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Increases/decreases rotation by adding/removing Vector3 passed by value
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Rotate(Vector3 delta)
+        {
+            Rotate(ref delta);
+        }
+
+        /// <summary>
+        /// Increases/decreases translation by adding/removing individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Translate(float? x, float? y, float? z)
+        {
+            localTranslation.Add(x, y, z);
+            isWorldDirty = true;
+            PropertyChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Increases/decreases translation by adding/removing Vector3 passed by reference
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Translate(ref Vector3 delta)
+        {
+            localTranslation.Add(ref delta);
+            isWorldDirty = true;
+            PropertyChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Increases/decreases translation by adding/removing Vector3 passed by value
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void Translate(Vector3 delta)
+        {
+            Translate(ref delta);
+        }
+
+        /// <summary>
+        /// Sets scale using individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void SetScale(float? x, float? y, float? z)
         {
             localScale.Set(x, y, z);
             isWorldDirty = true;
         }
 
-        public void SetScale(Vector3 scale)
+        /// <summary>
+        /// Sets scale using Vector3 pass by reference
+        /// </summary>
+        /// <param name="newScale"></param>
+        public void SetScale(ref Vector3 newScale)
         {
-            localScale.Set(scale);
+            localScale.Set(ref newScale);
             isWorldDirty = true;
         }
 
-        public void SetScale(ref Vector3 scale)
+        /// <summary>
+        /// Sets scale using Vector3 pass by value
+        /// </summary>
+        /// <param name="newScale"></param>
+        public void SetScale(Vector3 newScale)
         {
-            localScale.Set(ref scale);
-            isWorldDirty = true;
+            SetScale(ref newScale);
         }
 
-        public void Rotate(float? x, float? y, float? z)
-        {
-            localRotation.Add(x, y, z);
-            isWorldDirty = true;
-        }
-
-        public void Rotate(ref Vector3 delta)
-        {
-            localRotation.Add(ref delta);
-            isWorldDirty = true;
-        }
-
-        public void Rotate(Vector3 delta)
-        {
-            localRotation.Add(ref delta);
-            isWorldDirty = true;
-        }
-
+        /// <summary>
+        /// Sets rotation using individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void SetRotation(float? x, float? y, float? z)
         {
             localRotation.Set(x, y, z);
             isWorldDirty = true;
+            PropertyChanged?.Invoke();
         }
 
-        public void SetRotation(Vector3 rotation)
+        /// <summary>
+        /// Sets rotation using Vector3 pass by reference
+        /// </summary>
+        /// <param name="newRotation"></param>
+        public void SetRotation(ref Vector3 newRotation)
         {
-            localRotation.Set(rotation);
+            localRotation.Set(ref newRotation);
             isWorldDirty = true;
+            PropertyChanged?.Invoke();
         }
 
-        public void SetRotation(ref Vector3 rotation)
+        /// <summary>
+        /// Sets rotation using Vector3 pass by value
+        /// </summary>
+        /// <param name="newRotation"></param>
+        public void SetRotation(Vector3 newRotation)
         {
-            localRotation.Set(ref rotation);
-            isWorldDirty = true;
+            SetRotation(ref newRotation);
         }
 
-        public void SetRotation(Matrix matrix)
+        /// <summary>
+        /// Sets rotation using Matrix pass by reference
+        /// </summary>
+        /// <param name="newRotation"></param>
+        public void SetRotation(ref Matrix matrix)
         {
             var quaternion = Quaternion.CreateFromRotationMatrix(matrix);
             var rotation = quaternion.ToEuler();
             localRotation.Set(rotation.X, rotation.Y, rotation.Z);
             isWorldDirty = true;
+            PropertyChanged?.Invoke();
         }
 
-        public void Translate(float? x, float? y, float? z)
+        /// <summary>
+        /// Sets rotation using Matrix pass by value
+        /// </summary>
+        /// <param name="newRotation"></param>
+        public void SetRotation(Matrix matrix)
         {
-            localTranslation.Add(x, y, z);
-            isWorldDirty = true;
+            SetRotation(ref matrix);
         }
 
-        public void Translate(Vector3 delta)
-        {
-            localTranslation.Add(delta);
-            isWorldDirty = true;
-        }
-
-        public void Translate(ref Vector3 delta)
-        {
-            localTranslation.Add(ref delta);
-            isWorldDirty = true;
-        }
-
+        /// <summary>
+        /// Sets translation using individual nullable x,y,z values
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void SetTranslation(float? x, float? y, float? z)
         {
             localTranslation.Set(x, y, z);
             isWorldDirty = true;
+            PropertyChanged?.Invoke();
         }
 
-        public void SetTranslation(Vector3 translation)
+        /// <summary>
+        /// Sets translation using Vector3 pass by reference
+        /// </summary>
+        /// <param name="newTranslation"></param>
+        public void SetTranslation(ref Vector3 newTranslation)
         {
-            localTranslation.Set(translation);
+            localTranslation.Set(ref newTranslation);
             isWorldDirty = true;
+            PropertyChanged?.Invoke();
         }
 
-        public void SetTranslation(ref Vector3 translation)
+        /// <summary>
+        /// Sets translation using Vector3 pass by value
+        /// </summary>
+        /// <param name="newTranslation"></param>
+        public void SetTranslation(Vector3 newTranslation)
         {
-            localTranslation.Set(ref translation);
-            isWorldDirty = true;
+            SetTranslation(ref newTranslation);
         }
 
         #endregion Actions - Modify Scale, Rotation, Translation

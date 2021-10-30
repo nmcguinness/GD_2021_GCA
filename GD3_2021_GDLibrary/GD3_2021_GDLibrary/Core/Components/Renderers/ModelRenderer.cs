@@ -6,12 +6,21 @@ namespace GDLibrary.Components
 {
     public class ModelRenderer : Renderer
     {
+        /// <summary>
+        /// Stores vertex, normal, uv data for the model
+        /// </summary>
         protected Model model;
+        /// <summary>
+        /// Stores bone transforms for the model (e.g. each mesh will normally have one bone)
+        /// </summary>
         protected Matrix[] boneTransforms;
 
         public Model Model
         {
-            get { return model; }
+            get
+            {
+                return model;
+            }
             set
             {
                 if (value != model)
@@ -45,16 +54,29 @@ namespace GDLibrary.Components
         {
             foreach (ModelMesh mesh in model.Meshes)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
                 {
-                    effect.World = boneTransforms[mesh.ParentBone.Index] * transform.WorldMatrix;
-                    effect.View = camera._viewMatrix;
-                    effect.Projection = camera._projectionMatrix;
-                    effect.EnableDefaultLighting();
-                    effect.CurrentTechnique.Passes[0].Apply();
+                    device.SetVertexBuffer(meshPart.VertexBuffer);
+                    device.Indices = meshPart.IndexBuffer;
+                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, meshPart.VertexOffset, meshPart.StartIndex, meshPart.PrimitiveCount);
                 }
-                mesh.Draw();
             }
+
+            //Alternatively we can draw using the BasicEffect
+            //foreach (ModelMesh mesh in model.Meshes)
+            //{
+            //    foreach (BasicEffect effect in mesh.Effects)
+            //    {
+            //        effect.World = boneTransforms[mesh.ParentBone.Index] * transform.WorldMatrix;
+            //        effect.View = camera._viewMatrix;
+            //        effect.Projection = camera._projectionMatrix;
+            //        effect.EnableDefaultLighting();
+            //        effect.CurrentTechnique.Passes[0].Apply();
+            //    }
+            //    mesh.Draw();
+            //}
         }
+
+        //TODO - Dispose, Clone
     }
 }

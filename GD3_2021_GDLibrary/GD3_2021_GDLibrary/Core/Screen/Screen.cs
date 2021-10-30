@@ -7,9 +7,14 @@ namespace GDLibrary.Core
     /// </summary>
     public sealed class Screen
     {
-        #region Fields
+        #region Statics
 
         private static Screen instance;
+
+        #endregion Statics
+
+        #region Fields
+
         private Rectangle screenRectangle;
 
         #endregion Fields

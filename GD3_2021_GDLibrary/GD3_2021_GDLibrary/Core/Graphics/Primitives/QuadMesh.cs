@@ -6,7 +6,7 @@ namespace GDLibrary.Graphics
     /// <summary>
     /// Defines a textured 1x1 quad, centred on origin, facing +ve Z-axis
     /// </summary>
-    public class QuadMesh : Mesh<VertexPositionNormalTexture>
+    public class QuadMesh : Mesh
     {
         protected override void CreateGeometry()
         {
@@ -26,10 +26,10 @@ namespace GDLibrary.Graphics
 
             var uvs = new Vector2[4]
              {
-                new Vector2(0.0f, 0.0f),
-                new Vector2(0.5f, 0.0f),
-                new Vector2(0.5f, 0.5f),
-                new Vector2(0.0f, 0.5f)
+                new Vector2(0,0),
+                new Vector2(1,0),
+                new Vector2(1,1),
+                new Vector2(0,1)
              };
 
             #endregion UVs
@@ -40,7 +40,7 @@ namespace GDLibrary.Graphics
             {
                 vertices[i].Position = positions[i];
                 vertices[i].TextureCoordinate = uvs[i];
-                vertices[i].Normal = Vector3.Forward;
+                vertices[i].Normal = Vector3.UnitZ; //facing toward the +ve Z-axis
             }
 
             indices = new ushort[] { 0, 1, 2, 0, 2, 3 };

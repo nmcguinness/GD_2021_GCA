@@ -6,7 +6,7 @@ namespace GDLibrary.Graphics
     /// <summary>
     /// Defines a textured 1x1x1 cube, centred on origin, aligned with XYZ axis
     /// </summary>
-    public class CubeMesh : Mesh<VertexPositionNormalTexture>
+    public class CubeMesh : Mesh
     {
         protected override void CreateGeometry()
         {

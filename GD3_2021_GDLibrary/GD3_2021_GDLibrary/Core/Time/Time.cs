@@ -13,12 +13,32 @@ namespace GDLibrary.Time
     /// <seealso cref="https://refactoring.guru/design-patterns/singleton/csharp/example"/>
     public class Time : GameComponent
     {
+        #region Statics
+
+        /// <summary>
+        ///  Singleton instance to allow global accessibility
+        /// </summary>
+        private static Time instance;
+
+        #endregion Statics
+
         #region Fields
 
-        private static Time instance;       //singleton instance to allow global accessibility
-        private float deltaTime;            //time between updates
-        private float totalGameTime;            //total elapsed time since start
-        private float timeScale = 1;        //0-1 scale factor used to slow down time (e.g. slo-mo effects)
+        /// <summary>
+        /// Time between updates
+        /// </summary>
+        private float deltaTime;
+        /// <summary>
+        /// Total elapsed time since start
+        /// </summary>
+        private float totalGameTime;
+        /// <summary>
+        /// 0-1 scale factor used to slow down time (e.g. slo-mo effects)
+        /// </summary>
+        private float timeScale = 1;
+        /// <summary>
+        /// Total frames since game start
+        /// </summary>
         private long frameCount = 0;
 
         #endregion Fields
@@ -70,6 +90,11 @@ namespace GDLibrary.Time
 
         #region Constructors
 
+        /// <summary>
+        /// Constructs a Singleton instance - usually called in Main to initialize the entity once
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
         public static Time GetInstance(Game game)
         {
             if (instance == null)

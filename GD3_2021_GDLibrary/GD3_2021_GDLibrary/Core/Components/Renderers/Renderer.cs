@@ -24,7 +24,7 @@ namespace GDLibrary.Components
 
         #region Constructors
 
-        public Renderer()
+        public Renderer() : base()
         {
             boundingSphere = new BoundingSphere();
             boundingBox = new BoundingBox();
@@ -57,6 +57,7 @@ namespace GDLibrary.Components
 
         #endregion Actions - Bounding sphere, Draw
 
+        //TODO - Add sort by material then alpha
         //public override int CompareTo(object obj)
         //{
         //    var renderer = obj as Renderer;

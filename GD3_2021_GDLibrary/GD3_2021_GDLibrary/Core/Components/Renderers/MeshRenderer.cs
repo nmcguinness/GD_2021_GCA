@@ -5,12 +5,16 @@ using System;
 
 namespace GDLibrary.Components
 {
+    /// <summary>
+    /// Draws a user-defined array of VertexPositionNormalTexture vertices
+    /// </summary>
     public class MeshRenderer : Renderer
     {
         //TODO - generalise for any IVertexType
-        protected Mesh<VertexPositionNormalTexture> mesh;
+        protected Mesh mesh;
 
-        public Mesh<VertexPositionNormalTexture> Mesh
+        //TODO - If mesh data is changed then we must re-set the data in the buffers. Same for ModelRenderer too.
+        public Mesh Mesh
         {
             get
             {
@@ -37,20 +41,20 @@ namespace GDLibrary.Components
         public override void SetBoundingVolume()
         {
             if (mesh == null)
-                return;
+                throw new NullReferenceException("No mesh has been set for this renderer!");
 
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            var vertices = mesh.GetVertices(VertexType.Position);
+            var vertices = mesh.GetVertices();
 
-            for (int i = 0, l = vertices.Length; i < l; i++)
+            foreach (var vertex in vertices)
             {
-                min.X = Math.Min(vertices[i].X, min.X);
-                min.Y = Math.Min(vertices[i].Y, min.Y);
-                min.Z = Math.Min(vertices[i].Z, min.Z);
-                max.X = Math.Max(vertices[i].X, max.X);
-                max.Y = Math.Max(vertices[i].Y, max.Y);
-                max.Z = Math.Max(vertices[i].Z, max.Z);
+                min.X = Math.Min(vertex.X, min.X);
+                min.Y = Math.Min(vertex.Y, min.Y);
+                min.Z = Math.Min(vertex.Z, min.Z);
+                max.X = Math.Max(vertex.X, max.X);
+                max.Y = Math.Max(vertex.Y, max.Y);
+                max.Z = Math.Max(vertex.Z, max.Z);
             }
 
             boundingBox.Min = min;
@@ -63,5 +67,7 @@ namespace GDLibrary.Components
             boundingSphere.Radius = (float)Math.Max(Math.Max(dx, dy), dz) / 2.0f;
             boundingSphere.Center = transform.LocalTranslation;
         }
+
+        //TODO - Dispose, Clone
     }
 }

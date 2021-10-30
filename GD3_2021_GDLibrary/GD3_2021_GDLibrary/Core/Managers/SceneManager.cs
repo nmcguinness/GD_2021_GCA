@@ -8,9 +8,14 @@ namespace GDLibrary.Core
     /// </summary>
     public class SceneManager
     {
-        #region Fields
+        #region Statics
 
         private static readonly int DEFAULT_SCENE_COUNT_AT_START = 4;
+
+        #endregion Statics
+
+        #region Fields
+
         private List<Scene> scenes;
         private int sceneToLoad;
         private int activeSceneIndex;

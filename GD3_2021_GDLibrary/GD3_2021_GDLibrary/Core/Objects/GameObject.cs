@@ -10,18 +10,73 @@ namespace GDLibrary
     /// </summary>
     public class GameObject : IDisposable
     {
-        #region Fields
+        #region Statics
 
         private static readonly int DEFAULT_COMPONENT_LIST_SIZE = 4;    //typical minimum number of components added to a GameObject
-        protected Transform transform;                                  //stores S, R, T of GameObject to generate the world matrix
-        protected List<Component> components;                           //a list of all attached components
+
+        #endregion Statics
+
+        #region Fields
+
+        /// <summary>
+        /// Set on first update of the component in SceneManager::Update
+        /// </summary>
         private bool isInitialized;
+
+        /// <summary>
+        /// Set in constructor to true. By default all components are enabled on instanciation
+        /// </summary>
+        private bool isEnabled;
+
+        /// <summary>
+        /// Scene to which this game object belongs
+        /// </summary>
+        protected Scene scene;
+
+        /// <summary>
+        /// Stores S, R, T of GameObject to generate the world matrix
+        /// </summary>
+        protected Transform transform;
+
+        /// <summary>
+        /// List of all attached components
+        /// </summary>
+        protected List<Component> components;
 
         #endregion Fields
 
         #region Properties
 
+        public bool IsInitialized
+        {
+            get { return isInitialized; }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return isEnabled;
+            }
+            set
+            {
+                if (value != isEnabled)
+                {
+                    isEnabled = value;
+
+                    //TODO - notify component has been enabled and enable all child components
+                }
+            }
+        }
+
+        public Scene Scene
+        {
+            get { return scene; }
+            set { scene = value; }
+        }
+
         public Transform Transform { get => transform; protected set => transform = value; }
+
         public List<Component> Components { get => components; }
 
         #endregion Properties
@@ -89,7 +144,11 @@ namespace GDLibrary
             if (component == null || component is Transform)
                 return null;
 
+            //set this as component's parent game object
             component.GameObject = this;
+
+            //perform any initial wake up operations
+            component.Awake();
 
             //TODO - prevent duplicate components? Component::Equals and GetHashCode need to be implemented
             components.Add(component);

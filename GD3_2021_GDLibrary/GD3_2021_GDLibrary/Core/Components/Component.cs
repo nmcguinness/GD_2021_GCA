@@ -5,28 +5,48 @@ namespace GDLibrary.Components
     /// <summary>
     /// A part of a game object e.g. Mesh, MeshRenderer, Camera, FirstPersonController
     /// </summary>
-    public abstract class Component : IDisposable
+    public abstract class Component : IDisposable, IComparable
     {
         #region Fields
 
-        private bool isStarted;
+        /// <summary>
+        /// Set to true on the first update of the component
+        /// </summary>
+        private bool isRunning;
+
+        /// <summary>
+        /// Allows us to enable/disable a component during the game (e.g. enable component that opens a door, disable a component that re-generates health)
+        /// </summary>
         private bool isEnabled;
+
+        /// <summary>
+        /// Sort order we can use to sort the update order of component in a game object
+        /// </summary>
+        private int sortOrder = 1;
+
+        /// <summary>
+        /// Reference to the container game object for all components
+        /// </summary>
         protected GameObject gameObject;
+
+        /// <summary>
+        /// Reference to the object transform stored in the container game object
+        /// </summary>
         protected Transform transform;
 
         #endregion Fields
 
         #region Properties
 
-        public bool IsStarted
+        public bool IsRunning
         {
             get
             {
-                return isStarted;
+                return isRunning;
             }
             protected set
             {
-                isStarted = value;
+                isRunning = value;
             }
         }
 
@@ -49,6 +69,22 @@ namespace GDLibrary.Components
             }
         }
 
+        public int SortOrder
+        {
+            get
+            {
+                return sortOrder;
+            }
+            protected set
+            {
+                if (value != sortOrder)
+                {
+                    sortOrder = value;
+                    //TODO - notify property changed
+                }
+            }
+        }
+
         public GameObject GameObject
         {
             get { return gameObject; }
@@ -61,7 +97,7 @@ namespace GDLibrary.Components
 
         public Component()
         {
-            IsStarted = false;
+            IsRunning = false;
             IsEnabled = true;
         }
 
@@ -83,8 +119,11 @@ namespace GDLibrary.Components
         /// </summary>
         public virtual void Awake()
         {
+            if (gameObject == null)
+                throw new NullReferenceException("This component is not attached to a game object!");
+
+            //Cache the transform so that we can access in child components without double de-reference e.g. transform.LocalTranslation not gameObject.Transform.LocalTranslation
             if (transform == null)
-                ///Cache the transform so that we can access in child components without double de-reference e.g. transform.LocalTranslation not gameObject.Transform.LocalTranslation
                 transform = gameObject.Transform;
         }
 
@@ -93,7 +132,7 @@ namespace GDLibrary.Components
         /// </summary>
         public virtual void Start()
         {
-            IsStarted = true;
+            IsRunning = true;
         }
 
         /// <summary>
@@ -149,14 +188,36 @@ namespace GDLibrary.Components
 
         #endregion Actions - Components
 
-        #region Housekeeping
+        #region Actions - Sorting
+
+        public virtual int CompareTo(object obj)
+        {
+            var component = obj as Component;
+
+            if (component == null)
+                return 1;
+
+            if (this == component)
+                return 0;
+
+            if (sortOrder == component.sortOrder)
+                return 0;
+            else if (sortOrder > component.sortOrder)
+                return 1;
+            else
+                return -1;
+        }
+
+        #endregion Actions - Sorting
+
+        #region Actions - Housekeeping
 
         public virtual void Dispose()
         {
             //Overridden in child class
         }
 
-        #endregion Housekeeping
+        #endregion Actions - Housekeeping
 
         //TODO - add virtual reset, clone(memberwise) with no code
     }

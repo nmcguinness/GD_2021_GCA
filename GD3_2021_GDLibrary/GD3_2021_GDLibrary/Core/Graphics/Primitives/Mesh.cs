@@ -1,12 +1,14 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDLibrary.Graphics
 {
-    public abstract class Mesh<T> where T : struct, IVertexType
+    public abstract class Mesh
     {
         #region Fields
 
-        protected T[] vertices;
+        protected VertexPositionNormalTexture[] vertices;
         protected ushort[] indices;
         protected VertexBuffer vertexBuffer;
         protected IndexBuffer indexBuffer;
@@ -15,7 +17,7 @@ namespace GDLibrary.Graphics
 
         #region Constructors
 
-        public T[] Vertices
+        public VertexPositionNormalTexture[] Vertices
         {
             get { return vertices; }
             set { vertices = value; }
@@ -45,7 +47,9 @@ namespace GDLibrary.Graphics
 
         public Mesh()
         {
+            //set up the position, normal, texture vertex array
             CreateGeometry();
+            //set up the buffers on VRAM with the vertex array and index array
             CreateBuffers();
         }
 
@@ -57,13 +61,61 @@ namespace GDLibrary.Graphics
 
         private void CreateBuffers()
         {
-            var graphics = Application.GraphicsDevice;
+            var graphicsDevice = Application.GraphicsDevice;
 
-            vertexBuffer = new VertexBuffer(graphics, typeof(T), vertices.Length, BufferUsage.WriteOnly);
+            vertexBuffer = new VertexBuffer(graphicsDevice, typeof(VertexPositionNormalTexture), vertices.Length, BufferUsage.WriteOnly);
             vertexBuffer.SetData(vertices);
 
-            indexBuffer = new IndexBuffer(graphics, (IndexElementSize)sizeof(ushort), indices.Length, BufferUsage.WriteOnly);
+            indexBuffer = new IndexBuffer(graphicsDevice, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
             indexBuffer.SetData(indices);
+        }
+
+        public void ComputeNormals()
+        {
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal = Vector3.Zero;
+
+            for (int i = 0; i < indices.Length / 3; i++)
+            {
+                int index0 = indices[i * 3];
+                int index1 = indices[i * 3 + 1];
+                int index2 = indices[i * 3 + 2];
+
+                // Select the face
+                Vector3 side1 = vertices[index0].Position - vertices[index2].Position;
+                Vector3 side2 = vertices[index0].Position - vertices[index1].Position;
+                Vector3 normal = Vector3.Cross(side1, side2);
+
+                vertices[index0].Normal += normal;
+                vertices[index1].Normal += normal;
+                vertices[index2].Normal += normal;
+            }
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                var normal = vertices[i].Normal;
+                var len = normal.Length();
+                if (len > 0.0f)
+                    vertices[i].Normal = normal / len;
+                else
+                    vertices[i].Normal = Vector3.Zero;
+            }
+        }
+
+        public Vector3[] GetVertices()
+        {
+            Vector3[] verts = new Vector3[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+                verts[i] = Vertices[i].Position;
+            return verts;
+        }
+
+        public Vector3[] GetNormals()
+        {
+            Vector3[] normals = new Vector3[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+                normals[i] = Vertices[i].Normal;
+            return normals;
         }
 
         #endregion Actions
