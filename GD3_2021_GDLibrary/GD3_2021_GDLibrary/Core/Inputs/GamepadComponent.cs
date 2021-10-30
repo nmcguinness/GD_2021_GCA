@@ -38,7 +38,7 @@ namespace GDLibrary.Inputs
 
         #endregion Properties
 
-        #region Constructor
+        #region Constructors
 
         public GamepadComponent(Game game)
     : base(game)
@@ -53,7 +53,7 @@ namespace GDLibrary.Inputs
             }
         }
 
-        #endregion Constructor
+        #endregion Constructors
 
         #region Update
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GDLibrary.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GDLibrary.Components
@@ -12,13 +13,30 @@ namespace GDLibrary.Components
 
         protected BoundingSphere boundingSphere;
         protected BoundingBox boundingBox;
+        protected Material material;
 
         #endregion Fields
 
         #region Properties
 
+        /// <summary>
+        /// Gets the sphere that bounds all vertices in the model/mesh that this renderer will render
+        /// </summary>
         protected BoundingSphere BoundingSphere { get; }
+
+        /// <summary>
+        /// Gets the axis-aligned box bounds all vertices in the model/mesh that this renderer will render
+        /// </summary>
         protected BoundingBox BoundingBox { get; }
+
+        /// <summary>
+        /// Gets/sets the material (e.g. diffuse color, alpha, and attached Effect file) of the model/mesh that this renderer will render
+        /// </summary>
+        public Material Material
+        {
+            get { return material; }
+            set { material = value; }
+        }
 
         #endregion Properties
 

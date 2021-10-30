@@ -34,7 +34,7 @@ namespace GDLibrary.Core
 
         #endregion Properties
 
-        #region Constructor
+        #region Constructors
 
         private Screen()
         {
@@ -53,7 +53,7 @@ namespace GDLibrary.Core
             return instance;
         }
 
-        #endregion Constructor
+        #endregion Constructors
 
         #region Actions
 

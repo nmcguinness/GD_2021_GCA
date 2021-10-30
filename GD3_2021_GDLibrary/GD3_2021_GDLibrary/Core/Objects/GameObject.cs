@@ -19,6 +19,11 @@ namespace GDLibrary
         #region Fields
 
         /// <summary>
+        /// Friendly name for the current object
+        /// </summary>
+        protected string name;
+
+        /// <summary>
         /// Set on first update of the component in SceneManager::Update
         /// </summary>
         private bool isInitialized;
@@ -47,11 +52,22 @@ namespace GDLibrary
 
         #region Properties
 
+        /// <summary>
+        /// Gets/sets the game object name
+        /// </summary>
+        public string Name { get => name; set => name = value.Trim(); }
+
+        /// <summary>
+        /// Gets boolean to determine if the object has run in first update cycle
+        /// </summary>
         public bool IsInitialized
         {
             get { return isInitialized; }
         }
 
+        /// <summary>
+        /// Gets/sets boolean to allow object to be disabled (e.g. no update or draw) within a scene
+        /// </summary>
         public bool IsEnabled
         {
             get
@@ -69,22 +85,32 @@ namespace GDLibrary
             }
         }
 
+        /// <summary>
+        /// Gets/sets the scene that the current object is used in
+        /// </summary>
         public Scene Scene
         {
             get { return scene; }
             set { scene = value; }
         }
 
+        /// <summary>
+        /// Gets/sets the transform associated with the current game object
+        /// </summary>
         public Transform Transform { get => transform; protected set => transform = value; }
 
+        /// <summary>
+        /// Gets a list of all components (e.g. controllers, behaviours, camera) of the current object
+        /// </summary>
         public List<Component> Components { get => components; }
 
         #endregion Properties
 
         #region Constructors
 
-        public GameObject()
+        public GameObject(string name)
         {
+            Name = name;
             if (transform == null)
             {
                 components = new List<Component>(DEFAULT_COMPONENT_LIST_SIZE);          //instanciate list
@@ -92,6 +118,8 @@ namespace GDLibrary
                 transform.GameObject = this;                                            //tell transform who it belongs to
                 components.Add(transform);                                              //add transform to the list
             }
+
+            isEnabled = true;
         }
 
         #endregion Constructors

@@ -1,7 +1,8 @@
 ﻿using GDLibrary.Components;
+using System;
 using System.Collections.Generic;
 
-namespace GDLibrary.Core
+namespace GDLibrary.Managers
 {
     /// <summary>
     /// SceneManager stores all scenes and calls update on currently active scene
@@ -58,7 +59,7 @@ namespace GDLibrary.Core
 
         #endregion Properties & Indexer
 
-        #region Constructor
+        #region Constructors
 
         public SceneManager()
         {
@@ -67,7 +68,7 @@ namespace GDLibrary.Core
             activeSceneIndex = -1;
         }
 
-        #endregion Constructor
+        #endregion Constructors
 
         public void Update()
         {
@@ -78,7 +79,7 @@ namespace GDLibrary.Core
             //if scene to load and its not the current scene
             if (sceneToLoad > -1)
             {
-                //unload current scene
+                //unload current scene, if running
                 if (activeSceneIndex > -1)
                     scenes[activeSceneIndex].Unload();
 
@@ -101,7 +102,7 @@ namespace GDLibrary.Core
             scenes[activeSceneIndex].Update();
         }
 
-        #region Actions - Add, Remove, Load
+        #region Actions - Add, Remove, Load, Find
 
         /// <summary>
         /// Add a new scene to the manager which by default is not the active scene
@@ -129,6 +130,7 @@ namespace GDLibrary.Core
 
             if (index > 0)
             {
+                //if we want to unload the active scene then set active to last scene in list, or zero
                 if (activeSceneIndex == index)
                     activeSceneIndex = scenes.Count - 1;
 
@@ -138,6 +140,16 @@ namespace GDLibrary.Core
                 //remove from the list
                 scenes.RemoveAt(index);
             }
+        }
+
+        public GameObject Find(Predicate<GameObject> predicate)
+        {
+            return ActiveScene.Find(predicate);
+        }
+
+        public List<GameObject> FindAll(Predicate<GameObject> predicate)
+        {
+            return ActiveScene.FindAll(predicate);
         }
 
         public void LoadScene(Scene scene)
@@ -156,18 +168,25 @@ namespace GDLibrary.Core
             }
         }
 
-        public void LoadScene(string name)
-        {
-            var index = scenes.FindIndex(scene => scene.Name.Equals(name));
-            LoadScene(index);
-        }
-
         public void LoadScene(int index)
         {
             if (index >= 0 && index < scenes.Count)
+            {
                 sceneToLoad = index;
+            }
+            else
+                throw new ArgumentOutOfRangeException("Index is out of range!");
         }
 
-        #endregion Actions - Add, Remove, Load
+        public void LoadScene(string name)
+        {
+            var index = scenes.FindIndex(scene => scene.Name.Equals(name));
+            if (index != -1)
+                LoadScene(index);
+            else
+                throw new KeyNotFoundException($"No scene with name {name} exists in the scene manager!");
+        }
+
+        #endregion Actions - Add, Remove, Load, Find
     }
 }

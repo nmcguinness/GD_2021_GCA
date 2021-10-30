@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GDLibrary.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace GDLibrary.Components
 {
@@ -18,32 +20,46 @@ namespace GDLibrary.Components
         #region Statics
 
         private static Scene current;
+        public static Scene Current { get => current; set => current = value; }
 
         #endregion Statics
 
         #region Fields
 
-        protected string name;
         protected List<GameObject> gameObjects;
         protected List<Renderer> renderers;
+        protected List<Material> materials;
         protected List<Camera> cameras;
 
         #endregion Fields
 
         #region Properties
 
-        public static Scene Current { get => current; set => current = value; }
-        public string Name { get => name; set => name = value; }
+        /// <summary>
+        /// Gets a list of all renderers attached to game objects in this scene
+        /// </summary>
+        public List<Renderer> Renderers => renderers;
+
+        /// <summary>
+        /// Gets  a list of all materials attached to renderers in this scene
+        /// </summary>
+        public List<Material> Materials => materials;
+
+        /// <summary>
+        /// Gets a list of all cameras in this scene
+        /// </summary>
+        public List<Camera> Cameras => cameras;
 
         #endregion Properties
 
         #region Constructors
 
-        public Scene()
+        public Scene(string name) : base(name)
         {
             //TODO - add default readonly variables instead of magic numbers!
             gameObjects = new List<GameObject>(10);
             renderers = new List<Renderer>(10);
+            materials = new List<Material>(5);
             cameras = new List<Camera>(4);
         }
 
@@ -67,7 +83,7 @@ namespace GDLibrary.Components
 
         #endregion Update
 
-        #region Actions
+        #region Actions - Add, Remove, Find, Check
 
         public void Add(GameObject gameObject)
         {
@@ -89,25 +105,31 @@ namespace GDLibrary.Components
                 gameObject.Initialize();
         }
 
+        public GameObject Find(Predicate<GameObject> predicate)
+        {
+            return gameObjects.Find(predicate);
+        }
+
+        public List<GameObject> FindAll(Predicate<GameObject> predicate)
+        {
+            return gameObjects.FindAll(predicate);
+        }
+
         protected void CheckComponents(GameObject gameObject, ComponentChangeType type)
         {
             for (int i = 0; i < gameObject.Components.Count; i++)
             {
                 var component = gameObject.Components[i];
 
-                if (component is Renderer)
+                if (component is Renderer renderer)
                 {
-                    var renderable = component as Renderer;
-
                     if (type == ComponentChangeType.Add)
-                        AddRenderer(renderable);
+                        AddRenderer(renderer);
                     else if (type == ComponentChangeType.Remove)
-                        RemoveRenderer(renderable);
+                        RemoveRenderer(renderer);
                 }
-                else if (component is Camera)
+                else if (component is Camera camera)
                 {
-                    var camera = component as Camera;
-
                     if (type == ComponentChangeType.Add && !cameras.Contains(camera))
                         AddCamera(camera);
                     else if (type == ComponentChangeType.Remove)
@@ -168,10 +190,11 @@ namespace GDLibrary.Components
         {
             gameObjects.Clear();
             renderers.Clear();
+            materials.Clear();
             cameras.Clear();
         }
 
-        #endregion Actions
+        #endregion Actions - Add, Remove, Find, Check
 
         //TODO - Clear, Dispose
     }

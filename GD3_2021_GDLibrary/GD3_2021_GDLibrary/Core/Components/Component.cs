@@ -91,6 +91,12 @@ namespace GDLibrary.Components
             set { gameObject = value; }
         }
 
+        public Transform Transform
+        {
+            get { return transform; }
+            protected set { transform = value; }
+        }
+
         #endregion Properties
 
         #region Constructors
