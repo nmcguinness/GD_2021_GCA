@@ -35,7 +35,8 @@ namespace GDLibrary.Components
         {
             device.SetVertexBuffer(mesh.VertexBuffer);
             device.Indices = mesh.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.IndexBuffer.IndexCount / 3);
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
+                0, 0, mesh.IndexBuffer.IndexCount / 3);
         }
 
         public override void SetBoundingVolume()

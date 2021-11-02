@@ -14,10 +14,10 @@ namespace GDLibrary.Graphics
 
             var positions = new Vector3[4]
             {
-                new Vector3(-0.5f, 0.5f, 0.0f),
-                new Vector3(0.5f, 0.5f, 0.0f),
-                new Vector3(0.5f, -0.5f, 0.0f),
-                new Vector3(-0.5f, -0.5f, 0.0f)
+                new Vector3(-0.5f, 0.5f, 0.0f),  //top left
+                new Vector3(0.5f, 0.5f, 0.0f),   //top right
+                new Vector3(0.5f, -0.5f, 0.0f),  //bottom right
+                new Vector3(-0.5f, -0.5f, 0.0f)  //bottom left
             };
 
             #endregion Positions

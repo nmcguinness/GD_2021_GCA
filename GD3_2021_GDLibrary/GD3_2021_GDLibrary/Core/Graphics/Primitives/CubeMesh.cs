@@ -76,6 +76,8 @@ namespace GDLibrary.Graphics
                 new VertexPositionNormalTexture(bottomRightFront,frontNormal,frontBottomRight),
                 new VertexPositionNormalTexture(topRightFront,frontNormal,frontTopRight),
 
+#region TEmp
+
                 // Back Surface
                 new VertexPositionNormalTexture(bottomRightBack,backNormal,backBottomLeft),
                 new VertexPositionNormalTexture(topRightBack,backNormal,backTopLeft),
@@ -104,6 +106,8 @@ namespace GDLibrary.Graphics
                 new VertexPositionNormalTexture(bottomRightBack,bottomNormal,TbottomLeftBack),
                 new VertexPositionNormalTexture(bottomRightFront,bottomNormal,TbottomLeftFront),
             };
+
+            #endregion TEmp
 
             indices = new ushort[] {
                 0, 1, 2, 2, 1, 3,

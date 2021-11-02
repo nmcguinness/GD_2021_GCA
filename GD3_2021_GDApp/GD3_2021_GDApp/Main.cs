@@ -7,6 +7,7 @@ using GDLibrary.Managers;
 using GDLibrary.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace GDApp
@@ -65,6 +66,7 @@ namespace GDApp
             //2 - add camera
             var camera = new GameObject("main camera");
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+            camera.AddComponent(new FirstPersonCameraController(Keys.W, Keys.S));
             camera.Transform.SetTranslation(0, 0, 4);
             levelOne.Add(camera);
 
