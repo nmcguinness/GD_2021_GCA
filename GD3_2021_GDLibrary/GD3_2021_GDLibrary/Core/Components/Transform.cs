@@ -83,12 +83,6 @@ namespace GDLibrary.Components
         {
             get
             {
-                if (isRotationDirty)
-                {
-                    rotationMatrix = Matrix.CreateFromYawPitchRoll(localRotation.Y, localRotation.X, localRotation.Z);
-                    isRotationDirty = false;
-                }
-
                 return rotationMatrix;
             }
         }
@@ -97,15 +91,6 @@ namespace GDLibrary.Components
         {
             get
             {
-                if (isWorldDirty)
-                {
-                    worldMatrix = Matrix.Identity
-                        * Matrix.CreateScale(localScale)
-                            * Matrix.CreateFromYawPitchRoll(localRotation.Y, localRotation.X, localRotation.Z)
-                                    * Matrix.CreateTranslation(localTranslation);
-                    isWorldDirty = false;
-                }
-
                 return worldMatrix;
             }
         }
@@ -368,6 +353,31 @@ namespace GDLibrary.Components
         public void SetTranslation(Vector3 newTranslation)
         {
             SetTranslation(ref newTranslation);
+        }
+
+        public override void Update()
+        {
+            if (isWorldDirty)
+            {
+                worldMatrix = Matrix.Identity
+                      * Matrix.CreateScale(localScale)
+                          * Matrix.CreateFromYawPitchRoll(
+                                  MathHelper.ToRadians(localRotation.Y),
+                                      MathHelper.ToRadians(localRotation.X),
+                                          MathHelper.ToRadians(localRotation.Z))
+                          * Matrix.CreateTranslation(localTranslation);
+                isWorldDirty = false;
+            }
+
+            if (isRotationDirty)
+            {
+                rotationMatrix = Matrix.CreateFromYawPitchRoll(
+                        MathHelper.ToRadians(localRotation.Y),
+                        MathHelper.ToRadians(localRotation.X),
+                        MathHelper.ToRadians(localRotation.Z));
+                isRotationDirty = false;
+            }
+            base.Update();
         }
 
         #endregion Actions - Modify Scale, Rotation, Translation

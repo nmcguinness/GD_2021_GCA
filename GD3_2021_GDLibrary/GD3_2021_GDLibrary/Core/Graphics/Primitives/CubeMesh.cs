@@ -23,6 +23,8 @@ namespace GDLibrary.Graphics
 
             #endregion Positions
 
+            #region Temp
+
             #region UVs
 
             Vector2 TtopLeftBack = new Vector2(0.0f, 0.0f);
@@ -50,12 +52,16 @@ namespace GDLibrary.Graphics
             Vector2 rightBottomLeft = new Vector2(0.0f, 1.0f);
             Vector2 rightBottomRight = new Vector2(1.0f, 1.0f);
 
+            #endregion UVs
+
             Vector2 leftTopLeft = new Vector2(0.0f, 0.0f);
             Vector2 leftTopRight = new Vector2(1.0f, 0.0f);
             Vector2 leftBottomLeft = new Vector2(0.0f, 1.0f);
             Vector2 leftBottomRight = new Vector2(1.0f, 1.0f);
 
-            #endregion UVs
+            #endregion Temp
+
+            #region TEmp
 
             #region Normals
 
@@ -76,24 +82,27 @@ namespace GDLibrary.Graphics
                 new VertexPositionNormalTexture(bottomRightFront,frontNormal,frontBottomRight),
                 new VertexPositionNormalTexture(topRightFront,frontNormal,frontTopRight),
 
-#region TEmp
-
                 // Back Surface
                 new VertexPositionNormalTexture(bottomRightBack,backNormal,backBottomLeft),
                 new VertexPositionNormalTexture(topRightBack,backNormal,backTopLeft),
                 new VertexPositionNormalTexture(bottomLeftBack,backNormal,backBottomRight),
                 new VertexPositionNormalTexture(topLeftBack,backNormal,backTopRight),
 
+	#endregion TEmp
+
                 // Left Surface
-                new VertexPositionNormalTexture(bottomLeftBack,leftNormal,leftBottomRight),
-                new VertexPositionNormalTexture(topLeftBack,leftNormal,leftTopRight),
-                new VertexPositionNormalTexture(bottomLeftFront,leftNormal,leftBottomLeft),
-                new VertexPositionNormalTexture(topLeftFront,leftNormal,leftTopLeft),
+                //FIX - incorrect UVs on left side of cube
+                new VertexPositionNormalTexture(bottomLeftBack,leftNormal,leftBottomLeft),
+                new VertexPositionNormalTexture(topLeftBack,leftNormal,leftTopLeft),
+                new VertexPositionNormalTexture(bottomLeftFront,leftNormal,leftBottomRight),
+                new VertexPositionNormalTexture(topLeftFront,leftNormal,leftTopRight),
+
                 // Right Surface
                 new VertexPositionNormalTexture(bottomRightFront,rightNormal,rightBottomLeft),
                 new VertexPositionNormalTexture(topRightFront,rightNormal,rightTopLeft),
                 new VertexPositionNormalTexture(bottomRightBack,rightNormal,rightBottomRight),
                 new VertexPositionNormalTexture(topRightBack,rightNormal,rightTopRight),
+
                 // Top Surface
                 new VertexPositionNormalTexture(topLeftFront,topNormal,TtopLeftFront),
                 new VertexPositionNormalTexture(topLeftBack,topNormal,TtopLeftBack),
@@ -106,8 +115,6 @@ namespace GDLibrary.Graphics
                 new VertexPositionNormalTexture(bottomRightBack,bottomNormal,TbottomLeftBack),
                 new VertexPositionNormalTexture(bottomRightFront,bottomNormal,TbottomLeftFront),
             };
-
-            #endregion TEmp
 
             indices = new ushort[] {
                 0, 1, 2, 2, 1, 3,

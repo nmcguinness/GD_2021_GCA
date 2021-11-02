@@ -4,28 +4,51 @@ namespace GDLibrary.Components
 {
     public class FirstPersonCameraController : Controller
     {
-        private Keys forward;
-        private Keys backward;
+        private float moveSpeedPerSecond = 3;
+        private float strafeSpeedPerSecond = 2; //you can never strafe as fast as you move
+        private float rotateDegreesPerSecond = 90; //4 secs = a full rotation
+        private Keys[] moveKeys;
+        private Keys[] turnKeys;
 
-        public FirstPersonCameraController(Keys forward, Keys backward)
+        public FirstPersonCameraController(Keys[] moveKeys, Keys[] turnKeys)
         {
-            this.forward = forward;
-            this.backward = backward;
+            this.moveKeys = moveKeys;
+            this.turnKeys = turnKeys;
         }
         public override void Update()
         {
-            if (Input.Keys.IsPressed(forward))
+            //forward/backward
+            if (Input.Keys.IsPressed(moveKeys[0]))
             {
-                transform.Translate(transform.Forward * Time.Time.Instance.DeltaTime / 1000.0f);
+                transform.Translate(transform.Forward * moveSpeedPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
             }
-            else if (Input.Keys.IsPressed(backward))
+            else if (Input.Keys.IsPressed(moveKeys[1]))
             {
-                transform.Translate(-transform.Forward * Time.Time.Instance.DeltaTime / 1000.0f);
+                transform.Translate(-transform.Forward * moveSpeedPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
             }
 
-            //A/D - transform.Rotate(0,1,0);
+            //strafe left/right
+            if (Input.Keys.IsPressed(moveKeys[2]))
+            {
+                transform.Translate(transform.Left * strafeSpeedPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+            }
+            else if (Input.Keys.IsPressed(moveKeys[3]))
+            {
+                transform.Translate(transform.Right * strafeSpeedPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+            }
 
-            base.Update();
+            //rotate left/right
+            if (Input.Keys.IsPressed(turnKeys[0]))
+            {
+                transform.Rotate(transform.Up * rotateDegreesPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+            }
+            else if (Input.Keys.IsPressed(turnKeys[1]))
+            {
+                transform.Rotate(-transform.Up * rotateDegreesPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+            }
+
+            //do we need to call the base method? does it actually do anything?
+            //base.Update();
         }
     }
 }

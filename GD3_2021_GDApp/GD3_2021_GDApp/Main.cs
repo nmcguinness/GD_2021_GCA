@@ -66,7 +66,9 @@ namespace GDApp
             //2 - add camera
             var camera = new GameObject("main camera");
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            camera.AddComponent(new FirstPersonCameraController(Keys.W, Keys.S));
+            var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
+            var turnKeys = new Keys[] { Keys.J, Keys.L };
+            camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
             camera.Transform.SetTranslation(0, 0, 4);
             levelOne.Add(camera);
 
@@ -175,7 +177,7 @@ namespace GDApp
             sceneManager.Update();
 
 #if DEBUG
-            DemoFind();
+            //DemoFind();
 #endif
         }
 

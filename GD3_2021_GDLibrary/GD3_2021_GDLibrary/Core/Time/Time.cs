@@ -27,15 +27,18 @@ namespace GDLibrary.Time
         /// <summary>
         /// Time between updates
         /// </summary>
-        private float deltaTime;
+        private float deltaTimeMs;
+
         /// <summary>
         /// Total elapsed time since start
         /// </summary>
-        private float totalGameTime;
+        private float totalGameTimeMs;
+
         /// <summary>
         /// 0-1 scale factor used to slow down time (e.g. slo-mo effects)
         /// </summary>
         private float timeScale = 1;
+
         /// <summary>
         /// Total frames since game start
         /// </summary>
@@ -53,22 +56,22 @@ namespace GDLibrary.Time
         /// <summary>
         /// Unscaled interval in time from the last frame to the current one
         /// </summary>
-        public float UnscaledDeltaTime => deltaTime;
+        public float UnscaledDeltaTimeMs => deltaTimeMs;
 
         /// <summary>
         /// Scaled interval in time from the last frame to the current one
         /// </summary>
-        public float DeltaTime => deltaTime * timeScale;
+        public float DeltaTimeMs => deltaTimeMs * timeScale;
 
         /// <summary>
         /// Unscaled time since the game started
         /// </summary>
-        public float UnscaledTotalTime => totalGameTime;
+        public float UnscaledTotalTimeMs => totalGameTimeMs;
 
         /// <summary>
         /// Scaled time since the game started
         /// </summary>
-        public float TotalGameTime => totalGameTime * timeScale;
+        public float TotalGameTimeMs => totalGameTimeMs * timeScale;
 
         /// <summary>
         /// Count of frames since the game started
@@ -114,8 +117,8 @@ namespace GDLibrary.Time
         public override void Update(GameTime gameTime)
         {
             frameCount++;
-            deltaTime = gameTime.ElapsedGameTime.Milliseconds;
-            totalGameTime = (float)gameTime.TotalGameTime.TotalMilliseconds;
+            deltaTimeMs = gameTime.ElapsedGameTime.Milliseconds;
+            totalGameTimeMs = (float)gameTime.TotalGameTime.TotalMilliseconds;
         }
 
         #endregion Update
