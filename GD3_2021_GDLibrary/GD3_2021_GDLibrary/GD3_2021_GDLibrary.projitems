@@ -11,6 +11,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Components\Camera\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Components\Controllers\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Objects\" />
   </ItemGroup>
   <ItemGroup>
@@ -18,6 +19,7 @@
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Behaviours\Behaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\ModelRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Renderers\MeshRenderer.cs" />

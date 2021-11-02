@@ -47,7 +47,7 @@ namespace GDApp
         protected override void Initialize()
         {
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1024, 768);
+            InitializeEngine("My Game Title Goes Here", 1920, 1080);
 
             //level with scenes and game objects
             InitializeLevel();

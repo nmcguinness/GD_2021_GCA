@@ -6,9 +6,12 @@
 ### Further Reading
 - None yet specified
 
-### Tasks - Week 6
-- [ ] Add Time singleton to allow speed/slow time
-- [ ] Explain use of *where* clause in VertexData<T> 
-- [ ] Method overriding with virtual and override
-- [ ] Demo Predicate
-- [ ] Demo generic class and generic method
+### Explain
+- [ ] Code additiona in Week 6(Halloween)
+
+
+### Tasks - Week 7
+- [ ] Add Clone to components
+- [ ] Add Controller and Behaviour
+- [ ] Test ModelRenderer
+- [ ] Complete existing TODOs
