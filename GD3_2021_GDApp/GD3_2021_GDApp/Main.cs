@@ -177,7 +177,7 @@ namespace GDApp
             sceneManager.Update();
 
 #if DEBUG
-            //DemoFind();
+            DemoFind();
 #endif
         }
 
