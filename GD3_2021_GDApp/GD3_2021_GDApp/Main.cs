@@ -188,7 +188,7 @@ namespace GDApp
                 cObject = sceneManager.Find(gameObject => gameObject.Name.Equals("cube"));
 
             //the ? is short for (if cObject != null) then...
-            cObject?.Transform.Rotate(0, 1 / 60.0f, 0);
+            cObject?.Transform.Rotate(0, 45 / 60.0f, 0);
         }
 
         protected override void Draw(GameTime gameTime)
