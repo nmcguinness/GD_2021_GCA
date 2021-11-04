@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace GDLibrary
 {
+    public enum GameObjectType : sbyte //0 - 255
+    {
+        Camera = 5, Player = 1, NPC = 2, Interactable = 3, Consumable = 4, Architecture = 0
+    }
+
     /// <summary>
     /// Base object in the game scene
     /// </summary>
@@ -17,6 +22,11 @@ namespace GDLibrary
         #endregion Statics
 
         #region Fields
+
+        //Type, Tag, LayerMask, ID
+        protected GameObjectType gameObjectType;
+
+        public GameObjectType GameObjectType { get; protected set; }
 
         /// <summary>
         /// Friendly name for the current object
@@ -108,9 +118,11 @@ namespace GDLibrary
 
         #region Constructors
 
-        public GameObject(string name)
+        public GameObject(string name,
+            GameObjectType gameObjectType = GameObjectType.Architecture)
         {
             Name = name;
+            this.gameObjectType = gameObjectType;
             if (transform == null)
             {
                 components = new List<Component>(DEFAULT_COMPONENT_LIST_SIZE);          //instanciate list

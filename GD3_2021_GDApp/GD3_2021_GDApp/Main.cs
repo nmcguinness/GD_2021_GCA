@@ -65,7 +65,7 @@ namespace GDApp
             #region Camera
 
             //2 - add camera
-            camera = new GameObject("main camera");
+            camera = new GameObject("main camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
             var turnKeys = new Keys[] { Keys.J, Keys.L };
@@ -97,12 +97,14 @@ namespace GDApp
             //shaders draw the object and add lights etc
             material.Shader = new BasicShader();  //RE-USE
 
+            var count = 1;
             for (int i = -20; i <= 20; i += 4)
             {
                 //3 - add demo cube
-                var cube = new GameObject("cube");
+                var cube = new GameObject($"cube{count++}", GameObjectType.Architecture);
 
                 cube.Transform.SetTranslation(i, 0, 0);
+                cube.Transform.Scale(Vector3.One * Math.Abs(i) / 20);
 
                 //a renderer draws the object using the model or mesh data
                 var renderer = new MeshRenderer();
@@ -240,15 +242,22 @@ namespace GDApp
             //Q. what would happen is we commented out this line?
             sceneManager.Update();
 #if DEBUG
-            // DemoFind();
+            DemoFind();
 #endif
         }
 
+        //predicate
+        //public bool IsTarget(GameObject g)
+        //{
+        //    return g.Equals("cube5");
+        //}
         private void DemoFind()
         {
             //lets look for an object - note - we can ONLY look for object AFTER SceneManager::Update has been called
             if (cObject == null)
-                cObject = sceneManager.Find(gameObject => gameObject.Name.Equals("cube"));
+                cObject = sceneManager.Find(
+                    gameObject => gameObject.Name.Equals("cube2")
+                    );
 
             //the ? is short for (if cObject != null) then...
             cObject?.Transform.Rotate(0, 45 / 60.0f, 0);
