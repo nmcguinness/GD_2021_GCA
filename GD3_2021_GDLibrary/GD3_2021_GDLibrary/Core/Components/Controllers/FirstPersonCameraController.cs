@@ -20,7 +20,8 @@ namespace GDLibrary.Components
             //forward/backward
             if (Input.Keys.IsPressed(moveKeys[0]))
             {
-                transform.Translate(transform.Forward * moveSpeedPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+                transform.Translate(transform.Forward * moveSpeedPerSecond
+                    * Time.Time.Instance.DeltaTimeMs / 1000.0f);
             }
             else if (Input.Keys.IsPressed(moveKeys[1]))
             {
@@ -40,15 +41,17 @@ namespace GDLibrary.Components
             //rotate left/right
             if (Input.Keys.IsPressed(turnKeys[0]))
             {
-                transform.Rotate(transform.Up * rotateDegreesPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+                transform.Rotate(transform.Up * rotateDegreesPerSecond
+                    * Time.Time.Instance.DeltaTimeMs / 1000.0f);
             }
             else if (Input.Keys.IsPressed(turnKeys[1]))
             {
-                transform.Rotate(-transform.Up * rotateDegreesPerSecond * Time.Time.Instance.DeltaTimeMs / 1000.0f);
+                transform.Rotate(-transform.Up * rotateDegreesPerSecond
+                    * Time.Time.Instance.DeltaTimeMs / 1000.0f);
             }
 
             //do we need to call the base method? does it actually do anything?
-            //base.Update();
+            // base.Update();
         }
     }
 }

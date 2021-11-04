@@ -74,8 +74,21 @@ namespace GDApp
 
             #endregion Camera
 
-            #region Cube using mesh data
+            InitializeCubes(levelOne);
 
+            //4 - repeat step 3 for all game objects
+
+            //5 - add scene to scene manager
+            sceneManager.Add(levelOne);
+
+            //6 - repeat steps 1 - 5 for each new scene (note, each scene does not need its own camera, we can reuse)
+
+            //7 - very important - set the active scene
+            sceneManager.LoadScene("level 1");
+        }
+
+        private void InitializeCubes(Scene level)
+        {
             //3 - add demo cube
             var cube = new GameObject("cube");
 
@@ -97,20 +110,64 @@ namespace GDApp
             renderer.Mesh = new CubeMesh();
 
             //add the cube to the level
-            levelOne.Add(cube);
-
-            #endregion Cube using mesh data
-
-            //4 - repeat step 3 for all game objects
-
-            //5 - add scene to scene manager
-            sceneManager.Add(levelOne);
-
-            //6 - repeat steps 1 - 5 for each new scene (note, each scene does not need its own camera, we can reuse)
-
-            //7 - very important - set the active scene
-            sceneManager.LoadScene("level 1");
+            level.Add(cube);
         }
+
+        //private void InitializeLevel()
+        //{
+        //    //1 - add a scene (e.g. a level of the game)
+        //    Scene levelOne = new Scene("level 1");
+
+        //    #region Camera
+
+        //    //2 - add camera
+        //    var camera = new GameObject("main camera");
+        //    camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+        //    var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
+        //    var turnKeys = new Keys[] { Keys.J, Keys.L };
+        //    camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
+        //    camera.Transform.SetTranslation(0, 0, 4);
+        //    levelOne.Add(camera);
+
+        //    #endregion Camera
+
+        //    #region Cube using mesh data
+
+        //    //3 - add demo cube
+        //    var cube = new GameObject("cube");
+
+        //    //a renderer draws the object using the model or mesh data
+        //    var renderer = new MeshRenderer();
+
+        //    //materials define the surface appearance of an object
+        //    var material = new BasicMaterial("simple diffuse");
+        //    material.Texture = Content.Load<Texture2D>("mona lisa");
+
+        //    //shaders draw the object and add lights etc
+        //    material.Shader = new BasicShader();
+        //    renderer.Material = material;
+
+        //    //add the renderer to the cube or it wont draw anything!
+        //    cube.AddComponent(renderer);
+
+        //    //add mesh/model mesh data to the renderer
+        //    renderer.Mesh = new CubeMesh();
+
+        //    //add the cube to the level
+        //    levelOne.Add(cube);
+
+        //    #endregion Cube using mesh data
+
+        //    //4 - repeat step 3 for all game objects
+
+        //    //5 - add scene to scene manager
+        //    sceneManager.Add(levelOne);
+
+        //    //6 - repeat steps 1 - 5 for each new scene (note, each scene does not need its own camera, we can reuse)
+
+        //    //7 - very important - set the active scene
+        //    sceneManager.LoadScene("level 1");
+        //}
 
         /// <summary>
         /// Set application data, input, title and scene manager
@@ -135,6 +192,7 @@ namespace GDApp
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
+            Screen.GetInstance().ToggleFullscreen();
 
             //instanciate input components and store reference in Input for global access
             Input.Keys = new KeyboardComponent(this);
