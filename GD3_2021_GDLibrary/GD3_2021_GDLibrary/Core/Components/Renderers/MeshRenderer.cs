@@ -26,6 +26,7 @@ namespace GDLibrary.Components
                 if (value != mesh && value != null)
                 {
                     mesh = value;
+                    //TODO - update if transform changes
                     SetBoundingVolume();
                 }
             }

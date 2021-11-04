@@ -70,7 +70,7 @@ namespace GDApp
             var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
             var turnKeys = new Keys[] { Keys.J, Keys.L };
             camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
-            camera.Transform.SetTranslation(0, 0, 25);
+            camera.Transform.SetTranslation(0, 0, 15);
             levelOne.Add(camera);
 
             #endregion Camera
@@ -90,27 +90,23 @@ namespace GDApp
 
         private void InitializeCubes(Scene level)
         {
-            #region Common - Reusable
-
-            //a renderer draws the object using the model or mesh data
-            var renderer = new MeshRenderer();  //RE-USE
-
             //materials define the surface appearance of an object
             var material = new BasicMaterial("simple diffuse");  //RE-USE
             material.Texture = Content.Load<Texture2D>("mona lisa");  //RE-USE
 
             //shaders draw the object and add lights etc
             material.Shader = new BasicShader();  //RE-USE
-            renderer.Material = material;  //RE-USE
 
-            #endregion Common - Reusable
-
-            for (int i = -20; i <= 20; i += 5)
+            for (int i = -20; i <= 20; i += 4)
             {
                 //3 - add demo cube
                 var cube = new GameObject("cube");
 
                 cube.Transform.SetTranslation(i, 0, 0);
+
+                //a renderer draws the object using the model or mesh data
+                var renderer = new MeshRenderer();
+                renderer.Material = material;
 
                 //add the renderer to the cube or it wont draw anything!
                 cube.AddComponent(renderer);
@@ -243,7 +239,6 @@ namespace GDApp
             //update every updateable game object
             //Q. what would happen is we commented out this line?
             sceneManager.Update();
-
 #if DEBUG
             // DemoFind();
 #endif
