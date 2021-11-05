@@ -49,7 +49,7 @@ namespace GDApp
         protected override void Initialize()
         {
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1920, 1080);
+            InitializeEngine("My Game Title Goes Here", 1024, 768);
 
             //level with scenes and game objects
             InitializeLevel();
@@ -75,7 +75,9 @@ namespace GDApp
 
             #endregion Camera
 
-            InitializeCubes(levelOne);
+            //    InitializeCubes(levelOne);
+
+            InitializeModels(levelOne);
 
             //4 - repeat step 3 for all game objects
 
@@ -86,6 +88,22 @@ namespace GDApp
 
             //7 - very important - set the active scene
             sceneManager.LoadScene("level 1");
+        }
+
+        private void InitializeModels(Scene level)
+        {
+            //materials define the surface appearance of an object
+            var material = new BasicMaterial("model material");
+            material.Texture = Content.Load<Texture2D>("checkerboard");
+            //shaders draw the object and add lights etc
+            material.Shader = new BasicShader();
+
+            var sphere = new GameObject("sphere", GameObjectType.Consumable);
+            var renderer = new ModelRenderer();
+            renderer.Material = material;
+            sphere.AddComponent(renderer);
+            renderer.Model = Content.Load<Model>("sphere");
+            level.Add(sphere);
         }
 
         private void InitializeCubes(Scene level)
@@ -200,7 +218,6 @@ namespace GDApp
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
-            Screen.GetInstance().ToggleFullscreen();
 
             //instanciate input components and store reference in Input for global access
             Input.Keys = new KeyboardComponent(this);

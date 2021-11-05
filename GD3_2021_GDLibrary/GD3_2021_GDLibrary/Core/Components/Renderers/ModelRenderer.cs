@@ -10,6 +10,7 @@ namespace GDLibrary.Components
         /// Stores vertex, normal, uv data for the model
         /// </summary>
         protected Model model;
+
         /// <summary>
         /// Stores bone transforms for the model (e.g. each mesh will normally have one bone)
         /// </summary>
@@ -46,7 +47,9 @@ namespace GDLibrary.Components
 
                 boundingSphere.Center = gameObject.Transform.LocalTranslation;
                 boundingSphere.Transform(gameObject.Transform.WorldMatrix);
-                boundingSphere.Radius *= Math.Max(Math.Max(transform.LocalScale.X, transform.LocalScale.Y), transform.LocalScale.Z);
+                boundingSphere.Radius *= Math.Max(
+                    Math.Max(transform.LocalScale.X, transform.LocalScale.Y),
+                    transform.LocalScale.Z);
             }
         }
 

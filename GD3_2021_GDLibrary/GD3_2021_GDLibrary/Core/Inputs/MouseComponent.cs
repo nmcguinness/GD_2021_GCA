@@ -94,6 +94,49 @@ namespace GDLibrary.Inputs
 
         #region Actions
 
+        /// <summary>
+        /// Checks if any button, scrollwheel, or mouse movement has taken place since last update
+        /// </summary>
+        /// <returns>True if state changed, otherwise false</returns>
+        public bool IsStateChanged()
+        {
+            return (currentState.Equals(previousState)) ? false : true;
+        }
+
+        /// <summary>
+        /// Gets the current -ve/+ve scroll wheel value
+        /// </summary>
+        /// <returns>A positive or negative integer</returns>
+        public int GetScrollWheelValue()
+        {
+            return currentState.ScrollWheelValue;
+        }
+
+        /// <summary>
+        /// Checks if the scroll wheel been moved since the last update
+        /// </summary>
+        /// <returns>True if the scroll wheel has been moved, otherwise false</returns>
+        public int GetDeltaFromScrollWheel()
+        {
+            if (IsStateChanged()) //if state changed then return difference
+            {
+                return currentState.ScrollWheelValue - previousState.ScrollWheelValue;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Calculates the mouse pointer distance (in X and Y) from the screen centre (e.g. width/2, height/2)
+        /// </summary>
+        /// <param name="screenCentre">Delta from this screen centre position</param>
+        /// <returns>Vector2</returns>
+        public Vector2 GetDeltaFromCentre(Vector2 screenCentre)
+        {
+            return new Vector2(currentState.X - screenCentre.X,
+                previousState.Y - screenCentre.Y);
+        }
+
         public virtual bool IsDown(MouseButton button)
         {
             return MouseButtonState(button, ButtonState.Pressed);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace GDLibrary.Components
 {
@@ -6,7 +7,7 @@ namespace GDLibrary.Components
     {
         private float moveSpeedPerSecond = 3;
         private float strafeSpeedPerSecond = 2; //you can never strafe as fast as you move
-        private float rotateDegreesPerSecond = 90; //4 secs = a full rotation
+        private float rotateDegreesPerSecond = 0.1f; //4 secs = a full rotation
         private Keys[] moveKeys;
         private Keys[] turnKeys;
 
