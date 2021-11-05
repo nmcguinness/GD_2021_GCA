@@ -6,8 +6,18 @@ namespace GDLibrary.Components
     /// <summary>
     /// Store and manage transform operations e.g. translation, rotation and scale
     /// </summary>
-    public class Transform : Component
+    public class Transform : Component, ICloneable
     {
+        /// <summary>
+        /// Deep or shallow, or mixed?
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            //  throw new NotImplementedException("Implement me, dumbass!");
+            return MemberwiseClone();
+        }
+
         #region Events
 
         public event Action PropertyChanged = null;
