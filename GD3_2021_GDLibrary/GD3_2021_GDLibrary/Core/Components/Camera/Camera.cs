@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDLibrary.Components
 {
@@ -15,7 +16,7 @@ namespace GDLibrary.Components
     /// <summary>
     /// Stores the fields required to represent a Camera and provide frustum culling (using the BoundingFrustum)
     /// </summary>
-    public class Camera : Component
+    public class Camera : Component, IComparable
     {
         #region Statics
 
@@ -201,6 +202,8 @@ namespace GDLibrary.Components
 
         #endregion Constructors
 
+        #region Housekeeping
+
         public override int CompareTo(object obj)
         {
             var camera = obj as Camera;
@@ -218,5 +221,7 @@ namespace GDLibrary.Components
             else
                 return -1;
         }
+
+        #endregion Housekeeping
     }
 }

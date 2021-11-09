@@ -1,5 +1,4 @@
 ﻿using GDLibrary.Components;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -7,13 +6,21 @@ namespace GDLibrary
 {
     public enum GameObjectType : sbyte //0 - 255
     {
-        Camera = 5, Player = 1, NPC = 2, Interactable = 3, Consumable = 4, Architecture = 0
+        Scene,
+        Camera,
+        Player,
+        NPC,
+        Interactable,
+        Consumable,
+        Architecture
+        //STU - add more for your game here...
     }
 
+    //TODO - Add IComparable?
     /// <summary>
     /// Base object in the game scene
     /// </summary>
-    public class GameObject : IDisposable
+    public class GameObject : IDisposable, ICloneable
     {
         #region Statics
 
@@ -26,7 +33,16 @@ namespace GDLibrary
         //Type, Tag, LayerMask, ID
         protected GameObjectType gameObjectType;
 
-        public GameObjectType GameObjectType { get; protected set; }
+        public GameObjectType GameObjectType
+        {
+            get { return gameObjectType; }
+            protected set { gameObjectType = value; }
+        }
+
+        /// <summary>
+        /// Unique identifier for each game object - may be used for search, sort later
+        /// </summary>
+        private string id;
 
         /// <summary>
         /// Friendly name for the current object
@@ -36,7 +52,7 @@ namespace GDLibrary
         /// <summary>
         /// Set on first update of the component in SceneManager::Update
         /// </summary>
-        private bool isInitialized;
+        private bool isRunning;
 
         /// <summary>
         /// Set in constructor to true. By default all components are enabled on instanciation
@@ -63,6 +79,21 @@ namespace GDLibrary
         #region Properties
 
         /// <summary>
+        /// Gets/sets the unique ID
+        /// </summary>
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+            protected set
+            {
+                id = value;
+            }
+        }
+
+        /// <summary>
         /// Gets/sets the game object name
         /// </summary>
         public string Name { get => name; set => name = value.Trim(); }
@@ -70,9 +101,9 @@ namespace GDLibrary
         /// <summary>
         /// Gets boolean to determine if the object has run in first update cycle
         /// </summary>
-        public bool IsInitialized
+        public bool IsRunning
         {
-            get { return isInitialized; }
+            get { return isRunning; }
         }
 
         /// <summary>
@@ -118,20 +149,34 @@ namespace GDLibrary
 
         #region Constructors
 
+        public GameObject() : this("", GameObjectType.Architecture)
+        {
+        }
+
         public GameObject(string name,
             GameObjectType gameObjectType = GameObjectType.Architecture)
         {
-            Name = name;
+            InternalConstructor(name, gameObjectType);
+        }
+
+        private void InternalConstructor(string name,
+            GameObjectType gameObjectType)
+        {
             this.gameObjectType = gameObjectType;
             if (transform == null)
             {
                 components = new List<Component>(DEFAULT_COMPONENT_LIST_SIZE);          //instanciate list
                 transform = new Transform();                                            //add default transform
+                transform.transform = transform;
                 transform.GameObject = this;                                            //tell transform who it belongs to
+                transform.Awake();
                 components.Add(transform);                                              //add transform to the list
             }
 
             isEnabled = true;
+            isRunning = false;
+            ID = "GO-" + Guid.NewGuid();
+            Name = string.IsNullOrEmpty(name) ? ID : name;
         }
 
         #endregion Constructors
@@ -143,9 +188,9 @@ namespace GDLibrary
         /// </summary>
         public virtual void Initialize()
         {
-            if (!isInitialized)
+            if (!isRunning)
             {
-                isInitialized = true;
+                isRunning = true;
 
                 //TODO - Add sort IComparable in each component
                 components.Sort();
@@ -181,17 +226,39 @@ namespace GDLibrary
         /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/new-constraint"/>
         public Component AddComponent(Component component)
         {
-            if (component == null || component is Transform)
+            if (component == null)
                 return null;
 
-            //set this as component's parent game object
-            component.GameObject = this;
+            var transform = component as Transform;
 
-            //perform any initial wake up operations
-            component.Awake();
+            if (transform != null)
+            {
+                InternalConstructor(name, gameObjectType);
+                transform.SetTranslation(transform.LocalTranslation);
+                transform.SetRotation(transform.LocalRotation);
+                transform.SetScale(transform.LocalScale);
+            }
+            else
+            {
+                //set this as component's parent game object
+                component.GameObject = this;
+                //set components transform same as this component
+                component.transform = transform;
+                //perform any initial wake up operations
+                component.Awake();
+                //TODO - prevent duplicate components? Component::Equals and GetHashCode need to be implemented
+                components.Add(component);
+            }
 
-            //TODO - prevent duplicate components? Component::Equals and GetHashCode need to be implemented
-            components.Add(component);
+            if (isRunning && !component.IsRunning)
+            {
+                component.Start();
+                component.IsRunning = true;
+                //TODO - check scene is running
+                components.Sort();
+            }
+
+            //TODO - notify component change?
 
             return component;
         }
@@ -226,6 +293,17 @@ namespace GDLibrary
         }
 
         /// <summary>
+        /// Gets the first component of type T conforming to the supplied predicate
+        /// </summary>
+        /// <typeparam name="T">Instance of type Component</typeparam>
+        /// <param name="pred">Predicate ot type T</param>
+        /// <returns></returns>
+        public T GetComponent<T>(Predicate<Component> pred) where T : Component
+        {
+            return components.Find(pred) as T;
+        }
+
+        /// <summary>
         /// Gets an array of all components of type T
         /// </summary>
         /// <typeparam name="T">Instance of type Component</typeparam>
@@ -243,6 +321,17 @@ namespace GDLibrary
             return componentList.ToArray();
         }
 
+        /// <summary>
+        /// Gets all components of type T conforming to the supplied predicate
+        /// </summary>
+        /// <typeparam name="T">Instance of type Component</typeparam>
+        /// <param name="pred">Predicate ot type T</param>
+        /// <returns></returns>
+        public T[] GetComponents<T>(Predicate<Component> pred) where T : Component
+        {
+            return components.FindAll(pred).ToArray() as T[];
+        }
+
         #endregion Add & Get Components
 
         #region Housekeeping
@@ -251,6 +340,28 @@ namespace GDLibrary
         {
             foreach (Component component in components)
                 component.Dispose();
+        }
+
+        public virtual object Clone()
+        {
+            var clone = new GameObject($"Clone - {Name}", gameObjectType);
+            clone.ID = "GO-" + Guid.NewGuid();
+
+            Component clonedComponent = null;
+            Transform clonedTransform = null;
+
+            foreach (Component component in components)
+            {
+                clonedComponent = clone.AddComponent((Component)component.Clone());
+                clonedComponent.gameObject = clone;
+
+                clonedTransform = clonedComponent as Transform;
+
+                if (clonedTransform != null)
+                    clonedComponent.transform = clonedTransform;
+            }
+
+            return clone;
         }
 
         #endregion Housekeeping

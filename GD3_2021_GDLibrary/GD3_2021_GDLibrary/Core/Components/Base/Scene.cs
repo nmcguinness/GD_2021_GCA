@@ -28,6 +28,8 @@ namespace GDLibrary.Components
 
         protected List<GameObject> gameObjects;
         protected List<Renderer> renderers;
+        protected List<Controller> controllers;
+        // protected List<Behaviour> behaviours;
         protected List<Material> materials;
         protected List<Camera> cameras;
 
@@ -59,6 +61,8 @@ namespace GDLibrary.Components
             //TODO - add default readonly variables instead of magic numbers!
             gameObjects = new List<GameObject>(10);
             renderers = new List<Renderer>(10);
+            controllers = new List<Controller>(10);
+            // behaviours = new List<Behaviour>(10);
             materials = new List<Material>(5);
             cameras = new List<Camera>(4);
         }
@@ -94,14 +98,14 @@ namespace GDLibrary.Components
             gameObject.Scene = this;
 
             //TODO - add root transform set and notify change
-            //gameObject.Transform.Root = _transform;
+            //gameObject.Transform.Root = transform;
 
             //if object enabled then add to appropriate list
             if (gameObject.IsEnabled)
                 CheckComponents(gameObject, ComponentChangeType.Add);
 
             //if object isn't initialized then init
-            if (!gameObject.IsInitialized)
+            if (!gameObject.IsRunning)
                 gameObject.Initialize();
         }
 
@@ -135,8 +139,38 @@ namespace GDLibrary.Components
                     else if (type == ComponentChangeType.Remove)
                         RemoveCamera(camera);
                 }
+                else if (component is Controller controller)
+                {
+                    if (type == ComponentChangeType.Add && !controllers.Contains(controller))
+                        AddController(controller);
+                    else if (type == ComponentChangeType.Remove)
+                        RemoveController(controller);
+                }
             }
         }
+
+        //protected void CheckComponents(GameObject gameObject, ComponentChangeType type)
+        //{
+        //    for (int i = 0; i < gameObject.Components.Count; i++)
+        //    {
+        //        var component = gameObject.Components[i];
+
+        //        if (component is Renderer renderer)
+        //        {
+        //            if (type == ComponentChangeType.Add)
+        //                AddRenderer(renderer);
+        //            else if (type == ComponentChangeType.Remove)
+        //                RemoveRenderer(renderer);
+        //        }
+        //        else if (component is Camera camera)
+        //        {
+        //            if (type == ComponentChangeType.Add && !cameras.Contains(camera))
+        //                AddCamera(camera);
+        //            else if (type == ComponentChangeType.Remove)
+        //                RemoveCamera(camera);
+        //        }
+        //    }
+        //}
 
         protected int AddCamera(Camera camera)
         {
@@ -170,10 +204,25 @@ namespace GDLibrary.Components
             renderers.Sort();
         }
 
-        protected void RemoveRenderer(Renderer renderable)
+        protected void RemoveRenderer(Renderer renderer)
         {
-            if (renderers.Contains(renderable))
-                renderers.Remove(renderable);
+            if (renderers.Contains(renderer))
+                renderers.Remove(renderer);
+        }
+
+        protected void AddController(Controller controller)
+        {
+            if (controllers.Contains(controller))
+                return;
+
+            controllers.Add(controller);
+            controllers.Sort();
+        }
+
+        protected void RemoveController(Controller controller)
+        {
+            if (controllers.Contains(controller))
+                controllers.Remove(controller);
         }
 
         public virtual void Unload()

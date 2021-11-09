@@ -5,9 +5,14 @@ namespace GDLibrary.Components
     /// <summary>
     /// A part of a game object e.g. Mesh, MeshRenderer, Camera, FirstPersonController
     /// </summary>
-    public abstract class Component : IDisposable, IComparable
+    public abstract class Component : IDisposable, IComparable, ICloneable
     {
         #region Fields
+
+        /// <summary>
+        /// Unique identifier for each component - may be used for search, sort later
+        /// </summary>
+        private string id;
 
         /// <summary>
         /// Set to true on the first update of the component
@@ -27,16 +32,28 @@ namespace GDLibrary.Components
         /// <summary>
         /// Reference to the container game object for all components
         /// </summary>
-        protected GameObject gameObject;
+        protected internal GameObject gameObject;
 
         /// <summary>
         /// Reference to the object transform stored in the container game object
         /// </summary>
-        protected Transform transform;
+        protected internal Transform transform;
 
         #endregion Fields
 
         #region Properties
+
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+            protected set
+            {
+                id = value;
+            }
+        }
 
         public bool IsRunning
         {
@@ -44,7 +61,7 @@ namespace GDLibrary.Components
             {
                 return isRunning;
             }
-            protected set
+            set
             {
                 isRunning = value;
             }
@@ -105,6 +122,7 @@ namespace GDLibrary.Components
         {
             IsRunning = false;
             IsEnabled = true;
+            ID = "CMP-" + Guid.NewGuid();
         }
 
         #endregion Constructors
@@ -221,6 +239,11 @@ namespace GDLibrary.Components
         public virtual void Dispose()
         {
             //Overridden in child class
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
 
         #endregion Actions - Housekeeping

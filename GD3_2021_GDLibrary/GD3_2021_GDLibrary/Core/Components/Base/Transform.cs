@@ -29,12 +29,12 @@ namespace GDLibrary.Components
         /// <summary>
         /// Used to render any visible game object (i.e. with MeshRenderer or ModelRenderer)
         /// </summary>
-        private Matrix worldMatrix = Matrix.Identity;
+        private Matrix worldMatrix;
 
         /// <summary>
         /// Used to calculate the World matrix and also to calculate the target for a Camera
         /// </summary>
-        private Matrix rotationMatrix = Matrix.Identity;
+        private Matrix rotationMatrix;
 
         /// <summary>
         /// Scale relative to the parent transform
@@ -121,6 +121,9 @@ namespace GDLibrary.Components
             localScale = scale.HasValue ? scale.Value : Vector3.One;
             localRotation = rotation.HasValue ? rotation.Value : Vector3.Zero;
             localTranslation = translation.HasValue ? translation.Value : Vector3.Zero;
+
+            worldMatrix = Matrix.Identity;
+            rotationMatrix = Matrix.Identity;
         }
 
         /// <summary>

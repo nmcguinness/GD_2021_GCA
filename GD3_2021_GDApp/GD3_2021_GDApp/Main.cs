@@ -62,20 +62,9 @@ namespace GDApp
             //1 - add a scene (e.g. a level of the game)
             Scene levelOne = new Scene("level 1");
 
-            #region Camera
+            InitializeCameras(levelOne);
 
-            //2 - add camera
-            camera = new GameObject("main camera", GameObjectType.Camera);
-            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
-            var turnKeys = new Keys[] { Keys.J, Keys.L };
-            camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
-            camera.Transform.SetTranslation(0, 0, 15);
-            levelOne.Add(camera);
-
-            #endregion Camera
-
-            //    InitializeCubes(levelOne);
+            InitializeCubes(levelOne);
 
             InitializeModels(levelOne);
 
@@ -90,6 +79,18 @@ namespace GDApp
             sceneManager.LoadScene("level 1");
         }
 
+        private void InitializeCameras(Scene level)
+        {
+            //2 - add camera
+            camera = new GameObject("main camera", GameObjectType.Camera);
+            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+            var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
+            var turnKeys = new Keys[] { Keys.J, Keys.L };
+            camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
+            camera.Transform.SetTranslation(0, 0, 15);
+            level.Add(camera);
+        }
+
         private void InitializeModels(Scene level)
         {
             //materials define the surface appearance of an object
@@ -98,46 +99,79 @@ namespace GDApp
             //shaders draw the object and add lights etc
             material.Shader = new BasicShader();
 
-            var sphere = new GameObject("sphere", GameObjectType.Consumable);
+            var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
             var renderer = new ModelRenderer();
             renderer.Material = material;
-            sphere.AddComponent(renderer);
+            archetypalSphere.AddComponent(renderer);
             renderer.Model = Content.Load<Model>("sphere");
-            level.Add(sphere);
+
+            //downsize the model a little because the sphere is quite large
+            archetypalSphere.Transform.SetScale(0.125f, 0.125f, 0.125f);
+
+            var count = 0;
+            for (var i = -8; i <= 8; i += 2)
+            {
+                var clone = archetypalSphere.Clone() as GameObject;
+                clone.Name = $"{clone.Name} - {count++}";
+                clone.Transform.SetTranslation(-5, i, 0);
+                level.Add(clone);
+            }
         }
 
         private void InitializeCubes(Scene level)
         {
-            //materials define the surface appearance of an object
-            var material = new BasicMaterial("simple diffuse");  //RE-USE
-            material.Texture = Content.Load<Texture2D>("mona lisa");  //RE-USE
+            var material = new BasicMaterial("simple diffuse");
+            material.Texture = Content.Load<Texture2D>("mona lisa");
+            material.Shader = new BasicShader();
+            var archetypalCube = new GameObject("cube", GameObjectType.Architecture);
+            var renderer = new MeshRenderer();
+            renderer.Material = material;
+            archetypalCube.AddComponent(renderer);
+            renderer.Mesh = new CubeMesh();
 
-            //shaders draw the object and add lights etc
-            material.Shader = new BasicShader();  //RE-USE
-
-            var count = 1;
-            for (int i = -20; i <= 20; i += 4)
+            var count = 0;
+            for (var i = 1; i <= 8; i += 2)
             {
-                //3 - add demo cube
-                var cube = new GameObject($"cube{count++}", GameObjectType.Architecture);
-
-                cube.Transform.SetTranslation(i, 0, 0);
-                cube.Transform.Scale(Vector3.One * Math.Abs(i) / 20);
-
-                //a renderer draws the object using the model or mesh data
-                var renderer = new MeshRenderer();
-                renderer.Material = material;
-
-                //add the renderer to the cube or it wont draw anything!
-                cube.AddComponent(renderer);
-
-                //add mesh/model mesh data to the renderer
-                renderer.Mesh = new CubeMesh();
-
-                //add the cube to the level
-                level.Add(cube);
+                var clone = archetypalCube.Clone() as GameObject;
+                clone.Name = $"{clone.Name} - {count++}";
+                clone.Transform.SetTranslation(i, 0, 0);
+                clone.Transform.SetScale(1, i, 1);
+                level.Add(clone);
             }
         }
+
+        //private void InitializeCubes(Scene level)
+        //{
+        //    //materials define the surface appearance of an object
+        //    var material = new BasicMaterial("simple diffuse");  //RE-USE
+        //    material.Texture = Content.Load<Texture2D>("mona lisa");  //RE-USE
+
+        //    //shaders draw the object and add lights etc
+        //    material.Shader = new BasicShader();  //RE-USE
+
+        //    var count = 1;
+        //    for (int i = -20; i <= 20; i += 4)
+        //    {
+        //        //3 - add demo cube
+        //        var cube = new GameObject($"cube{count++}", GameObjectType.Architecture);
+
+        //        cube.Transform.SetTranslation(i, 0, 0);
+        //        cube.Transform.Scale(Vector3.One * Math.Abs(i) / 20);
+
+        //        //a renderer draws the object using the model or mesh data
+        //        var renderer = new MeshRenderer();
+        //        renderer.Material = material;
+
+        //        //add the renderer to the cube or it wont draw anything!
+        //        cube.AddComponent(renderer);
+
+        //        //add mesh/model mesh data to the renderer
+        //        renderer.Mesh = new CubeMesh();
+
+        //        //add the cube to the level
+        //        level.Add(cube);
+        //    }
+        //}
 
         //private void InitializeLevel()
         //{

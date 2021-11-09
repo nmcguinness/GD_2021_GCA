@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Tests_GD3_2021_GDLibrary
 {
-    public class TransformTest
+    public class TransformTests
     {
         [Test]
         public void TestClone()
@@ -14,6 +14,30 @@ namespace Tests_GD3_2021_GDLibrary
 
             Assert.NotNull(clone);
             Assert.AreNotSame(clone, transform);
+        }
+
+        [Test]
+        public void TestTranslate()
+        {
+            var transform = new Transform();
+            transform.Translate(1, 2, 3);
+            Assert.AreEqual(transform.LocalTranslation, new Vector3(1, 2, 3));
+        }
+
+        [Test]
+        public void TestRotate()
+        {
+            var transform = new Transform();
+            transform.Rotate(45, -90, 360);
+            Assert.AreEqual(transform.LocalRotation, new Vector3(45, -90, 360));
+        }
+
+        [Test]
+        public void TestScale()
+        {
+            var transform = new Transform();
+            transform.Scale(4, -8, 0.5f);
+            Assert.AreEqual(transform.LocalScale, new Vector3(5, -7, 1.5f));
         }
 
         [Test]
