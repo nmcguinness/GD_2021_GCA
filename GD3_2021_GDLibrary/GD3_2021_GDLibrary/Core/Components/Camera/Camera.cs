@@ -20,6 +20,10 @@ namespace GDLibrary.Components
     {
         #region Statics
 
+        private readonly float MIN_NEAR_CLIP = 1;
+        private readonly float MIN_FAR_CLIP = 10;
+        private readonly float DEFAULT_ASPECT_RATIO = 16 / 10.0f;
+        private readonly float DEFAULT_FIELD_OF_VIEW = MathHelper.PiOver4 / 2.0f;
         /// <summary>
         /// Main camera used to render the scene in the SceneManager
         /// </summary>
@@ -108,7 +112,7 @@ namespace GDLibrary.Components
             {
                 if (fieldOfView != value)
                 {
-                    fieldOfView = value;
+                    fieldOfView = value > DEFAULT_FIELD_OF_VIEW ? value : DEFAULT_FIELD_OF_VIEW; ;
                     isProjectionDirty = true;
                 }
             }
@@ -121,7 +125,7 @@ namespace GDLibrary.Components
             {
                 if (aspectRatio != value)
                 {
-                    aspectRatio = value;
+                    aspectRatio = value > 0 ? value : DEFAULT_ASPECT_RATIO;
                     isProjectionDirty = true;
                 }
             }
@@ -134,7 +138,7 @@ namespace GDLibrary.Components
             {
                 if (nearClipPlane != value)
                 {
-                    nearClipPlane = value >= 0 ? value : 1;
+                    nearClipPlane = value > MIN_NEAR_CLIP ? value : MIN_NEAR_CLIP;
                     isProjectionDirty = true;
                 }
             }
@@ -147,7 +151,7 @@ namespace GDLibrary.Components
             {
                 if (farClipPlane != value)
                 {
-                    farClipPlane = value >= 1 ? value : 1000;
+                    farClipPlane = value > MIN_FAR_CLIP ? value : MIN_FAR_CLIP;
                     isProjectionDirty = true;
                 }
             }

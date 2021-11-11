@@ -13,8 +13,10 @@ namespace GDApp
 {
     public class Main : Game
     {
+#if DEBUG
         private GameObject cObject = null;
         private Curve1D curve1D;
+#endif
 
         #region Fields
 
@@ -65,6 +67,7 @@ namespace GDApp
             //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
 
+#if DEBUG
             //DEMO - curve demo
             curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
             curve1D.Add(0, 0);
@@ -73,6 +76,7 @@ namespace GDApp
             curve1D.Add(40, 4000);
             curve1D.Add(60, 6000);
             // var value = curve1D.Evaluate(500, 2);
+#endif
 
             base.Initialize();
         }
@@ -181,24 +185,38 @@ namespace GDApp
 
         private void InitializeCameras(Scene level)
         {
+            #region First Person Camera
+
             var camera = new GameObject("main camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-
-            var controller = new FirstPersonController();
+            var controller = new FirstPersonController(0.05f, 0.025f, 0.00009f);
             camera.AddComponent(controller);
 
             camera.Transform.SetTranslation(0, 0, 15);
-            level.Add(camera);
+            //level.Add(camera);
+
+            #endregion First Person Camera
+
             ////////////////////////////////////////////////////////////////////////////
             //curve camera
-            var translationCurve = new Curve3D(CurveLoopType.Oscillate);
-            //add points for the curve
+
+            #region Curve Camera
+
+            var translationCurve = new Curve3D(CurveLoopType.Cycle);
+            translationCurve.Add(new Vector3(0, 0, 10), 0);
+            translationCurve.Add(new Vector3(0, 5, 15), 1000);
+            translationCurve.Add(new Vector3(0, 0, 20), 2000);
+            translationCurve.Add(new Vector3(0, -5, 25), 3000);
+            translationCurve.Add(new Vector3(0, 0, 30), 4000);
+            translationCurve.Add(new Vector3(0, 0, 10), 6000);
 
             camera = new GameObject("curve camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             var curveController = new CurveBehaviour(translationCurve);
             camera.AddComponent(curveController);
             level.Add(camera);
+
+            #endregion Curve Camera
         }
 
         private void InitializeModels(Scene level)
@@ -256,95 +274,6 @@ namespace GDApp
                 level.Add(clone);
             }
         }
-
-        //private void InitializeCubes(Scene level)
-        //{
-        //    //materials define the surface appearance of an object
-        //    var material = new BasicMaterial("simple diffuse");  //RE-USE
-        //    material.Texture = Content.Load<Texture2D>("mona lisa");  //RE-USE
-
-        //    //shaders draw the object and add lights etc
-        //    material.Shader = new BasicShader();  //RE-USE
-
-        //    var count = 1;
-        //    for (int i = -20; i <= 20; i += 4)
-        //    {
-        //        //3 - add demo cube
-        //        var cube = new GameObject($"cube{count++}", GameObjectType.Architecture);
-
-        //        cube.Transform.SetTranslation(i, 0, 0);
-        //        cube.Transform.Scale(Vector3.One * Math.Abs(i) / 20);
-
-        //        //a renderer draws the object using the model or mesh data
-        //        var renderer = new MeshRenderer();
-        //        renderer.Material = material;
-
-        //        //add the renderer to the cube or it wont draw anything!
-        //        cube.AddComponent(renderer);
-
-        //        //add mesh/model mesh data to the renderer
-        //        renderer.Mesh = new CubeMesh();
-
-        //        //add the cube to the level
-        //        level.Add(cube);
-        //    }
-        //}
-
-        //private void InitializeLevel()
-        //{
-        //    //1 - add a scene (e.g. a level of the game)
-        //    Scene levelOne = new Scene("level 1");
-
-        //    #region Camera
-
-        //    //2 - add camera
-        //    var camera = new GameObject("main camera");
-        //    camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-        //    var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
-        //    var turnKeys = new Keys[] { Keys.J, Keys.L };
-        //    camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
-        //    camera.Transform.SetTranslation(0, 0, 4);
-        //    levelOne.Add(camera);
-
-        //    #endregion Camera
-
-        //    #region Cube using mesh data
-
-        //    //3 - add demo cube
-        //    var cube = new GameObject("cube");
-
-        //    //a renderer draws the object using the model or mesh data
-        //    var renderer = new MeshRenderer();
-
-        //    //materials define the surface appearance of an object
-        //    var material = new BasicMaterial("simple diffuse");
-        //    material.Texture = Content.Load<Texture2D>("mona lisa");
-
-        //    //shaders draw the object and add lights etc
-        //    material.Shader = new BasicShader();
-        //    renderer.Material = material;
-
-        //    //add the renderer to the cube or it wont draw anything!
-        //    cube.AddComponent(renderer);
-
-        //    //add mesh/model mesh data to the renderer
-        //    renderer.Mesh = new CubeMesh();
-
-        //    //add the cube to the level
-        //    levelOne.Add(cube);
-
-        //    #endregion Cube using mesh data
-
-        //    //4 - repeat step 3 for all game objects
-
-        //    //5 - add scene to scene manager
-        //    sceneManager.Add(levelOne);
-
-        //    //6 - repeat steps 1 - 5 for each new scene (note, each scene does not need its own camera, we can reuse)
-
-        //    //7 - very important - set the active scene
-        //    sceneManager.LoadScene("level 1");
-        //}
 
         /// <summary>
         /// Set application data, input, title and scene manager
@@ -414,9 +343,9 @@ namespace GDApp
             DemoFind();
             var value = curve1D.Evaluate(
                 gameTime.TotalGameTime.TotalMilliseconds, 2);
-            System.Diagnostics.Debug.WriteLine(
-                $"At time {gameTime.TotalGameTime.TotalMilliseconds}" +
-                $"the curve evaluates to {value}");
+            //System.Diagnostics.Debug.WriteLine(
+            //    $"At time {gameTime.TotalGameTime.TotalMilliseconds}" +
+            //    $"the curve evaluates to {value}");
 
 #endif
         }

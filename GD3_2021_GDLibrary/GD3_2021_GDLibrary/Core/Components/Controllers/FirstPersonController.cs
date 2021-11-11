@@ -1,26 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace GDLibrary.Components
 {
+    /// <summary>
+    /// Adds simple 1st person controller to camera using keyboard and mouse input
+    /// </summary>
     public class FirstPersonController : Controller
     {
-        private Camera camera;
         protected Vector3 translation = Vector3.Zero;
         protected Vector3 rotation = Vector3.Zero;
         private float moveSpeed = 0.05f;
         private float strafeSpeed = 0.025f;
-        private float rotationSpeed = 0.00003f;
+        private float rotationSpeed = 0.00009f;
 
-        public override void Awake()
+        public FirstPersonController(float moveSpeed, float strafeSpeed, float rotationSpeed)
         {
-            camera = GetComponent<Camera>();
-
-            if (camera == null)
-                throw new Exception("No camera attached to this game object.");
+            this.moveSpeed = moveSpeed;
+            this.strafeSpeed = strafeSpeed;
+            this.rotationSpeed = rotationSpeed;
         }
-
         public override void Update()
         {
             HandleInputs();
@@ -58,14 +57,12 @@ namespace GDLibrary.Components
             transform.Rotate(ref rotation);  //converts value type to a reference
         }
 
-        //int add(ref int x, ref int y)
-        //{
-        //    return x + y;
-        //}
+        #region Unused
 
-        //NEVER CALLED
         protected override void HandleGamepadInput()
         {
         }
+
+        #endregion Unused
     }
 }
