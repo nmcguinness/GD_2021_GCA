@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDLibrary.Graphics
 {
     /// <summary>
     /// Defines a textured 1x1x1 cube, centred on origin, aligned with XYZ axis
     /// </summary>
-    public class CubeMesh : Mesh
+    public class CubeMesh : Mesh, ICloneable
     {
         protected override void CreateGeometry()
         {
@@ -125,5 +126,14 @@ namespace GDLibrary.Graphics
                 20, 21, 22, 22, 21, 23
             };
         }
+
+        #region Actions - Housekeeping
+
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        #endregion Actions - Housekeeping
     }
 }

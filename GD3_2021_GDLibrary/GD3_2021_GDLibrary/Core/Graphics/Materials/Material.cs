@@ -2,7 +2,7 @@
 
 namespace GDLibrary.Graphics
 {
-    public abstract class Material : IDisposable
+    public abstract class Material : IDisposable, ICloneable
     {
         #region Fields
 
@@ -17,6 +17,7 @@ namespace GDLibrary.Graphics
 
         public string Name { get => name; set => name = value.Trim(); }
         public bool IsOpaque { get => isOpaque; }
+
         public float Alpha
         {
             get => alpha;
@@ -49,6 +50,8 @@ namespace GDLibrary.Graphics
         {
             //Overridden in child classes
         }
+
+        public abstract object Clone();
 
         #endregion Actions - Housekeeeping
     }

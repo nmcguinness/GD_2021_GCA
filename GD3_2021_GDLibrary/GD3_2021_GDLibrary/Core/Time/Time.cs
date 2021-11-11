@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace GDLibrary.Time
+namespace GDLibrary
 {
     /// <summary>
     /// Replaces GameTime for any game objects that want to slow down, or speed up, time in the game

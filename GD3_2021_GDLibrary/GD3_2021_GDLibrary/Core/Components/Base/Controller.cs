@@ -1,4 +1,6 @@
-﻿namespace GDLibrary.Components
+﻿using System;
+
+namespace GDLibrary.Components
 {
     /// <summary>
     /// Parent class for any controller component that
@@ -6,6 +8,28 @@
     /// </summary>
     public abstract class Controller : Component
     {
-        //add methods GetInput, GetFire, GetCrouch
+        #region Input
+
+        /// <summary>
+        /// Calls handle methods for Keyboard/Mouse/Gamepad
+        /// </summary>
+        protected abstract void HandleInputs();
+
+        /// <summary>
+        /// Read and apply the keyboard input.
+        /// </summary>
+        protected abstract void HandleKeyboardInput();
+
+        /// <summary>
+        /// Read and apply the mouse input.
+        /// </summary>
+        protected abstract void HandleMouseInput();
+
+        /// <summary>
+        /// Read and apply the gamepad input.
+        /// </summary>
+        protected abstract void HandleGamepadInput();
+
+        #endregion Input
     }
 }

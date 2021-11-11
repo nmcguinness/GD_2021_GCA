@@ -162,7 +162,7 @@ namespace GDLibrary.Components
         /// <summary>
         /// Called when the component is enabled (e.g. enable animation on a crane arm in a lab)
         /// </summary>
-        protected void OnEnabled()
+        protected virtual void OnEnabled()
         {
             //Overridden in child class
         }

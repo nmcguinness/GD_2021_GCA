@@ -32,8 +32,8 @@ namespace GDLibrary.Graphics
             effect = new BasicEffect(Application.GraphicsDevice);
 
             //TODO - remove this lazy code - just here to demo lighting
-            (effect as BasicEffect).LightingEnabled = true;
-            (effect as BasicEffect).EnableDefaultLighting();
+            //(effect as BasicEffect).LightingEnabled = true;
+            //(effect as BasicEffect).EnableDefaultLighting();
         }
 
         #endregion Initialization

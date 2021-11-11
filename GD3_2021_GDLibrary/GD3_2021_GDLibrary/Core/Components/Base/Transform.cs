@@ -8,16 +8,6 @@ namespace GDLibrary.Components
     /// </summary>
     public class Transform : Component, ICloneable
     {
-        /// <summary>
-        /// Deep or shallow, or mixed?
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            //  throw new NotImplementedException("Implement me, dumbass!");
-            return MemberwiseClone();
-        }
-
         #region Events
 
         public event Action PropertyChanged = null;
@@ -394,5 +384,22 @@ namespace GDLibrary.Components
         }
 
         #endregion Actions - Modify Scale, Rotation, Translation
+
+        #region Actions - Housekeeping
+
+        //TODO - Dispose
+
+        /// <summary>
+        /// Deep or shallow, or mixed?
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            //value types - deep
+            //reference types - shallow
+            return MemberwiseClone();
+        }
+
+        #endregion Actions - Housekeeping
     }
 }

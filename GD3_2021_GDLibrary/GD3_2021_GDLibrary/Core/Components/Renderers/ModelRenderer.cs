@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GDLibrary.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -32,7 +33,9 @@ namespace GDLibrary.Components
                     {
                         boneTransforms = new Matrix[model.Bones.Count];
                         model.CopyAbsoluteBoneTransformsTo(boneTransforms);
-                        SetBoundingVolume();
+
+                        //BUG - on clone
+                        //       SetBoundingVolume();
                     }
                 }
             }
@@ -80,6 +83,18 @@ namespace GDLibrary.Components
             //}
         }
 
-        //TODO - Dispose, Clone
+        #region Actions - Housekeeping
+
+        //TODO - Dispose
+
+        public override object Clone()
+        {
+            var clone = new ModelRenderer();
+            clone.Model = model;
+            clone.material = material.Clone() as Material;
+            return clone;
+        }
+
+        #endregion Actions - Housekeeping
     }
 }

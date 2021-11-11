@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDLibrary.Graphics
 {
     /// <summary>
     /// Defines a textured 1x1 quad, centred on origin, facing +ve Z-axis
     /// </summary>
-    public class QuadMesh : Mesh
+    public class QuadMesh : Mesh, ICloneable
     {
         protected override void CreateGeometry()
         {
@@ -45,5 +46,14 @@ namespace GDLibrary.Graphics
 
             indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
         }
+
+        #region Actions - Housekeeping
+
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        #endregion Actions - Housekeeping
     }
 }

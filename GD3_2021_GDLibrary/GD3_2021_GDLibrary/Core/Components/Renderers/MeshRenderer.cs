@@ -27,7 +27,8 @@ namespace GDLibrary.Components
                 {
                     mesh = value;
                     //TODO - update if transform changes
-                    SetBoundingVolume();
+                    //BUG - on clone
+                    //  SetBoundingVolume();
                 }
             }
         }
@@ -70,6 +71,18 @@ namespace GDLibrary.Components
             boundingSphere.Center = transform.LocalTranslation;
         }
 
-        //TODO - Dispose, Clone
+        #region Actions - Housekeeping
+
+        //TODO - Dispose
+
+        public override object Clone()
+        {
+            var clone = new MeshRenderer();
+            clone.material = material.Clone() as Material;
+            clone.Mesh = mesh.Clone() as Mesh;
+            return clone;
+        }
+
+        #endregion Actions - Housekeeping
     }
 }

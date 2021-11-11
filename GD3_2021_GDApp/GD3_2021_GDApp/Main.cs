@@ -4,11 +4,10 @@ using GDLibrary.Core;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
 using GDLibrary.Managers;
-using GDLibrary.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
+using System.Collections.Generic;
 
 namespace GDApp
 {
@@ -29,8 +28,10 @@ namespace GDApp
         /// </summary>
         private RenderManager renderManager;
 
-        private GameObject cObject;
-        private GameObject camera;
+        /// <summary>
+        /// Quick lookup for all textures used within the game
+        /// </summary>
+        private Dictionary<string, Texture2D> textureDictionary;
 
         #endregion Fields
 
@@ -51,10 +52,39 @@ namespace GDApp
             //data, input, scene manager
             InitializeEngine("My Game Title Goes Here", 1024, 768);
 
+            InitializeDictionaries();
+
+            LoadAssets();
+
             //level with scenes and game objects
             InitializeLevel();
 
+            Input.Mouse.Position = new Vector2(512, 384);
+
             base.Initialize();
+        }
+
+        private void InitializeDictionaries()
+        {
+            textureDictionary = new Dictionary<string, Texture2D>();
+        }
+
+        private void LoadAssets()
+        {
+            LoadTextures();
+        }
+
+        private void LoadTextures()
+        {
+            //debug
+            textureDictionary.Add("checkerboard", Content.Load<Texture2D>("Assets/Demo/Textures/checkerboard"));
+
+            //skybox
+            textureDictionary.Add("skybox_front", Content.Load<Texture2D>("Assets/Textures/Skybox/front"));
+            textureDictionary.Add("skybox_left", Content.Load<Texture2D>("Assets/Textures/Skybox/left"));
+            textureDictionary.Add("skybox_right", Content.Load<Texture2D>("Assets/Textures/Skybox/right"));
+            textureDictionary.Add("skybox_back", Content.Load<Texture2D>("Assets/Textures/Skybox/back"));
+            textureDictionary.Add("skybox_sky", Content.Load<Texture2D>("Assets/Textures/Skybox/sky"));
         }
 
         private void InitializeLevel()
@@ -62,41 +92,102 @@ namespace GDApp
             //1 - add a scene (e.g. a level of the game)
             Scene levelOne = new Scene("level 1");
 
+            InitializeSkybox(levelOne, 50);
+
             InitializeCameras(levelOne);
 
             InitializeCubes(levelOne);
 
             InitializeModels(levelOne);
 
-            //4 - repeat step 3 for all game objects
-
-            //5 - add scene to scene manager
             sceneManager.Add(levelOne);
 
-            //6 - repeat steps 1 - 5 for each new scene (note, each scene does not need its own camera, we can reuse)
-
-            //7 - very important - set the active scene
             sceneManager.LoadScene("level 1");
+        }
+
+        private void InitializeSkybox(Scene level, float worldScale = 500)
+        {
+            #region Archetype
+
+            var material = new BasicMaterial("simple diffuse");
+            material.Texture = textureDictionary["checkerboard"];
+            material.Shader = new BasicShader();
+
+            var archetypalCube = new GameObject("quad", GameObjectType.Skybox);
+            var renderer = new MeshRenderer();
+            renderer.Material = material;
+            archetypalCube.AddComponent(renderer);
+            renderer.Mesh = new QuadMesh();
+
+            #endregion Archetype
+
+            //back
+            GameObject back = archetypalCube.Clone() as GameObject;
+            back.Name = "skybox_back";
+            material.Texture = textureDictionary["skybox_back"];
+            back.Transform.Translate(0, 0, -worldScale / 2.0f);
+            back.Transform.Scale(worldScale, worldScale, null);
+            level.Add(back);
+
+            ////left
+            //GameObject left = archetypalCube.Clone() as GameObject;
+            //left.Name = "skybox_left";
+            //material.Texture = textureDictionary["skybox_left"];
+            //left.Transform.Translate(-worldScale / 2.0f, 0, 0);
+            //left.Transform.Scale(worldScale, worldScale, null);
+            //left.Transform.Rotate(0, 90, 0);
+            //level.Add(left);
+
+            ////right
+            //GameObject right = archetypalCube.Clone() as GameObject;
+            //right.Name = "skybox_right";
+            //material.Texture = textureDictionary["skybox_right"];
+            //right.Transform.Translate(worldScale / 2.0f, 0, 0);
+            //right.Transform.Scale(worldScale, worldScale, null);
+            //right.Transform.Rotate(0, -90, 0);
+            //level.Add(right);
+
+            ////front
+            //GameObject front = archetypalCube.Clone() as GameObject;
+            //front.Name = "skybox_front";
+            //material.Texture = textureDictionary["skybox_front"];
+            //front.Transform.Translate(0, 0, worldScale / 2.0f);
+            //front.Transform.Scale(worldScale, worldScale, null);
+            //front.Transform.Rotate(0, -180, 0);
+            //level.Add(front);
+
+            ////top
+            //GameObject top = archetypalCube.Clone() as GameObject;
+            //top.Name = "skybox_sky";
+            //material.Texture = textureDictionary["skybox_sky"];
+            //top.Transform.Translate(0, worldScale / 2.0f, 0);
+            //top.Transform.Scale(worldScale, worldScale, null);
+            //top.Transform.Rotate(90, 0, 0);
+            //level.Add(top);
         }
 
         private void InitializeCameras(Scene level)
         {
             //2 - add camera
-            camera = new GameObject("main camera", GameObjectType.Camera);
+            var camera = new GameObject("main camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
             var turnKeys = new Keys[] { Keys.J, Keys.L };
-            camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
+            //   camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
+
+            var controller = new FirstPersonController();
+            camera.AddComponent(controller);
+
             camera.Transform.SetTranslation(0, 0, 15);
             level.Add(camera);
         }
 
         private void InitializeModels(Scene level)
         {
-            //materials define the surface appearance of an object
+            #region Archetype
+
             var material = new BasicMaterial("model material");
             material.Texture = Content.Load<Texture2D>("checkerboard");
-            //shaders draw the object and add lights etc
             material.Shader = new BasicShader();
 
             var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
@@ -107,6 +198,8 @@ namespace GDApp
 
             //downsize the model a little because the sphere is quite large
             archetypalSphere.Transform.SetScale(0.125f, 0.125f, 0.125f);
+
+            #endregion Archetype
 
             var count = 0;
             for (var i = -8; i <= 8; i += 2)
@@ -120,14 +213,19 @@ namespace GDApp
 
         private void InitializeCubes(Scene level)
         {
+            #region Archetype
+
             var material = new BasicMaterial("simple diffuse");
             material.Texture = Content.Load<Texture2D>("mona lisa");
             material.Shader = new BasicShader();
+
             var archetypalCube = new GameObject("cube", GameObjectType.Architecture);
             var renderer = new MeshRenderer();
             renderer.Material = material;
             archetypalCube.AddComponent(renderer);
             renderer.Mesh = new CubeMesh();
+
+            #endregion Archetype
 
             var count = 0;
             for (var i = 1; i <= 8; i += 2)
@@ -292,27 +390,26 @@ namespace GDApp
             //update every updateable game object
             //Q. what would happen is we commented out this line?
             sceneManager.Update();
+
 #if DEBUG
             DemoFind();
 #endif
         }
 
-        //predicate
-        //public bool IsTarget(GameObject g)
-        //{
-        //    return g.Equals("cube5");
-        //}
+#if DEBUG
+        private GameObject cObject = null;
+
         private void DemoFind()
         {
             //lets look for an object - note - we can ONLY look for object AFTER SceneManager::Update has been called
             if (cObject == null)
-                cObject = sceneManager.Find(
-                    gameObject => gameObject.Name.Equals("cube2")
-                    );
+                cObject = sceneManager.Find(gameObject => gameObject.Name.Equals("Clone - cube - 2"));
 
             //the ? is short for (if cObject != null) then...
             cObject?.Transform.Rotate(0, 45 / 60.0f, 0);
         }
+
+#endif
 
         protected override void Draw(GameTime gameTime)
         {
@@ -320,16 +417,6 @@ namespace GDApp
 
             //render every renderable game object
             renderManager.Render(sceneManager.ActiveScene);
-
-            //var cam = camera.GetComponent<Camera>();
-            //var meshRenderer = cube.GetComponent<Renderer>() as MeshRenderer;
-
-            //effect.World = meshRenderer.GameObject.Transform.WorldMatrix;
-            //effect.View = cam.ViewMatrix;
-            //effect.Projection = cam.ProjectionMatrix;
-            //effect.CurrentTechnique.Passes[0].Apply();
-
-            //meshRenderer.Draw(_graphics.GraphicsDevice);
 
             base.Draw(gameTime);
         }

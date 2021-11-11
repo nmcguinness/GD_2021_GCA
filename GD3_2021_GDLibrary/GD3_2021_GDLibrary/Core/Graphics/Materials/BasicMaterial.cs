@@ -27,5 +27,14 @@ namespace GDLibrary.Graphics
         }
 
         #endregion Constructors
+
+        public override object Clone()
+        {
+            var clone = new BasicMaterial($"Clone - {name}");
+            clone.diffuseColor = diffuseColor;
+            clone.texture = texture;
+            clone.shader = shader;
+            return clone;
+        }
     }
 }

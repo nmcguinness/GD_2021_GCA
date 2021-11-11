@@ -12,7 +12,8 @@ namespace GDLibrary
         NPC,
         Interactable,
         Consumable,
-        Architecture
+        Architecture,
+        Skybox
         //STU - add more for your game here...
     }
 
@@ -243,7 +244,7 @@ namespace GDLibrary
                 //set this as component's parent game object
                 component.GameObject = this;
                 //set components transform same as this component
-                component.transform = transform;
+                component.transform = this.transform;
                 //perform any initial wake up operations
                 component.Awake();
                 //TODO - prevent duplicate components? Component::Equals and GetHashCode need to be implemented

@@ -4,7 +4,7 @@ using System;
 
 namespace GDLibrary.Graphics
 {
-    public abstract class Mesh
+    public abstract class Mesh : ICloneable
     {
         #region Fields
 
@@ -117,6 +117,12 @@ namespace GDLibrary.Graphics
                 normals[i] = Vertices[i].Normal;
             return normals;
         }
+
+        #region Actions - Housekeeping
+
+        public abstract object Clone();
+
+        #endregion Actions - Housekeeping
 
         #endregion Actions
     }
