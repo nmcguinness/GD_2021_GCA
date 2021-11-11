@@ -187,6 +187,7 @@ namespace GDApp
         {
             #region First Person Camera
 
+            //add camera game object
             var camera = new GameObject("main camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             camera.AddComponent(new FirstPersonController(0.05f, 0.025f, 0.00009f));
@@ -197,6 +198,7 @@ namespace GDApp
 
             #region Curve Camera
 
+            //add curve for camera translation
             var translationCurve = new Curve3D(CurveLoopType.Cycle);
             translationCurve.Add(new Vector3(0, 0, 10), 0);
             translationCurve.Add(new Vector3(0, 5, 15), 1000);
@@ -205,6 +207,7 @@ namespace GDApp
             translationCurve.Add(new Vector3(0, 0, 30), 4000);
             translationCurve.Add(new Vector3(0, 0, 10), 6000);
 
+            //add camera game object
             var curveCamera = new GameObject("curve camera", GameObjectType.Camera);
             curveCamera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             curveCamera.AddComponent(new CurveBehaviour(translationCurve));
