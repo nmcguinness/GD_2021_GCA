@@ -15,6 +15,11 @@ namespace GDLibrary.Components
         private string id;
 
         /// <summary>
+        /// Unique name for each component - may be used for search, sort later
+        /// </summary>
+        private string name;
+
+        /// <summary>
         /// Set to true on the first update of the component
         /// </summary>
         private bool isRunning;
@@ -52,6 +57,18 @@ namespace GDLibrary.Components
             protected set
             {
                 id = value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            protected set
+            {
+                name = value;
             }
         }
 

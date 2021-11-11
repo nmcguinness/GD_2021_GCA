@@ -193,7 +193,7 @@ namespace GDApp
             camera.AddComponent(controller);
 
             camera.Transform.SetTranslation(0, 0, 15);
-            //level.Add(camera);
+            level.Add(camera);
 
             #endregion First Person Camera
 
@@ -210,11 +210,14 @@ namespace GDApp
             translationCurve.Add(new Vector3(0, 0, 30), 4000);
             translationCurve.Add(new Vector3(0, 0, 10), 6000);
 
-            camera = new GameObject("curve camera", GameObjectType.Camera);
-            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            camera.AddComponent(new CurveBehaviour(translationCurve));
-            camera.AddComponent(new FOVOnScrollController(MathHelper.ToRadians(5)));
-            level.Add(camera);
+            var curveCamera = new GameObject("curve camera", GameObjectType.Camera);
+            curveCamera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+            curveCamera.AddComponent(new CurveBehaviour(translationCurve));
+            curveCamera.AddComponent(new FOVOnScrollController(MathHelper.ToRadians(5)));
+            level.Add(curveCamera);
+
+            //set theMain camera, if we dont call this then the first camera added will be the Main
+            level.SetMainCamera("curve camera");
 
             #endregion Curve Camera
         }

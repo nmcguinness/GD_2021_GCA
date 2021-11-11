@@ -29,7 +29,7 @@ namespace GDLibrary.Components
         protected List<GameObject> gameObjects;
         protected List<Renderer> renderers;
         protected List<Controller> controllers;
-        // protected List<Behaviour> behaviours;
+        protected List<Behaviour> behaviours;
         protected List<Material> materials;
         protected List<Camera> cameras;
 
@@ -62,7 +62,7 @@ namespace GDLibrary.Components
             gameObjects = new List<GameObject>(10);
             renderers = new List<Renderer>(10);
             controllers = new List<Controller>(10);
-            // behaviours = new List<Behaviour>(10);
+            behaviours = new List<Behaviour>(10);
             materials = new List<Material>(5);
             cameras = new List<Camera>(4);
         }
@@ -139,6 +139,13 @@ namespace GDLibrary.Components
                     else if (type == ComponentChangeType.Remove)
                         RemoveCamera(camera);
                 }
+                else if (component is Behaviour behaviour)
+                {
+                    if (type == ComponentChangeType.Add && !behaviours.Contains(behaviour))
+                        AddBehaviour(behaviour);
+                    else if (type == ComponentChangeType.Remove)
+                        RemoveBehaviour(behaviour);
+                }
                 else if (component is Controller controller)
                 {
                     if (type == ComponentChangeType.Add && !controllers.Contains(controller))
@@ -148,29 +155,6 @@ namespace GDLibrary.Components
                 }
             }
         }
-
-        //protected void CheckComponents(GameObject gameObject, ComponentChangeType type)
-        //{
-        //    for (int i = 0; i < gameObject.Components.Count; i++)
-        //    {
-        //        var component = gameObject.Components[i];
-
-        //        if (component is Renderer renderer)
-        //        {
-        //            if (type == ComponentChangeType.Add)
-        //                AddRenderer(renderer);
-        //            else if (type == ComponentChangeType.Remove)
-        //                RemoveRenderer(renderer);
-        //        }
-        //        else if (component is Camera camera)
-        //        {
-        //            if (type == ComponentChangeType.Add && !cameras.Contains(camera))
-        //                AddCamera(camera);
-        //            else if (type == ComponentChangeType.Remove)
-        //                RemoveCamera(camera);
-        //        }
-        //    }
-        //}
 
         protected int AddCamera(Camera camera)
         {
@@ -187,6 +171,39 @@ namespace GDLibrary.Components
             }
 
             return index;
+        }
+
+        /// <summary>
+        /// Sets the Main camera for the game using an appropriate predicate
+        /// </summary>
+        /// <param name="predicate">Predicate of type GameObject</param>
+        /// <returns>True if set, otherwise false</returns>
+        public bool SetMainCamera(Predicate<GameObject> predicate)
+        {
+            //look for the cameras game object
+            var cameraObject = gameObjects.Find(predicate);
+
+            //if not null then look for a camera component
+            var camera = cameraObject?.GetComponent<Camera>();
+
+            //if no camera then null
+            if (camera == null)
+                throw new ArgumentException("Predicate did not return a valid camera!");
+
+            //set this camera as Main in the game
+            Camera.Main = camera;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the Main camera for the game using the Name of the parent game object
+        /// </summary>
+        /// <param name="name">String name of the parent GameObject</param>
+        /// <returns>True if set, otherwise false</returns>
+        public bool SetMainCamera(string name)
+        {
+            return SetMainCamera(gameObject => gameObject.Name == name);
         }
 
         protected void RemoveCamera(Camera camera)
@@ -225,6 +242,21 @@ namespace GDLibrary.Components
                 controllers.Remove(controller);
         }
 
+        protected void AddBehaviour(Behaviour behaviour)
+        {
+            if (behaviours.Contains(behaviour))
+                return;
+
+            behaviours.Add(behaviour);
+            behaviours.Sort();
+        }
+
+        protected void RemoveBehaviour(Behaviour behaviour)
+        {
+            if (behaviours.Contains(behaviour))
+                behaviours.Remove(behaviour);
+        }
+
         public virtual void Unload()
         {
             foreach (GameObject gameObject in gameObjects)
@@ -238,6 +270,8 @@ namespace GDLibrary.Components
         protected void Clear()
         {
             gameObjects.Clear();
+            controllers.Clear();
+            behaviours.Clear();
             renderers.Clear();
             materials.Clear();
             cameras.Clear();

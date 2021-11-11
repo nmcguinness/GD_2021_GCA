@@ -43,8 +43,6 @@ namespace GDLibrary.Managers
         {
             //set depth and blend state
 
-            //render sky box
-
             //render game objects
             var length = scene.Renderers.Count;
 
