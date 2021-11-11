@@ -6,7 +6,6 @@ using GDLibrary.Inputs;
 using GDLibrary.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace GDApp
@@ -59,6 +58,7 @@ namespace GDApp
             //level with scenes and game objects
             InitializeLevel();
 
+            //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
 
             base.Initialize();
@@ -92,7 +92,7 @@ namespace GDApp
             //1 - add a scene (e.g. a level of the game)
             Scene levelOne = new Scene("level 1");
 
-            InitializeSkybox(levelOne, 50);
+            InitializeSkybox(levelOne, 500);
 
             InitializeCameras(levelOne);
 
@@ -129,51 +129,47 @@ namespace GDApp
             back.Transform.Scale(worldScale, worldScale, null);
             level.Add(back);
 
-            ////left
-            //GameObject left = archetypalCube.Clone() as GameObject;
-            //left.Name = "skybox_left";
-            //material.Texture = textureDictionary["skybox_left"];
-            //left.Transform.Translate(-worldScale / 2.0f, 0, 0);
-            //left.Transform.Scale(worldScale, worldScale, null);
-            //left.Transform.Rotate(0, 90, 0);
-            //level.Add(left);
+            //left
+            GameObject left = archetypalCube.Clone() as GameObject;
+            left.Name = "skybox_left";
+            material.Texture = textureDictionary["skybox_left"];
+            left.Transform.Translate(-worldScale / 2.0f, 0, 0);
+            left.Transform.Scale(worldScale, worldScale, null);
+            left.Transform.Rotate(0, 90, 0);
+            level.Add(left);
 
-            ////right
-            //GameObject right = archetypalCube.Clone() as GameObject;
-            //right.Name = "skybox_right";
-            //material.Texture = textureDictionary["skybox_right"];
-            //right.Transform.Translate(worldScale / 2.0f, 0, 0);
-            //right.Transform.Scale(worldScale, worldScale, null);
-            //right.Transform.Rotate(0, -90, 0);
-            //level.Add(right);
+            //right
+            GameObject right = archetypalCube.Clone() as GameObject;
+            right.Name = "skybox_right";
+            material.Texture = textureDictionary["skybox_right"];
+            right.Transform.Translate(worldScale / 2.0f, 0, 0);
+            right.Transform.Scale(worldScale, worldScale, null);
+            right.Transform.Rotate(0, -90, 0);
+            level.Add(right);
 
-            ////front
-            //GameObject front = archetypalCube.Clone() as GameObject;
-            //front.Name = "skybox_front";
-            //material.Texture = textureDictionary["skybox_front"];
-            //front.Transform.Translate(0, 0, worldScale / 2.0f);
-            //front.Transform.Scale(worldScale, worldScale, null);
-            //front.Transform.Rotate(0, -180, 0);
-            //level.Add(front);
+            //front
+            GameObject front = archetypalCube.Clone() as GameObject;
+            front.Name = "skybox_front";
+            material.Texture = textureDictionary["skybox_front"];
+            front.Transform.Translate(0, 0, worldScale / 2.0f);
+            front.Transform.Scale(worldScale, worldScale, null);
+            front.Transform.Rotate(0, -180, 0);
+            level.Add(front);
 
-            ////top
-            //GameObject top = archetypalCube.Clone() as GameObject;
-            //top.Name = "skybox_sky";
-            //material.Texture = textureDictionary["skybox_sky"];
-            //top.Transform.Translate(0, worldScale / 2.0f, 0);
-            //top.Transform.Scale(worldScale, worldScale, null);
-            //top.Transform.Rotate(90, 0, 0);
-            //level.Add(top);
+            //top
+            GameObject top = archetypalCube.Clone() as GameObject;
+            top.Name = "skybox_sky";
+            material.Texture = textureDictionary["skybox_sky"];
+            top.Transform.Translate(0, worldScale / 2.0f, 0);
+            top.Transform.Scale(worldScale, worldScale, null);
+            top.Transform.Rotate(90, 0, 0);
+            level.Add(top);
         }
 
         private void InitializeCameras(Scene level)
         {
-            //2 - add camera
             var camera = new GameObject("main camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            var moveKeys = new Keys[] { Keys.W, Keys.S, Keys.A, Keys.D };
-            var turnKeys = new Keys[] { Keys.J, Keys.L };
-            //   camera.AddComponent(new FirstPersonCameraController(moveKeys, turnKeys));
 
             var controller = new FirstPersonController();
             camera.AddComponent(controller);

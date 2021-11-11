@@ -31,9 +31,9 @@ namespace GDLibrary.Graphics
         public override object Clone()
         {
             var clone = new BasicMaterial($"Clone - {name}");
-            clone.diffuseColor = diffuseColor;
-            clone.texture = texture;
-            clone.shader = shader;
+            clone.diffuseColor = diffuseColor; //deep
+            clone.texture = texture;  //shallow
+            clone.shader = shader; //shallow
             return clone;
         }
     }

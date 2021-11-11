@@ -55,9 +55,15 @@ namespace GDLibrary.Components
             rotation = Vector3.Zero;
             rotation.Y -= Input.Mouse.Delta.X * rotationSpeed * Time.Instance.DeltaTimeMs;
             rotation.X -= Input.Mouse.Delta.Y * rotationSpeed * Time.Instance.DeltaTimeMs;
-            transform.Rotate(ref rotation);
+            transform.Rotate(ref rotation);  //converts value type to a reference
         }
 
+        //int add(ref int x, ref int y)
+        //{
+        //    return x + y;
+        //}
+
+        //NEVER CALLED
         protected override void HandleGamepadInput()
         {
         }
