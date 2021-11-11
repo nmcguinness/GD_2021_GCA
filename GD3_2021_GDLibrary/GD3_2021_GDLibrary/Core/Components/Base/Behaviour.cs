@@ -5,5 +5,6 @@
     /// </summary>
     public abstract class Behaviour : Component
     {
+        //TODO - common?
     }
 }

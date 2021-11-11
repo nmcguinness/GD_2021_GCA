@@ -4,6 +4,7 @@ using GDLibrary.Core;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
 using GDLibrary.Managers;
+using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -12,6 +13,9 @@ namespace GDApp
 {
     public class Main : Game
     {
+        private GameObject cObject = null;
+        private Curve1D curve1D;
+
         #region Fields
 
         private GraphicsDeviceManager _graphics;
@@ -60,6 +64,15 @@ namespace GDApp
 
             //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
+
+            //DEMO - curve demo
+            curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
+            curve1D.Add(0, 0);
+            curve1D.Add(10, 1000);
+            curve1D.Add(20, 2000);
+            curve1D.Add(40, 4000);
+            curve1D.Add(60, 6000);
+            // var value = curve1D.Evaluate(500, 2);
 
             base.Initialize();
         }
@@ -113,16 +126,16 @@ namespace GDApp
             material.Texture = textureDictionary["checkerboard"];
             material.Shader = new BasicShader();
 
-            var archetypalCube = new GameObject("quad", GameObjectType.Skybox);
+            var archetypalQuad = new GameObject("quad", GameObjectType.Skybox);
             var renderer = new MeshRenderer();
             renderer.Material = material;
-            archetypalCube.AddComponent(renderer);
+            archetypalQuad.AddComponent(renderer);
             renderer.Mesh = new QuadMesh();
 
             #endregion Archetype
 
             //back
-            GameObject back = archetypalCube.Clone() as GameObject;
+            GameObject back = archetypalQuad.Clone() as GameObject;
             back.Name = "skybox_back";
             material.Texture = textureDictionary["skybox_back"];
             back.Transform.Translate(0, 0, -worldScale / 2.0f);
@@ -130,7 +143,7 @@ namespace GDApp
             level.Add(back);
 
             //left
-            GameObject left = archetypalCube.Clone() as GameObject;
+            GameObject left = archetypalQuad.Clone() as GameObject;
             left.Name = "skybox_left";
             material.Texture = textureDictionary["skybox_left"];
             left.Transform.Translate(-worldScale / 2.0f, 0, 0);
@@ -139,7 +152,7 @@ namespace GDApp
             level.Add(left);
 
             //right
-            GameObject right = archetypalCube.Clone() as GameObject;
+            GameObject right = archetypalQuad.Clone() as GameObject;
             right.Name = "skybox_right";
             material.Texture = textureDictionary["skybox_right"];
             right.Transform.Translate(worldScale / 2.0f, 0, 0);
@@ -148,7 +161,7 @@ namespace GDApp
             level.Add(right);
 
             //front
-            GameObject front = archetypalCube.Clone() as GameObject;
+            GameObject front = archetypalQuad.Clone() as GameObject;
             front.Name = "skybox_front";
             material.Texture = textureDictionary["skybox_front"];
             front.Transform.Translate(0, 0, worldScale / 2.0f);
@@ -157,7 +170,7 @@ namespace GDApp
             level.Add(front);
 
             //top
-            GameObject top = archetypalCube.Clone() as GameObject;
+            GameObject top = archetypalQuad.Clone() as GameObject;
             top.Name = "skybox_sky";
             material.Texture = textureDictionary["skybox_sky"];
             top.Transform.Translate(0, worldScale / 2.0f, 0);
@@ -175,6 +188,16 @@ namespace GDApp
             camera.AddComponent(controller);
 
             camera.Transform.SetTranslation(0, 0, 15);
+            level.Add(camera);
+            ////////////////////////////////////////////////////////////////////////////
+            //curve camera
+            var translationCurve = new Curve3D(CurveLoopType.Oscillate);
+            //add points for the curve
+
+            camera = new GameObject("curve camera", GameObjectType.Camera);
+            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+            var curveController = new CurveBehaviour(translationCurve);
+            camera.AddComponent(curveController);
             level.Add(camera);
         }
 
@@ -389,11 +412,16 @@ namespace GDApp
 
 #if DEBUG
             DemoFind();
+            var value = curve1D.Evaluate(
+                gameTime.TotalGameTime.TotalMilliseconds, 2);
+            System.Diagnostics.Debug.WriteLine(
+                $"At time {gameTime.TotalGameTime.TotalMilliseconds}" +
+                $"the curve evaluates to {value}");
+
 #endif
         }
 
 #if DEBUG
-        private GameObject cObject = null;
 
         private void DemoFind()
         {
