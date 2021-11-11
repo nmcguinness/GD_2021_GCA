@@ -112,7 +112,7 @@ namespace GDLibrary.Components
             {
                 if (fieldOfView != value)
                 {
-                    fieldOfView = value > DEFAULT_FIELD_OF_VIEW ? value : DEFAULT_FIELD_OF_VIEW; ;
+                    fieldOfView = (value > 0 && value < MathHelper.Pi) ? value : DEFAULT_FIELD_OF_VIEW;
                     isProjectionDirty = true;
                 }
             }

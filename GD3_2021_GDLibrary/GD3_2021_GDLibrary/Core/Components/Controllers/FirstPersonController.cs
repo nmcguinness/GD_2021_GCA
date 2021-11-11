@@ -30,6 +30,7 @@ namespace GDLibrary.Components
             HandleMouseInput();
             HandleKeyboardInput();
             //    HandleGamepadInput(); //not using for this controller implementation
+            //   base.Update(); //nothing happens so dont call this
         }
 
         protected override void HandleKeyboardInput()

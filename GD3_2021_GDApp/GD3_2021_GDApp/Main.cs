@@ -212,8 +212,8 @@ namespace GDApp
 
             camera = new GameObject("curve camera", GameObjectType.Camera);
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            var curveController = new CurveBehaviour(translationCurve);
-            camera.AddComponent(curveController);
+            camera.AddComponent(new CurveBehaviour(translationCurve));
+            camera.AddComponent(new FOVOnScrollController(MathHelper.ToRadians(5)));
             level.Add(camera);
 
             #endregion Curve Camera
