@@ -1,4 +1,5 @@
-﻿using GDLibrary;
+﻿using GD.Utilities;
+using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Core;
 using GDLibrary.Graphics;
@@ -15,7 +16,6 @@ namespace GDApp
     {
 #if DEBUG
         private GameObject cObject = null;
-        private Curve1D curve1D;
 #endif
 
         #region Fields
@@ -68,18 +68,50 @@ namespace GDApp
             Input.Mouse.Position = new Vector2(512, 384);
 
 #if DEBUG
-            //DEMO - curve demo
-            curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
+            RunDemos();
+#endif
+
+            base.Initialize();
+        }
+
+#if DEBUG
+
+        private void RunDemos()
+        {
+            #region Curve Demo
+
+            var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
             curve1D.Add(0, 0);
             curve1D.Add(10, 1000);
             curve1D.Add(20, 2000);
             curve1D.Add(40, 4000);
             curve1D.Add(60, 6000);
-            // var value = curve1D.Evaluate(500, 2);
-#endif
+            var value = curve1D.Evaluate(500, 2);
 
-            base.Initialize();
+            #endregion Curve Demo
+
+            #region Serialization Single Object Demo
+
+            var demoSaveLoad = new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f));
+            SerializationUtility.Save("DemoSingle.xml", demoSaveLoad);
+            var readSingle = SerializationUtility.Load("DemoSingle.xml", typeof(DemoSaveLoad)) as DemoSaveLoad;
+
+            #endregion Serialization Single Object Demo
+
+            #region Serialization List Objects Demo
+
+            List<DemoSaveLoad> listDemos = new List<DemoSaveLoad>();
+            listDemos.Add(new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f)));
+            listDemos.Add(new DemoSaveLoad(new Vector3(10, 20, 30), new Vector3(4, 9, -18), new Vector3(15f, 1f, 202.5f)));
+            listDemos.Add(new DemoSaveLoad(new Vector3(100, 200, 300), new Vector3(145, 290, -80), new Vector3(6.5f, 1.1f, 8.05f)));
+
+            SerializationUtility.Save("ListDemo.xml", listDemos);
+            var readList = SerializationUtility.Load("ListDemo.xml", typeof(List<DemoSaveLoad>)) as List<DemoSaveLoad>;
+
+            #endregion Serialization List Objects Demo
         }
+
+#endif
 
         private void InitializeDictionaries()
         {
@@ -342,12 +374,6 @@ namespace GDApp
 
 #if DEBUG
             DemoFind();
-            var value = curve1D.Evaluate(
-                gameTime.TotalGameTime.TotalMilliseconds, 2);
-            //System.Diagnostics.Debug.WriteLine(
-            //    $"At time {gameTime.TotalGameTime.TotalMilliseconds}" +
-            //    $"the curve evaluates to {value}");
-
 #endif
         }
 
@@ -360,7 +386,8 @@ namespace GDApp
                 cObject = sceneManager.Find(gameObject => gameObject.Name.Equals("Clone - cube - 2"));
 
             //the ? is short for (if cObject != null) then...
-            cObject?.Transform.Rotate(0, 45 / 60.0f, 0);
+
+            cObject?.Transform.Rotate(0, Time.Instance.UnscaledDeltaTimeMs * 3 / 60.0f, 0);
         }
 
 #endif
