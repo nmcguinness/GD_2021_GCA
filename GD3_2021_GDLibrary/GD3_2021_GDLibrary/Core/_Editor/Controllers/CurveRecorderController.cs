@@ -1,19 +1,40 @@
-﻿using GDLibrary.Components;
+﻿using GD.Utilities;
+using GDLibrary.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace GDLibrary.Editor
 {
+    [DataContract]
+    public sealed class CurveHelper
+    {
+        private Vector3 translation;
+        private Vector3 rotation;
+
+        [DataMember]
+        public Vector3 Translation { get => translation; set => translation = value; }
+        [DataMember]
+        public Vector3 Rotation { get => rotation; set => rotation = value; }
+
+        public CurveHelper(Vector3 translation, Vector3 rotation)
+        {
+            this.translation = translation;
+            this.rotation = rotation;
+        }
+    }
+
     public class CurveRecorderController : Controller
     {
         private static readonly int DEFAULT_MIN_SIZE = 10;
         private Camera camera;
-        private List<Transform> keyTransforms;
+        private List<CurveHelper> keyTransforms;
 
         public CurveRecorderController()
         {
-            keyTransforms = new List<Transform>(DEFAULT_MIN_SIZE);
+            keyTransforms = new List<CurveHelper>(DEFAULT_MIN_SIZE);
         }
 
         public override void Awake()
@@ -36,7 +57,9 @@ namespace GDLibrary.Editor
         {
             //if we right clicked then add to list
             if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Right))
-                keyTransforms.Add(camera.transform);
+                keyTransforms.Add(
+                    new CurveHelper(camera.transform.LocalTranslation,
+                    camera.transform.LocalRotation));
         }
 
         protected override void HandleKeyboardInput()
@@ -49,7 +72,8 @@ namespace GDLibrary.Editor
             }
             else if (Input.Keys.WasJustPressed(Keys.F5))
             {
-                //Serialization
+                SerializationUtility.Save("CurveRecorderControllerOutput.xml",
+                    keyTransforms);
             }
         }
 

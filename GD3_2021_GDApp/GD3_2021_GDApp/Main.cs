@@ -39,6 +39,8 @@ namespace GDApp
         /// </summary>
         private Dictionary<string, Texture2D> textureDictionary;
 
+        private Scene activeScene;
+
         #endregion Fields
 
         #region Constructors
@@ -85,7 +87,7 @@ namespace GDApp
             curveRecorder.AddComponent(new CurveRecorderController());
 
             //TODO - access to the level!
-            Application.SceneManager.ActiveScene.Add(curveRecorder);
+            activeScene.Add(curveRecorder);
         }
 
         private void RunDemos()
@@ -153,17 +155,17 @@ namespace GDApp
         private void InitializeLevel()
         {
             //1 - add a scene (e.g. a level of the game)
-            Scene levelOne = new Scene("level 1");
+            activeScene = new Scene("level 1");
 
-            InitializeSkybox(levelOne, 500);
+            InitializeSkybox(activeScene, 500);
 
-            InitializeCameras(levelOne);
+            InitializeCameras(activeScene);
 
-            InitializeCubes(levelOne);
+            InitializeCubes(activeScene);
 
-            InitializeModels(levelOne);
+            InitializeModels(activeScene);
 
-            sceneManager.Add(levelOne);
+            sceneManager.Add(activeScene);
 
             sceneManager.LoadScene("level 1");
         }
@@ -263,7 +265,7 @@ namespace GDApp
             #endregion Curve Camera
 
             //set theMain camera, if we dont call this then the first camera added will be the Main
-            level.SetMainCamera("curve camera");
+            level.SetMainCamera("main camera");
 
             Time.Instance.TimeScale = 0.1f;
         }
