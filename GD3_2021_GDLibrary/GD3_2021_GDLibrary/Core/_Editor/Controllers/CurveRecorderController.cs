@@ -30,16 +30,13 @@ namespace GDLibrary.Editor
         protected override void HandleInputs()
         {
             HandleMouseInput();
+            HandleKeyboardInput();
         }
         protected override void HandleMouseInput()
         {
             //if we right clicked then add to list
             if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Right))
                 keyTransforms.Add(camera.transform);
-        }
-
-        protected override void HandleGamepadInput()
-        {
         }
 
         protected override void HandleKeyboardInput()
@@ -54,6 +51,10 @@ namespace GDLibrary.Editor
             {
                 //Serialization
             }
+        }
+
+        protected override void HandleGamepadInput()
+        {
         }
     }
 }
