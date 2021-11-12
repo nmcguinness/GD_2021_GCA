@@ -80,13 +80,13 @@ namespace GDApp
         {
             #region Curve Demo
 
-            var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
-            curve1D.Add(0, 0);
-            curve1D.Add(10, 1000);
-            curve1D.Add(20, 2000);
-            curve1D.Add(40, 4000);
-            curve1D.Add(60, 6000);
-            var value = curve1D.Evaluate(500, 2);
+            //var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
+            //curve1D.Add(0, 0);
+            //curve1D.Add(10, 1000);
+            //curve1D.Add(20, 2000);
+            //curve1D.Add(40, 4000);
+            //curve1D.Add(60, 6000);
+            //var value = curve1D.Evaluate(500, 2);
 
             #endregion Curve Demo
 
@@ -94,7 +94,8 @@ namespace GDApp
 
             var demoSaveLoad = new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f));
             SerializationUtility.Save("DemoSingle.xml", demoSaveLoad);
-            var readSingle = SerializationUtility.Load("DemoSingle.xml", typeof(DemoSaveLoad)) as DemoSaveLoad;
+            var readSingle = SerializationUtility.Load("DemoSingle.xml",
+                typeof(DemoSaveLoad)) as DemoSaveLoad;
 
             #endregion Serialization Single Object Demo
 
@@ -106,7 +107,8 @@ namespace GDApp
             listDemos.Add(new DemoSaveLoad(new Vector3(100, 200, 300), new Vector3(145, 290, -80), new Vector3(6.5f, 1.1f, 8.05f)));
 
             SerializationUtility.Save("ListDemo.xml", listDemos);
-            var readList = SerializationUtility.Load("ListDemo.xml", typeof(List<DemoSaveLoad>)) as List<DemoSaveLoad>;
+            var readList = SerializationUtility.Load("ListDemo.xml",
+                typeof(List<DemoSaveLoad>)) as List<DemoSaveLoad>;
 
             #endregion Serialization List Objects Demo
         }
@@ -250,6 +252,8 @@ namespace GDApp
 
             //set theMain camera, if we dont call this then the first camera added will be the Main
             level.SetMainCamera("curve camera");
+
+            Time.Instance.TimeScale = 0.1f;
         }
 
         private void InitializeModels(Scene level)
@@ -387,7 +391,8 @@ namespace GDApp
 
             //the ? is short for (if cObject != null) then...
 
-            cObject?.Transform.Rotate(0, Time.Instance.UnscaledDeltaTimeMs * 3 / 60.0f, 0);
+            cObject?.Transform.Rotate(0,
+                Time.Instance.UnscaledDeltaTimeMs * 3 / 60.0f, 0);
         }
 
 #endif

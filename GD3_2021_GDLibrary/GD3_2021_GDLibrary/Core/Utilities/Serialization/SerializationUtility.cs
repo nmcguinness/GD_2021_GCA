@@ -20,6 +20,7 @@ namespace GD.Utilities
             var xmlWriter = XmlWriter.Create(name, xmlSettings);
 
             dataContractSerializer.WriteObject(xmlWriter, obj);
+            xmlWriter.Flush();
             xmlWriter.Close();
         }
 
