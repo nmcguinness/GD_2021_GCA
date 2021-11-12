@@ -2,6 +2,7 @@
 using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Core;
+using GDLibrary.Editor;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
 using GDLibrary.Managers;
@@ -69,12 +70,23 @@ namespace GDApp
 
 #if DEBUG
             RunDemos();
+            InitializeEditorHelpers();
 #endif
 
             base.Initialize();
         }
 
 #if DEBUG
+
+        private void InitializeEditorHelpers()
+        {
+            var curveRecorder = new GameObject("curve recorder",
+                GameObjectType.Editor);
+            curveRecorder.AddComponent(new CurveRecorderController());
+
+            //TODO - access to the level!
+            Application.SceneManager.ActiveScene.Add(curveRecorder);
+        }
 
         private void RunDemos()
         {

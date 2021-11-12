@@ -13,7 +13,8 @@ namespace GDLibrary
         Interactable,
         Consumable,
         Architecture,
-        Skybox
+        Skybox,
+        Editor
         //STU - add more for your game here...
     }
 
