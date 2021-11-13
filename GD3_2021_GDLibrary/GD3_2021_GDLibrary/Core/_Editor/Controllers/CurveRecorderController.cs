@@ -30,10 +30,15 @@ namespace GDLibrary.Editor
     {
         private static readonly int DEFAULT_MIN_SIZE = 10;
         private Camera camera;
+        private string fileName;
         private List<CurveHelper> keyTransforms;
 
-        public CurveRecorderController()
+        public CurveRecorderController(string fileName = "")
         {
+            if (fileName.Length == 0)
+                fileName = $"{GetType().Name}.xml"; //use class as name
+
+            this.fileName = fileName;
             keyTransforms = new List<CurveHelper>(DEFAULT_MIN_SIZE);
         }
 
@@ -57,8 +62,7 @@ namespace GDLibrary.Editor
         {
             //if we right clicked then add to list
             if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Right))
-                keyTransforms.Add(
-                    new CurveHelper(camera.transform.LocalTranslation,
+                keyTransforms.Add(new CurveHelper(camera.transform.LocalTranslation,
                     camera.transform.LocalRotation));
         }
 
@@ -68,12 +72,13 @@ namespace GDLibrary.Editor
                 keyTransforms.Clear();
             else if (Input.Keys.WasJustPressed(Keys.F2))
             {
-                keyTransforms.RemoveAt(keyTransforms.Count - 1);
+                if (keyTransforms.Count > 1)
+                    keyTransforms.RemoveAt(keyTransforms.Count - 1);
             }
             else if (Input.Keys.WasJustPressed(Keys.F5))
             {
-                SerializationUtility.Save("CurveRecorderControllerOutput.xml",
-                    keyTransforms);
+                if (keyTransforms.Count > 0)
+                    SerializationUtility.Save(fileName, keyTransforms);
             }
         }
 
