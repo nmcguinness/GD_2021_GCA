@@ -267,7 +267,8 @@ namespace GDApp
             //set theMain camera, if we dont call this then the first camera added will be the Main
             level.SetMainCamera("main camera");
 
-            Time.Instance.TimeScale = 0.1f;
+            //allows us to scale time on all game objects that based movement on Time
+            // Time.Instance.TimeScale = 0.1f;
         }
 
         private void InitializeModels(Scene level)
