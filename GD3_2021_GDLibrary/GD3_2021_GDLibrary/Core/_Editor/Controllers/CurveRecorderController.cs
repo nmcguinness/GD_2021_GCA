@@ -1,4 +1,4 @@
-﻿using GD.Utilities;
+﻿using GDLibrary.Utilities;
 using GDLibrary.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;

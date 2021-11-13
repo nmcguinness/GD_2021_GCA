@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace GD.Utilities
+namespace GDLibrary.Utilities
 {
     /// <summary>
     /// Provides XML serialization functionality
@@ -24,7 +23,7 @@ namespace GD.Utilities
             xmlWriter.Close();
         }
 
-        public static object Load(string name, Type type)
+        public static object Load(string name, System.Type type)
         {
             var fStream = new FileStream(name, FileMode.Open);
             var textReader = XmlDictionaryReader.CreateTextReader(fStream, new XmlDictionaryReaderQuotas());

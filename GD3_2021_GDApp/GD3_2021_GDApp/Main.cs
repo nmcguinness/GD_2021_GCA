@@ -1,4 +1,4 @@
-﻿using GD.Utilities;
+﻿using GDLibrary.Utilities;
 using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Core;
@@ -82,11 +82,9 @@ namespace GDApp
 
         private void InitializeEditorHelpers()
         {
-            var curveRecorder = new GameObject("curve recorder",
-                GameObjectType.Editor);
+            //a game object to record camera positions to an XML file for use in a curve later
+            var curveRecorder = new GameObject("curve recorder", GameObjectType.Editor);
             curveRecorder.AddComponent(new CurveRecorderController());
-
-            //TODO - access to the level!
             activeScene.Add(curveRecorder);
         }
 
@@ -154,19 +152,14 @@ namespace GDApp
 
         private void InitializeLevel()
         {
-            //1 - add a scene (e.g. a level of the game)
             activeScene = new Scene("level 1");
 
             InitializeSkybox(activeScene, 500);
-
             InitializeCameras(activeScene);
-
             InitializeCubes(activeScene);
-
             InitializeModels(activeScene);
 
             sceneManager.Add(activeScene);
-
             sceneManager.LoadScene("level 1");
         }
 
