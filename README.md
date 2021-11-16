@@ -33,3 +33,4 @@
 - [ ] Add AnimationController
 - [ ] Add Menu/UI support
 - [ ] Complete existing TODOs
+- [ ] BUG: Mouse delta on FPC

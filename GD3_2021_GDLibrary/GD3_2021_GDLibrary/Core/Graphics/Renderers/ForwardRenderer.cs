@@ -25,6 +25,7 @@ namespace GDLibrary.Renderers
             //set depth and blend state
 
             //set viewport
+            graphicsDevice.Viewport = camera.Viewport;
 
             //render game objects
             var length = scene.Renderers.Count;

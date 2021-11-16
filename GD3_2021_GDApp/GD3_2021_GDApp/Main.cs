@@ -202,7 +202,18 @@ namespace GDApp
 
             //add camera game object
             var camera = new GameObject("main camera", GameObjectType.Camera);
-            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+
+            //  _graphics.PreferredBackBufferWidth
+            int width = 320, height = 240;
+            int xPos = (_graphics.PreferredBackBufferWidth - width) / 2;
+            int yPos = (_graphics.PreferredBackBufferHeight - height) / 2;
+            var viewport = new Viewport(xPos, yPos, width, height);
+            camera.AddComponent(new Camera(viewport));
+
+            //camera.AddComponent(new Camera(new Viewport(0, 50,
+            //    _graphics.PreferredBackBufferWidth,
+            //    _graphics.PreferredBackBufferHeight - 50)));
+
             camera.AddComponent(new FirstPersonController(0.05f, 0.025f, 0.00009f));
             camera.Transform.SetTranslation(0, 0, 15);
             level.Add(camera);
@@ -370,7 +381,7 @@ namespace GDApp
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.HotPink);
 
             //since the render manager is now a DrawableGameComponent we dont need to actively call Render/Draw
             //renderManager.Render(sceneManager.ActiveScene);
