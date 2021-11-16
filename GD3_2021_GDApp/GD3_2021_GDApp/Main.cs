@@ -127,8 +127,8 @@ namespace GDApp
         /// <summary>
         /// Set up the skybox using a QuadMesh
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="worldScale"></param>
+        /// <param name="level">Scene Stores all game objects for current...</param>
+        /// <param name="worldScale">float Value used to scale skybox normally 250 - 1000</param>
         private void InitializeSkybox(Scene level, float worldScale = 500)
         {
             #region Archetype

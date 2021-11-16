@@ -23,6 +23,11 @@ namespace GDLibrary.Editor
 
         public CurveHelper(Vector3 translation, Vector3 rotation)
         {
+            //round the vectors "in-place"
+            translation.Round(ROUND_PRECISION);
+            rotation.Round(ROUND_PRECISION);
+
+            //reduce precision
             this.translation = translation;
             this.rotation = rotation;
         }
