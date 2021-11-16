@@ -5,6 +5,9 @@ using System;
 
 namespace GDLibrary.Renderers
 {
+    /// <summary>
+    /// Renders the scene using a forward lighting technique and related effects
+    /// </summary>
     public class ForwardRenderer : IRenderScene
     {
         //temps used in Render
@@ -20,6 +23,8 @@ namespace GDLibrary.Renderers
                 scene = Application.SceneManager.ActiveScene;
 
             //set depth and blend state
+
+            //set viewport
 
             //render game objects
             var length = scene.Renderers.Count;
