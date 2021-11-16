@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 /// <summary>
 /// Adds extra methods to Vector3 using Extensions feature in C#

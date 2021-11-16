@@ -7,11 +7,28 @@
 - None yet specified
 
 ### Explain
-- [ ] Code additiona in Week 6(Halloween)
+- [x] Code additions in Week 6(Halloween)
 
 
 ### Tasks - Week 7
-- [ ] Add Clone to components
-- [ ] Add Controller and Behaviour
-- [ ] Test ModelRenderer
+- [x] Add Clone to components
+- [x] Add Controller and Behaviour
+- [x] Test ModelRenderer
+- [x] Add FirstPersonController
+- [x] Add Curve
+- [x] Add CurveController
+- [x] Add XML SerializationUtility
+- [x] Add Editor/CurveRecorderController
+
+### Tasks - Week 8
+- [x] Re-factor RenderManager to support forward/backward rendering (lighting)
+- [x] Re-factor RenderManager and SceneManager as GameComponents - see Main::Update and Draw 
+- [x] Add DEMO compiler directive in Main to turn on/off demo code
+- [ ] Add Round to Vector3 class as an extension
+- [ ] Round curve recorder translation and rotation stored to XML
+- [ ] Re-factor RenderManager and Camera (if necessary) to support multi-screen
+- [ ] Add physics engine
+- [ ] Add lighting engine
+- [ ] Add AnimationController
+- [ ] Add Menu/UI support
 - [ ] Complete existing TODOs
