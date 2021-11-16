@@ -25,7 +25,8 @@
 - [x] Re-factor RenderManager and SceneManager as GameComponents - see Main::Update and Draw 
 - [x] Add DEMO compiler directive in Main to turn on/off demo code
 - [x] Add Round to Vector3 class as an extension
-- [ ] Round curve recorder translation and rotation stored to XML
+- [x] Round curve recorder translation and rotation stored to XML
+- [ ] Added support for static and dynamic game objects 
 - [ ] Re-factor RenderManager and Camera (if necessary) to support multi-screen
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add physics engine

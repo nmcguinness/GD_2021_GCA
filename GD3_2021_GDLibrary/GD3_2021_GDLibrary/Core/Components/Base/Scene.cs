@@ -87,6 +87,16 @@ namespace GDLibrary.Components
         }
 
         /// <summary>
+        /// Returns a list of all the cameras in this scene
+        /// </summary>
+        /// <returns></returns>
+        /// <see cref="GDLibrary.Managers.RenderManager.Draw(Microsoft.Xna.Framework.GameTime)"/>
+        public List<Camera> GetAllActiveSceneCameras()
+        {
+            return gameObjects.Cameras;
+        }
+
+        /// <summary>
         /// Sets the Main camera for the game using an appropriate predicate
         /// </summary>
         /// <param name="predicate">Predicate of type GameObject</param>

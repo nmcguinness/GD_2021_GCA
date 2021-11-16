@@ -204,21 +204,19 @@ namespace GDApp
             //add camera game object
             var camera = new GameObject("main camera", GameObjectType.Camera);
 
-            //  _graphics.PreferredBackBufferWidth
-            //int width = 320, height = 240;
-            //int xPos = (_graphics.PreferredBackBufferWidth - width) / 2;
-            //int yPos = (_graphics.PreferredBackBufferHeight - height) / 2;
-            //var viewport = new Viewport(xPos, yPos, width, height);
-            //camera.AddComponent(new Camera(viewport));
+            //set viewport
+            //var viewportLeft = new Viewport(0, 0,
+            //    _graphics.PreferredBackBufferWidth / 2,
+            //    _graphics.PreferredBackBufferHeight);
 
-            //camera.AddComponent(new Camera(new Viewport(0, 50,
-            //    _graphics.PreferredBackBufferWidth,
-            //    _graphics.PreferredBackBufferHeight - 50)));
-
+            //add components
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-
             camera.AddComponent(new FirstPersonController(0.05f, 0.025f, 0.00009f));
+
+            //set initial position
             camera.Transform.SetTranslation(0, 0, 15);
+
+            //add to level
             level.Add(camera);
 
             #endregion First Person Camera
@@ -236,9 +234,18 @@ namespace GDApp
 
             //add camera game object
             var curveCamera = new GameObject("curve camera", GameObjectType.Camera);
+
+            //set viewport
+            //var viewportRight = new Viewport(_graphics.PreferredBackBufferWidth / 2, 0,
+            //    _graphics.PreferredBackBufferWidth / 2,
+            //    _graphics.PreferredBackBufferHeight);
+
+            //add components
             curveCamera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             curveCamera.AddComponent(new CurveBehaviour(translationCurve));
             curveCamera.AddComponent(new FOVOnScrollController(MathHelper.ToRadians(2)));
+
+            //add to level
             level.Add(curveCamera);
 
             #endregion Curve Camera
@@ -335,7 +342,7 @@ namespace GDApp
             Application.SceneManager = sceneManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer());
+            renderManager = new RenderManager(this, new ForwardRenderer(), false);
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
