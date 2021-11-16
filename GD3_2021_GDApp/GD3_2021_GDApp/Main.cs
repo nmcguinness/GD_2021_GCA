@@ -16,6 +16,8 @@ namespace GDApp
 {
     public class Main : Game
     {
+        public int dummy;
+
         #region Fields
 
         private GraphicsDeviceManager _graphics;
@@ -243,14 +245,14 @@ namespace GDApp
             #region Archetype
 
             var material = new BasicMaterial("model material");
-            material.Texture = Content.Load<Texture2D>("checkerboard");
+            material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/checkerboard");
             material.Shader = new BasicShader();
 
             var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
             var renderer = new ModelRenderer();
             renderer.Material = material;
             archetypalSphere.AddComponent(renderer);
-            renderer.Model = Content.Load<Model>("sphere");
+            renderer.Model = Content.Load<Model>("Assets/Models/sphere");
 
             //downsize the model a little because the sphere is quite large
             archetypalSphere.Transform.SetScale(0.125f, 0.125f, 0.125f);
@@ -276,7 +278,7 @@ namespace GDApp
             #region Archetype
 
             var material = new BasicMaterial("simple diffuse");
-            material.Texture = Content.Load<Texture2D>("mona lisa");
+            material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/mona lisa");
             material.Shader = new BasicShader();
 
             var archetypalCube = new GameObject("cube", GameObjectType.Architecture);

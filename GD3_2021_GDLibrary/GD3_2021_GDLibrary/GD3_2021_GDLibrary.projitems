@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Curve.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Graphics\Renderers\ForwardRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Graphics\Renderers\IRenderScene.cs" />
-    <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Utilities\Debug\GDDebug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\_Editor\Controllers\CurveRecorderController.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Utilities\Serialization\SerializationUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\_Demo\DemoSaveLoad.cs" />

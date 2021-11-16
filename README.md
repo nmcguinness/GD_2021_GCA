@@ -24,7 +24,7 @@
 - [x] Re-factor RenderManager to support forward/backward rendering (lighting)
 - [x] Re-factor RenderManager and SceneManager as GameComponents - see Main::Update and Draw 
 - [x] Add DEMO compiler directive in Main to turn on/off demo code
-- [ ] Add Round to Vector3 class as an extension
+- [x] Add Round to Vector3 class as an extension
 - [ ] Round curve recorder translation and rotation stored to XML
 - [ ] Re-factor RenderManager and Camera (if necessary) to support multi-screen
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
