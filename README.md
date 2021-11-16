@@ -27,6 +27,7 @@
 - [ ] Add Round to Vector3 class as an extension
 - [ ] Round curve recorder translation and rotation stored to XML
 - [ ] Re-factor RenderManager and Camera (if necessary) to support multi-screen
+- [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add physics engine
 - [ ] Add lighting engine
 - [ ] Add AnimationController
