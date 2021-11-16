@@ -68,8 +68,15 @@ public static class Vector3Extensions
     {
     }
 
+    /// <summary>
+    /// Adds round functionality to Vector3 from user-defined integer precision
+    /// </summary>
+    /// <param name="target">Vector3</param>
+    /// <param name="precision">Integer</param>
     public static void Round(this ref Vector3 target, int precision)
     {
+        //TODO - throw an exception on negative precision
+
         target.X = (float)Math.Round(target.X, precision);
         target.Y = (float)Math.Round(target.Y, precision);
         target.Z = (float)Math.Round(target.Z, precision);
