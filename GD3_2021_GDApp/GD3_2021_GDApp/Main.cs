@@ -1,12 +1,13 @@
-﻿using GDLibrary.Utilities;
+﻿//#define DEMO
+
 using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Core;
-using GDLibrary.Editor;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
+using GDLibrary.Renderers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -15,10 +16,6 @@ namespace GDApp
 {
     public class Main : Game
     {
-#if DEBUG
-        private GameObject cObject = null;
-#endif
-
         #region Fields
 
         private GraphicsDeviceManager _graphics;
@@ -55,88 +52,49 @@ namespace GDApp
 
         #region Initialization - Scene manager, Application data, Screen, Input, Scenes, Game Objects
 
+        /// <summary>
+        /// Initialize engine, dictionaries, assets, level contents
+        /// </summary>
         protected override void Initialize()
         {
             //data, input, scene manager
             InitializeEngine("My Game Title Goes Here", 1024, 768);
 
+            //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
 
+            //load assets into the relevant dictionary
             LoadAssets();
 
             //level with scenes and game objects
             InitializeLevel();
 
+            //TODO - remove hardcoded mouse values - update Screen class
             //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
-
-#if DEBUG
-            RunDemos();
-            InitializeEditorHelpers();
-#endif
 
             base.Initialize();
         }
 
-#if DEBUG
-
-        private void InitializeEditorHelpers()
-        {
-            //a game object to record camera positions to an XML file for use in a curve later
-            var curveRecorder = new GameObject("curve recorder", GameObjectType.Editor);
-            curveRecorder.AddComponent(new CurveRecorderController());
-            activeScene.Add(curveRecorder);
-        }
-
-        private void RunDemos()
-        {
-            #region Curve Demo
-
-            //var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
-            //curve1D.Add(0, 0);
-            //curve1D.Add(10, 1000);
-            //curve1D.Add(20, 2000);
-            //curve1D.Add(40, 4000);
-            //curve1D.Add(60, 6000);
-            //var value = curve1D.Evaluate(500, 2);
-
-            #endregion Curve Demo
-
-            #region Serialization Single Object Demo
-
-            var demoSaveLoad = new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f));
-            SerializationUtility.Save("DemoSingle.xml", demoSaveLoad);
-            var readSingle = SerializationUtility.Load("DemoSingle.xml",
-                typeof(DemoSaveLoad)) as DemoSaveLoad;
-
-            #endregion Serialization Single Object Demo
-
-            #region Serialization List Objects Demo
-
-            List<DemoSaveLoad> listDemos = new List<DemoSaveLoad>();
-            listDemos.Add(new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f)));
-            listDemos.Add(new DemoSaveLoad(new Vector3(10, 20, 30), new Vector3(4, 9, -18), new Vector3(15f, 1f, 202.5f)));
-            listDemos.Add(new DemoSaveLoad(new Vector3(100, 200, 300), new Vector3(145, 290, -80), new Vector3(6.5f, 1.1f, 8.05f)));
-
-            SerializationUtility.Save("ListDemo.xml", listDemos);
-            var readList = SerializationUtility.Load("ListDemo.xml",
-                typeof(List<DemoSaveLoad>)) as List<DemoSaveLoad>;
-
-            #endregion Serialization List Objects Demo
-        }
-
-#endif
-
+        /// <summary>
+        /// Stores all re-used assets and archetypal game objects
+        /// </summary>
         private void InitializeDictionaries()
         {
             textureDictionary = new Dictionary<string, Texture2D>();
         }
 
+        /// <summary>
+        /// Load resources from file
+        /// </summary>
         private void LoadAssets()
         {
             LoadTextures();
         }
 
+        /// <summary>
+        /// Load texture data from file and add to the dictionary
+        /// </summary>
         private void LoadTextures()
         {
             //debug
@@ -150,6 +108,9 @@ namespace GDApp
             textureDictionary.Add("skybox_sky", Content.Load<Texture2D>("Assets/Textures/Skybox/sky"));
         }
 
+        /// <summary>
+        /// Create a scene, add content, add to the scene manager, and load default scene
+        /// </summary>
         private void InitializeLevel()
         {
             activeScene = new Scene("level 1");
@@ -163,6 +124,11 @@ namespace GDApp
             sceneManager.LoadScene("level 1");
         }
 
+        /// <summary>
+        /// Set up the skybox using a QuadMesh
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="worldScale"></param>
         private void InitializeSkybox(Scene level, float worldScale = 500)
         {
             #region Archetype
@@ -224,6 +190,10 @@ namespace GDApp
             level.Add(top);
         }
 
+        /// <summary>
+        /// Initialize the camera(s) in our scene
+        /// </summary>
+        /// <param name="level"></param>
         private void InitializeCameras(Scene level)
         {
             #region First Person Camera
@@ -264,6 +234,10 @@ namespace GDApp
             // Time.Instance.TimeScale = 0.1f;
         }
 
+        /// <summary>
+        /// Add demo game objects based on FBX vertex data
+        /// </summary>
+        /// <param name="level"></param>
         private void InitializeModels(Scene level)
         {
             #region Archetype
@@ -293,6 +267,10 @@ namespace GDApp
             }
         }
 
+        /// <summary>
+        /// Add demo game objects based on user-defined vertices and indices
+        /// </summary>
+        /// <param name="level"></param>
         private void InitializeCubes(Scene level)
         {
             #region Archetype
@@ -329,7 +307,7 @@ namespace GDApp
             Window.Title = gameTitle;
 
             //instanciate scene manager to store all scenes
-            sceneManager = new SceneManager();
+            sceneManager = new SceneManager(this);
 
             //initialize global application data
             Application.Main = this;
@@ -338,8 +316,8 @@ namespace GDApp
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
 
-            //instanciate render manager to render all drawn game objects
-            renderManager = new RenderManager();
+            //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
+            renderManager = new RenderManager(this, new ForwardRenderer());
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
@@ -349,8 +327,11 @@ namespace GDApp
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
 
-            //add all input components to component list so that they will be updated
+            //add all input components to component list so that they will be updated and/or drawn
             //Q. what would happen is we commented out these lines?
+
+            Components.Add(sceneManager); //add so SceneManager::Update() will be called
+            Components.Add(renderManager); //add so RenderManager::Draw() will be called
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
@@ -381,40 +362,69 @@ namespace GDApp
             base.Update(gameTime);
 
             //update every updateable game object
-            //Q. what would happen is we commented out this line?
-            sceneManager.Update();
-
-#if DEBUG
-            DemoFind();
-#endif
+            //since the scene manager is now a GameComponent we dont need to actively call Update
+            //sceneManager.Update();
         }
-
-#if DEBUG
-
-        private void DemoFind()
-        {
-            //lets look for an object - note - we can ONLY look for object AFTER SceneManager::Update has been called
-            if (cObject == null)
-                cObject = sceneManager.Find(gameObject => gameObject.Name.Equals("Clone - cube - 2"));
-
-            //the ? is short for (if cObject != null) then...
-
-            cObject?.Transform.Rotate(0,
-                Time.Instance.UnscaledDeltaTimeMs * 3 / 60.0f, 0);
-        }
-
-#endif
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //render every renderable game object
-            renderManager.Render(sceneManager.ActiveScene);
+            //since the render manager is now a DrawableGameComponent we dont need to actively call Render/Draw
+            //renderManager.Render(sceneManager.ActiveScene);
 
             base.Draw(gameTime);
         }
 
         #endregion Update & Draw
+
+#if DEMO
+
+        private void InitializeEditorHelpers()
+        {
+            //a game object to record camera positions to an XML file for use in a curve later
+            var curveRecorder = new GameObject("curve recorder", GameObjectType.Editor);
+            curveRecorder.AddComponent(new GDLibrary.Editor.CurveRecorderController());
+            activeScene.Add(curveRecorder);
+        }
+
+        private void RunDemos()
+        {
+        #region Curve Demo
+
+            //var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
+            //curve1D.Add(0, 0);
+            //curve1D.Add(10, 1000);
+            //curve1D.Add(20, 2000);
+            //curve1D.Add(40, 4000);
+            //curve1D.Add(60, 6000);
+            //var value = curve1D.Evaluate(500, 2);
+
+        #endregion Curve Demo
+
+        #region Serialization Single Object Demo
+
+            var demoSaveLoad = new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f));
+            GDLibrary.Utilities.SerializationUtility.Save("DemoSingle.xml", demoSaveLoad);
+            var readSingle = GDLibrary.Utilities.SerializationUtility.Load("DemoSingle.xml",
+                typeof(DemoSaveLoad)) as DemoSaveLoad;
+
+        #endregion Serialization Single Object Demo
+
+        #region Serialization List Objects Demo
+
+            List<DemoSaveLoad> listDemos = new List<DemoSaveLoad>();
+            listDemos.Add(new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f)));
+            listDemos.Add(new DemoSaveLoad(new Vector3(10, 20, 30), new Vector3(4, 9, -18), new Vector3(15f, 1f, 202.5f)));
+            listDemos.Add(new DemoSaveLoad(new Vector3(100, 200, 300), new Vector3(145, 290, -80), new Vector3(6.5f, 1.1f, 8.05f)));
+
+            GDLibrary.Utilities.SerializationUtility.Save("ListDemo.xml", listDemos);
+            var readList = GDLibrary.Utilities.SerializationUtility.Load("ListDemo.xml",
+                typeof(List<DemoSaveLoad>)) as List<DemoSaveLoad>;
+
+        #endregion Serialization List Objects Demo
+        }
+
+#endif
     }
 }
