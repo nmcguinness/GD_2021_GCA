@@ -116,9 +116,9 @@ namespace GDApp
         private void InitializeLevel()
         {
             activeScene = new Scene("level 1");
+            InitializeCameras(activeScene);
 
             InitializeSkybox(activeScene, 500);
-            InitializeCameras(activeScene);
             InitializeCubes(activeScene);
             InitializeModels(activeScene);
 
@@ -137,7 +137,7 @@ namespace GDApp
 
             var material = new BasicMaterial("simple diffuse");
             material.Texture = textureDictionary["checkerboard"];
-            material.Shader = new BasicShader();
+            material.Shader = new BasicShader(Application.Content);
 
             var archetypalQuad = new GameObject("quad", GameObjectType.Skybox);
             archetypalQuad.IsStatic = false;
@@ -267,7 +267,7 @@ namespace GDApp
 
             var material = new BasicMaterial("model material");
             material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/checkerboard");
-            material.Shader = new BasicShader();
+            material.Shader = new BasicShader(Application.Content);
 
             var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
             archetypalSphere.IsStatic = false;
@@ -302,7 +302,7 @@ namespace GDApp
 
             var material = new BasicMaterial("simple diffuse");
             material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/mona lisa");
-            material.Shader = new BasicShader();
+            material.Shader = new BasicShader(Application.Content);
 
             var archetypalCube = new GameObject("cube", GameObjectType.Architecture);
             var renderer = new MeshRenderer();
@@ -342,7 +342,7 @@ namespace GDApp
             Application.SceneManager = sceneManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer(), false);
+            renderManager = new RenderManager(this, new ForwardRenderer(), true);
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
