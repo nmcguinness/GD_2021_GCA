@@ -155,6 +155,7 @@ namespace GDApp
                 new Transform2D(new Vector2(50, 100), new Vector2(8, 2), 0),
                 0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
 
+            //add a demo time based behaviour - because we can!
             healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
 
             //add the ui element to the scene
