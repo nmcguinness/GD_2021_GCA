@@ -301,7 +301,7 @@ namespace GDLibrary
         #region Constructors
 
         /// <summary>
-        /// Use this constructor draw WHITE BLEND, FULL, UNROTATED, ZERO-ORIGIN textures
+        /// Construct a ui texture object when we draw WHITE BLEND, FULL, UNROTATED, ZERO-ORIGIN textures
         /// </summary>
         /// <param name="transform"></param>
         /// <param name="depth"></param>
@@ -314,6 +314,19 @@ namespace GDLibrary
         {
         }
 
+        /// <summary>
+        /// Construct a ui texture object where we want to set all draw related settings (e.g. source rectangle, color, origin)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="uiObjectType"></param>
+        /// <param name="transform"></param>
+        /// <param name="depth"></param>
+        /// <param name="color"></param>
+        /// <param name="spriteEffects"></param>
+        /// <param name="origin"></param>
+        /// <param name="defaultTexture"></param>
+        /// <param name="alternateTexture"></param>
+        /// <param name="sourceRectangle"></param>
         public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
             Color color, SpriteEffects spriteEffects, Vector2 origin,
             Texture2D defaultTexture, Texture2D alternateTexture,

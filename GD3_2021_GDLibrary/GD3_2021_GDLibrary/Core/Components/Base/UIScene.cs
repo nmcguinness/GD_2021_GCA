@@ -36,6 +36,10 @@ namespace GDLibrary.Components.UI
 
         #region Constructors
 
+        /// <summary>
+        /// Instanciate a scene to store ui objects for a particular view in the game (e.g. a menu screen, a ui layout)
+        /// </summary>
+        /// <param name="name">string</param>
         public UIScene(string name)
         {
             Name = name;

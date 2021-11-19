@@ -26,6 +26,12 @@ namespace GDLibrary.Components.UI
 
         #region Constructors
 
+        /// <summary>
+        /// Instanciate a transform 2D to store translation, rotation and scale of a UI object
+        /// </summary>
+        /// <param name="localTranslation">Vector2</param>
+        /// <param name="localScale">Vector2</param>
+        /// <param name="rotationInDegrees">float</param>
         public Transform2D(Vector2 localTranslation,
      Vector2 localScale, float rotationInDegrees)
         {

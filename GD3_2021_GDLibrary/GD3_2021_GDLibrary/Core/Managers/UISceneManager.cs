@@ -14,6 +14,11 @@ namespace GDLibrary.Components.UI
         private UIScene activeScene;
         private string activeSceneName;
 
+        /// <summary>
+        /// Instanciate a ui scene manager to store all ui scenes (e.g. in-game ui)
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="spriteBatch"></param>
         public UISceneManager(Game game, SpriteBatch spriteBatch) : base(game)
         {
             this.spriteBatch = spriteBatch;
