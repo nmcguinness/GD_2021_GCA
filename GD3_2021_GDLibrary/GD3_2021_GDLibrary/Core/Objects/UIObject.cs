@@ -144,9 +144,13 @@ namespace GDLibrary
 
         #region Actions - Update & Draw
 
+        /// <summary>
+        /// Called each update to call an update on all ui components of the ui object
+        /// </summary>
         public virtual void Update()
         {
-            //TODO - here we will update all components
+            for (int i = 0; i < components.Count; i++)
+                components[i].Update();
         }
 
         public abstract void Draw(SpriteBatch spriteBatch);

@@ -76,10 +76,12 @@ namespace GDLibrary.Components.UI
 
         #region Actions - Update & Draw
 
+        private UIObject uiObject;
         public virtual void Update()
         {
-            foreach (UIObject uiObject in uiObjects)
+            for (int i = 0; i < uiObjects.Count; i++)
             {
+                var uiObject = uiObjects[i];
                 if (uiObject.IsEnabled)
                     uiObject.Update();
             }
@@ -87,8 +89,9 @@ namespace GDLibrary.Components.UI
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            foreach (UIObject uiObject in uiObjects)
+            for (int i = 0; i < uiObjects.Count; i++)
             {
+                var uiObject = uiObjects[i];
                 if (uiObject.IsEnabled)
                     uiObject.Draw(spriteBatch);
             }

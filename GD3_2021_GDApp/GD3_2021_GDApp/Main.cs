@@ -76,6 +76,7 @@ namespace GDApp
             //level with scenes and game objects
             InitializeLevel();
 
+            //add menu and ui
             InitializeUI();  //19.11.21
 
             //TODO - remove hardcoded mouse values - update Screen class
@@ -149,9 +150,12 @@ namespace GDApp
             #region Add Health Bar
 
             //create the UI element
-            var healthTextureObj = new UITextureObject("health", UIObjectType.Texture,
-                new Transform2D(new Vector2(50, 100), Vector2.One, 0),
+            var healthTextureObj = new UITextureObject("health",
+                UIObjectType.Texture,
+                new Transform2D(new Vector2(50, 100), new Vector2(8, 2), 0),
                 0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
+
+            healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
 
             //add the ui element to the scene
             mainGameUIScene.Add(healthTextureObj);
