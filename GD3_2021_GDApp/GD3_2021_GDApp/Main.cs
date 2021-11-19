@@ -2,6 +2,7 @@
 
 using GDLibrary;
 using GDLibrary.Components;
+using GDLibrary.Components.UI;
 using GDLibrary.Core;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
@@ -16,8 +17,6 @@ namespace GDApp
 {
     public class Main : Game
     {
-        public int dummy;
-
         #region Fields
 
         private GraphicsDeviceManager _graphics;
@@ -32,6 +31,11 @@ namespace GDApp
         /// Renders all game objects with an attached and enabled renderer
         /// </summary>
         private RenderManager renderManager;
+
+        /// <summary>
+        /// Renders all ui objects
+        /// </summary>
+        private UISceneManager uiSceneManager;
 
         /// <summary>
         /// Quick lookup for all textures used within the game
@@ -52,13 +56,14 @@ namespace GDApp
 
         #endregion Constructors
 
-        #region Initialization - Scene manager, Application data, Screen, Input, Scenes, Game Objects
-
         /// <summary>
         /// Initialize engine, dictionaries, assets, level contents
         /// </summary>
         protected override void Initialize()
         {
+            //move here so that UISceneManager can use!
+            _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
+
             //data, input, scene manager
             InitializeEngine("My Game Title Goes Here", 1024, 768);
 
@@ -71,12 +76,16 @@ namespace GDApp
             //level with scenes and game objects
             InitializeLevel();
 
+            InitializeUI();  //19.11.21
+
             //TODO - remove hardcoded mouse values - update Screen class
             //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
 
             base.Initialize();
         }
+
+        #region Initialization - Dictionaries & Assets
 
         /// <summary>
         /// Stores all re-used assets and archetypal game objects
@@ -109,6 +118,72 @@ namespace GDApp
             textureDictionary.Add("skybox_back", Content.Load<Texture2D>("Assets/Textures/Skybox/back"));
             textureDictionary.Add("skybox_sky", Content.Load<Texture2D>("Assets/Textures/Skybox/sky"));
         }
+
+        protected override void LoadContent()
+        {
+            //  _spriteBatch = new SpriteBatch(GraphicsDevice); //Move to Initialize for UISceneManager
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
+
+        #endregion Initialization - Dictionaries & Assets
+
+        #region Initialization - UI & Menu
+
+        private void InitializeUI()  //19.11.21
+        {
+            //TODO
+            //InitializeGameMenu();
+
+            InitializeGameUI();
+        }
+
+        private void InitializeGameUI()
+        {
+            //create the scene
+            var mainGameUIScene = new UIScene("main game ui");
+
+            #region Add Health Bar
+
+            //create the UI element
+            var healthTextureObj = new UITextureObject("health", UIObjectType.Texture,
+                new Transform2D(new Vector2(50, 100), Vector2.One, 0),
+                0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
+
+            //add the ui element to the scene
+            mainGameUIScene.Add(healthTextureObj);
+
+            #endregion Add Health Bar
+
+            #region Add Text
+
+            //create the UI element
+            var nameTextObj = new UITextObject("player name", UIObjectType.Text,
+                new Transform2D(new Vector2(50, 50), Vector2.One, 0),
+                0, Content.Load<SpriteFont>("Assets/Fonts/ui"), "Brutus Maximus");
+
+            //add the ui element to the scene
+            mainGameUIScene.Add(nameTextObj);
+
+            #endregion Add Text
+
+            #region Add Scene To Manager & Set Active Scene
+
+            //add the ui scene to the manager
+            uiSceneManager.Add(mainGameUIScene);
+
+            //set the active scene
+            uiSceneManager.SetActiveScene("main game ui");
+
+            #endregion Add Scene To Manager & Set Active Scene
+        }
+
+        #endregion Initialization - UI & Menu
+
+        #region Initialization - Engine, Cameras, Content
 
         /// <summary>
         /// Create a scene, add content, add to the scene manager, and load default scene
@@ -342,7 +417,7 @@ namespace GDApp
             Application.SceneManager = sceneManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer(), true);
+            renderManager = new RenderManager(this, new ForwardRenderer(), false);
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, false);
@@ -352,31 +427,20 @@ namespace GDApp
             Input.Mouse = new MouseComponent(this);
             Input.Gamepad = new GamepadComponent(this);
 
+            //create the manager and add to components
+            uiSceneManager = new UISceneManager(this, _spriteBatch); //19.11.21
+
             //add all input components to component list so that they will be updated and/or drawn
-            //Q. what would happen is we commented out these lines?
-            Components.Add(sceneManager); //add so SceneManager::Update() will be called
-            Components.Add(renderManager); //add so RenderManager::Draw() will be called
+            Components.Add(sceneManager);
+            Components.Add(renderManager);
             Components.Add(Input.Keys);
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
             Components.Add(Time.GetInstance(this));
+            Components.Add(uiSceneManager);  //19.11.21
         }
 
-        #endregion Initialization - Scene manager, Application data, Screen, Input, Scenes, Game Objects
-
-        #region Load & Unload Assets
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-        }
-
-        protected override void UnloadContent()
-        {
-            base.UnloadContent();
-        }
-
-        #endregion Load & Unload Assets
+        #endregion Initialization - Engine, Cameras, Content
 
         #region Update & Draw
 
