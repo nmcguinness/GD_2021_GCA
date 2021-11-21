@@ -23,25 +23,31 @@ namespace GDApp
         private SpriteBatch _spriteBatch;
 
         /// <summary>
-        /// Stores all scenes (which means all game objects i.e. players, cameras, pickups, behaviours, controllers)
+        /// Stores and updates all scenes (which means all game objects i.e. players, cameras, pickups, behaviours, controllers)
         /// </summary>
         private SceneManager sceneManager;
 
         /// <summary>
-        /// Renders all game objects with an attached and enabled renderer
+        /// Draws all game objects with an attached and enabled renderer
         /// </summary>
         private RenderManager renderManager;
 
         /// <summary>
-        /// Renders all ui objects
+        /// Updates and Draws all ui objects
         /// </summary>
         private UISceneManager uiSceneManager;
+
+        /// <summary>
+        /// Renders all ui objects
+        /// </summary>
+        private PhysicsManager physicsManager;
 
         /// <summary>
         /// Quick lookup for all textures used within the game
         /// </summary>
         private Dictionary<string, Texture2D> textureDictionary;
 
+        //temp
         private Scene activeScene;
 
         #endregion Fields
@@ -65,7 +71,7 @@ namespace GDApp
             _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
 
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1024, 768);
+            InitializeEngine("My Game Title Goes Here", 1920, 1080);
 
             //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
@@ -79,25 +85,13 @@ namespace GDApp
             //add menu and ui
             InitializeUI();  //19.11.21
 
-            //TODO - remove hardcoded mouse values - update Screen class
-            //centre the mouse with hardcoded value - remove later
-            Input.Mouse.Position = new Vector2(512, 384);
+            //TODO - remove hardcoded mouse values - update Screen class to centre the mouse with hardcoded value - remove later
+            Input.Mouse.Position = Screen.Instance.ScreenCentre;
 
-#if DEBUG
-            InitializeDebugInfo();
-#endif
+            //turn on/off debug info
+            InitializeDebugUI(true);
 
             base.Initialize();
-        }
-
-        private void InitializeDebugInfo()
-        {
-            Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(
-                this,
-                _spriteBatch,
-                Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"),
-                new Vector2(20, _graphics.PreferredBackBufferHeight - 20),
-                Color.Red));
         }
 
         #region Initialization - Dictionaries & Assets
@@ -148,6 +142,9 @@ namespace GDApp
 
         #region Initialization - UI & Menu
 
+        /// <summary>
+        /// Adds menu and UI elements
+        /// </summary>
         private void InitializeUI()  //19.11.21
         {
             //TODO
@@ -156,6 +153,9 @@ namespace GDApp
             InitializeGameUI();
         }
 
+        /// <summary>
+        /// Adds ui elements seen in-game (e.g. health, timer)
+        /// </summary>
         private void InitializeGameUI()
         {
             //create the scene
@@ -200,9 +200,82 @@ namespace GDApp
             #endregion Add Scene To Manager & Set Active Scene
         }
 
+        /// <summary>
+        /// Adds component to draw debug info to the screen
+        /// </summary>
+        private void InitializeDebugUI(bool showDebug)
+        {
+            if (showDebug)
+            {
+                Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(
+                    this,
+                    _spriteBatch,
+                    Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"),
+                    new Vector2(20, _graphics.PreferredBackBufferHeight - 20),
+                    Color.Red));
+            }
+        }
+
         #endregion Initialization - UI & Menu
 
         #region Initialization - Engine, Cameras, Content
+
+        /// <summary>
+        /// Set application data, input, title and scene manager
+        /// </summary>
+        private void InitializeEngine(string gameTitle, int width, int height)
+        {
+            //set game title
+            Window.Title = gameTitle;
+
+            //add physics manager to enable CD/CR and physics
+            physicsManager = new PhysicsManager(this);
+
+            //instanciate scene manager to store all scenes
+            sceneManager = new SceneManager(this);
+
+            //create the ui scene manager to update and draw all ui scenes
+            uiSceneManager = new UISceneManager(this, _spriteBatch); //19.11.21
+
+            //initialize global application data
+            Application.Main = this;
+            Application.Content = Content;
+            Application.GraphicsDevice = _graphics.GraphicsDevice; //TODO - is this necessary?
+            Application.GraphicsDeviceManager = _graphics;
+            Application.SceneManager = sceneManager;
+
+            //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
+            renderManager = new RenderManager(this, new ForwardRenderer(), false);
+
+            //instanciate screen (singleton) and set resolution etc
+            Screen.GetInstance().Set(width, height, true, true);
+
+            //instanciate input components and store reference in Input for global access
+            Input.Keys = new KeyboardComponent(this);
+            Input.Mouse = new MouseComponent(this);
+            Input.Gamepad = new GamepadComponent(this);
+
+            //************* add all input components to component list so that they will be updated and/or drawn ***********/
+            //add time support
+            Components.Add(Time.GetInstance(this));
+
+            //add input support
+            Components.Add(Input.Keys);
+            Components.Add(Input.Mouse);
+            Components.Add(Input.Gamepad);
+
+            //add scene manager to update game objects
+            Components.Add(sceneManager);
+
+            //add render manager to draw objects
+            Components.Add(renderManager);
+
+            //add ui scene manager to update and drawn ui objects
+            Components.Add(uiSceneManager);
+
+            //add physics manager to enable CD/CR and physics
+            Components.Add(physicsManager);
+        }
 
         /// <summary>
         /// Create a scene, add content, add to the scene manager, and load default scene
@@ -415,48 +488,6 @@ namespace GDApp
                 clone.Transform.SetScale(1, i, 1);
                 level.Add(clone);
             }
-        }
-
-        /// <summary>
-        /// Set application data, input, title and scene manager
-        /// </summary>
-        private void InitializeEngine(string gameTitle, int width, int height)
-        {
-            //set game title
-            Window.Title = gameTitle;
-
-            //instanciate scene manager to store all scenes
-            sceneManager = new SceneManager(this);
-
-            //initialize global application data
-            Application.Main = this;
-            Application.Content = Content;
-            Application.GraphicsDevice = _graphics.GraphicsDevice; //TODO - is this necessary?
-            Application.GraphicsDeviceManager = _graphics;
-            Application.SceneManager = sceneManager;
-
-            //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer(), false);
-
-            //instanciate screen (singleton) and set resolution etc
-            Screen.GetInstance().Set(width, height, true, false);
-
-            //instanciate input components and store reference in Input for global access
-            Input.Keys = new KeyboardComponent(this);
-            Input.Mouse = new MouseComponent(this);
-            Input.Gamepad = new GamepadComponent(this);
-
-            //create the manager and add to components
-            uiSceneManager = new UISceneManager(this, _spriteBatch); //19.11.21
-
-            //add all input components to component list so that they will be updated and/or drawn
-            Components.Add(sceneManager);
-            Components.Add(renderManager);
-            Components.Add(Input.Keys);
-            Components.Add(Input.Mouse);
-            Components.Add(Input.Gamepad);
-            Components.Add(Time.GetInstance(this));
-            Components.Add(uiSceneManager);  //19.11.21
         }
 
         #endregion Initialization - Engine, Cameras, Content
