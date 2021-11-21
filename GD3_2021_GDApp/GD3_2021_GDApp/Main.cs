@@ -83,7 +83,21 @@ namespace GDApp
             //centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = new Vector2(512, 384);
 
+#if DEBUG
+            InitializeDebugInfo();
+#endif
+
             base.Initialize();
+        }
+
+        private void InitializeDebugInfo()
+        {
+            Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(
+                this,
+                _spriteBatch,
+                Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"),
+                new Vector2(20, _graphics.PreferredBackBufferHeight - 20),
+                Color.Red));
         }
 
         #region Initialization - Dictionaries & Assets

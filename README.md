@@ -35,3 +35,5 @@
 - [ ] Add Menu/UI support
 - [ ] Complete existing TODOs
 - [ ] BUG: Mouse delta on FPC
+- [ ] BUG: GameObject Clone texture sharing
+- [ ] Add parenting to GameObject and UIObject

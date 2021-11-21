@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Controllers\Camera\OLD_FirstPersonCameraController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\UIScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\UIController.cs" />
+    <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Utilities\GDDebug\PerfUtility.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Components\Behaviours\UI\UITimeColorFlipBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\ViewportExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Graphics\Materials\CustomMaterial.cs" />
