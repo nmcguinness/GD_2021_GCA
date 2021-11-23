@@ -9,6 +9,9 @@
 ### Explain
 - [x] Code additions in Week 6(Halloween)
 
+### Bugs
+- [x] BUG: Mouse delta on FPC
+- [ ] BUG: GameObject Clone texture sharing
 
 ### Tasks - Week 7
 - [x] Add Clone to components
@@ -26,14 +29,19 @@
 - [x] Add DEMO compiler directive in Main to turn on/off demo code
 - [x] Add Round to Vector3 class as an extension
 - [x] Round curve recorder translation and rotation stored to XML
-- [ ] Added support for static and dynamic game objects 
-- [ ] Re-factor RenderManager and Camera (if necessary) to support multi-screen
+- [x] Added support for static and dynamic game objects 
+- [x] Re-factor RenderManager and Camera (if necessary) to support multi-screen
+
+### Tasks - Week 9
+- [x] Added support for pausing game components to support menu
+- [x] Added ui game objects and ui scene manager for onscreen elements
+- [x] Add Menu/UI support
+- [x] Added EventDispatcher
+- [x] Added support to UISceneManager for add/remove ui objects
+- [ ] Add support for removing/adding objects to the scene manager
+- [ ] Add support for removing/adding objects to the ui scene manager
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add physics engine
 - [ ] Add lighting engine
 - [ ] Add AnimationController
-- [ ] Add Menu/UI support
-- [ ] Complete existing TODOs
-- [ ] BUG: Mouse delta on FPC
-- [ ] BUG: GameObject Clone texture sharing
 - [ ] Add parenting to GameObject and UIObject

@@ -1,9 +1,11 @@
 ﻿//#define DEMO
 
+using BEPUphysics.Entities;
 using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Components.UI;
 using GDLibrary.Core;
+using GDLibrary.Core.Demo;
 using GDLibrary.Graphics;
 using GDLibrary.Inputs;
 using GDLibrary.Managers;
@@ -37,6 +39,8 @@ namespace GDApp
         /// </summary>
         private UISceneManager uiSceneManager;
 
+        private EventDispatcher eventDispatcher;
+
         /// <summary>
         /// Renders all ui objects
         /// </summary>
@@ -49,6 +53,10 @@ namespace GDApp
 
         //temp
         private Scene activeScene;
+
+        private Entity box1;
+        private GameObject archetypalCube;
+        private UITextObject nameTextObj;
 
         #endregion Fields
 
@@ -83,7 +91,7 @@ namespace GDApp
             InitializeLevel();
 
             //add menu and ui
-            InitializeUI();  //19.11.21
+            InitializeUI();
 
             //TODO - remove hardcoded mouse values - update Screen class to centre the mouse with hardcoded value - remove later
             Input.Mouse.Position = Screen.Instance.ScreenCentre;
@@ -180,7 +188,7 @@ namespace GDApp
             #region Add Text
 
             //create the UI element
-            var nameTextObj = new UITextObject("player name", UIObjectType.Text,
+            nameTextObj = new UITextObject("player name", UIObjectType.Text,
                 new Transform2D(new Vector2(50, 50), Vector2.One, 0),
                 0, Content.Load<SpriteFont>("Assets/Fonts/ui"), "Brutus Maximus");
 
@@ -211,8 +219,8 @@ namespace GDApp
                     this,
                     _spriteBatch,
                     Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"),
-                    new Vector2(20, _graphics.PreferredBackBufferHeight - 20),
-                    Color.Red));
+                    new Vector2(40, _graphics.PreferredBackBufferHeight - 40),
+                    Color.White));
             }
         }
 
@@ -228,6 +236,9 @@ namespace GDApp
             //set game title
             Window.Title = gameTitle;
 
+            //the most important element! add event dispatcher for system events
+            eventDispatcher = new EventDispatcher(this);
+
             //add physics manager to enable CD/CR and physics
             physicsManager = new PhysicsManager(this);
 
@@ -235,14 +246,15 @@ namespace GDApp
             sceneManager = new SceneManager(this);
 
             //create the ui scene manager to update and draw all ui scenes
-            uiSceneManager = new UISceneManager(this, _spriteBatch); //19.11.21
+            uiSceneManager = new UISceneManager(this, _spriteBatch);
 
             //initialize global application data
             Application.Main = this;
             Application.Content = Content;
-            Application.GraphicsDevice = _graphics.GraphicsDevice; //TODO - is this necessary?
+            Application.GraphicsDevice = _graphics.GraphicsDevice;
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
+            Application.PhysicsManager = physicsManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
             renderManager = new RenderManager(this, new ForwardRenderer(), false);
@@ -256,6 +268,10 @@ namespace GDApp
             Input.Gamepad = new GamepadComponent(this);
 
             //************* add all input components to component list so that they will be updated and/or drawn ***********/
+
+            //add event dispatcher
+            Components.Add(eventDispatcher);
+
             //add time support
             Components.Add(Time.GetInstance(this));
 
@@ -291,6 +307,13 @@ namespace GDApp
 
             sceneManager.Add(activeScene);
             sceneManager.LoadScene("level 1");
+        }
+
+        /// <summary>
+        /// Demo of the new physics manager and collidable objects
+        /// </summary>
+        private void InitializeCollidables()
+        {
         }
 
         /// <summary>
@@ -496,6 +519,15 @@ namespace GDApp
 
         protected override void Update(GameTime gameTime)
         {
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.P))
+            {
+                //DEMO - raise event
+            }
+            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.U))
+            {
+                //DEMO - raise event
+            }
+
             base.Update(gameTime);
         }
 
@@ -519,8 +551,18 @@ namespace GDApp
 
         private void RunDemos()
         {
-        #region Curve Demo
+            // CurveDemo();
+            // SaveLoadDemo();
 
+            EventSenderDemo();
+        }
+
+        private void EventSenderDemo()
+        {
+        }
+
+        private void CurveDemo()
+        {
             //var curve1D = new GDLibrary.Parameters.Curve1D(CurveLoopType.Cycle);
             //curve1D.Add(0, 0);
             //curve1D.Add(10, 1000);
@@ -528,9 +570,10 @@ namespace GDApp
             //curve1D.Add(40, 4000);
             //curve1D.Add(60, 6000);
             //var value = curve1D.Evaluate(500, 2);
+        }
 
-        #endregion Curve Demo
-
+        private void SaveLoadDemo()
+        {
         #region Serialization Single Object Demo
 
             var demoSaveLoad = new DemoSaveLoad(new Vector3(1, 2, 3), new Vector3(45, 90, -180), new Vector3(1.5f, 0.1f, 20.25f));
