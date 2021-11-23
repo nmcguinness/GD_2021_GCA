@@ -13,6 +13,7 @@
 - [ ] Fix camera drift on no mouse movement
 - [x] Fix Mouse delta on FPC
 - [ ] GameObject Clone texture sharing
+- [ ] Alpha fade on ui text
 
 ### Tasks - Week 7
 - [x] Add Clone to components

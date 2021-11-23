@@ -205,11 +205,13 @@ namespace GDApp
             //create the UI element
             var healthTextureObj = new UITextureObject("health",
                 UIObjectType.Texture,
-                new Transform2D(new Vector2(50, 100), new Vector2(8, 2), 0),
+                new Transform2D(new Vector2(50, 600),
+                new Vector2(8, 2),
+                MathHelper.ToRadians(-90)),
                 0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
 
             //add a demo time based behaviour - because we can!
-            // healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
+            healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
 
             healthTextureObj.AddComponent(
                             new UIProgressBarController(0, 8, 0));
@@ -221,10 +223,18 @@ namespace GDApp
 
             #region Add Text
 
+            var font = Content.Load<SpriteFont>("Assets/Fonts/ui");
+            var str = "player name";
+
             //create the UI element
-            nameTextObj = new UITextObject("player name", UIObjectType.Text,
-                new Transform2D(new Vector2(50, 50), Vector2.One, 0),
-                0, Content.Load<SpriteFont>("Assets/Fonts/ui"), "Brutus Maximus");
+            nameTextObj = new UITextObject(str, UIObjectType.Text,
+                new Transform2D(new Vector2(512, 386),
+                Vector2.One, 0),
+                0, font, "Brutus Maximus");
+
+            nameTextObj.Origin = font.MeasureString(str) / 2;
+
+            nameTextObj.AddComponent(new UIExpandFadeBehaviour());
 
             //add the ui element to the scene
             mainGameUIScene.Add(nameTextObj);

@@ -48,7 +48,6 @@ namespace GDLibrary.Components.UI
             }
             set
             {
-                //       if(startValue != value)
                 startValue = (value >= 0) ? value : 0;
             }
         }
@@ -59,13 +58,16 @@ namespace GDLibrary.Components.UI
             StartValue = startValue;
             MaxValue = maxValue;
             CurrentValue = currentValue;
-
-            sourceRectangle = (uiObject as UITextureObject).SourceRectangle;
-            sourceRectangle.Width = (int)(sourceRectangle.Width * 0.5f);
         }
 
         public override void Update()
         {
+            if (uiObject != null)
+            {
+                (uiObject as UITextureObject).SetRectangle(
+                    64 * CurrentValue / MaxValue, 8);
+            }
+
             HandleInputs();
         }
 

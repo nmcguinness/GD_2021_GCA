@@ -300,6 +300,11 @@ namespace GDLibrary
 
         #region Constructors
 
+        public void SetRectangle(int width, int height)
+        {
+            sourceRectangle = new Rectangle(0, 0, width, height);
+        }
+
         /// <summary>
         /// Construct a ui texture object when we draw WHITE BLEND, FULL, UNROTATED, ZERO-ORIGIN textures
         /// </summary>
