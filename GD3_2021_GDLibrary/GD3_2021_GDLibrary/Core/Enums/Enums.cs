@@ -41,6 +41,9 @@
     public enum EventActionType
     {
         OnPlay,
+        OnPlay2D,
+        OnPlay3D,
+
         OnPause,
         OnResume,
         OnRestart,
@@ -72,5 +75,16 @@
         OnNoObjectPicked,
 
         //add more here...
+    }
+
+    /// <summary>
+    /// Used by SoundManager to set volume etc on a category of sounds e.g. all explosion sounds
+    /// </summary>
+    public enum SoundCategoryType : sbyte
+    {
+        WinLose,
+        Explosion,
+        BackgroundMusic,
+        Alarm
     }
 }

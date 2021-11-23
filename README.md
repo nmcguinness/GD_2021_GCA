@@ -38,6 +38,7 @@
 - [x] Add Menu/UI support
 - [x] Added EventDispatcher
 - [x] Added support to UISceneManager for add/remove ui objects
+- [ ] Added an untested sound manager
 - [ ] Add support for removing/adding objects to the scene manager
 - [ ] Add support for removing/adding objects to the ui scene manager
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)

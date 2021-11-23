@@ -12,6 +12,7 @@ using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Renderers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -39,6 +40,7 @@ namespace GDApp
         /// </summary>
         private UISceneManager uiSceneManager;
 
+        private SoundManager soundManager;
         private EventDispatcher eventDispatcher;
 
         /// <summary>
@@ -118,6 +120,18 @@ namespace GDApp
         private void LoadAssets()
         {
             LoadTextures();
+            LoadSounds();
+        }
+
+        /// <summary>
+        /// Load sound data used by sound manager
+        /// </summary>
+        private void LoadSounds()
+        {
+            //for example...
+            //soundManager.Add(new GDLibrary.Managers.Cue("smokealarm",
+            //    Content.Load<SoundEffect>("Assets/Sounds/Effects/smokealarm1"),
+            //    SoundCategoryType.Alarm, new Vector3(1, 0, 0), false));
         }
 
         /// <summary>
@@ -248,6 +262,9 @@ namespace GDApp
             //create the ui scene manager to update and draw all ui scenes
             uiSceneManager = new UISceneManager(this, _spriteBatch);
 
+            //add support for playing sounds
+            soundManager = new SoundManager(this);
+
             //initialize global application data
             Application.Main = this;
             Application.Content = Content;
@@ -291,6 +308,9 @@ namespace GDApp
 
             //add physics manager to enable CD/CR and physics
             Components.Add(physicsManager);
+
+            //add sound
+            Components.Add(soundManager);
         }
 
         /// <summary>
