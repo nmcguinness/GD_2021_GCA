@@ -1,19 +1,26 @@
-﻿using GDLibrary.Core;
+﻿using GDLibrary.Components.UI;
+using GDLibrary.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GDLibrary.Components.UI
+namespace GDLibrary.Managers
 {
     /// <summary>
     /// Stores a dictionary of ui scenes and updates and draws the currently active scene
     /// </summary>
     public class UISceneManager : PausableDrawableGameComponent
     {
-        private SpriteBatch spriteBatch;
-        private Dictionary<string, UIScene> uiScenes;
-        private UIScene activeUIScene;
-        private string activeUISceneName;
+        #region Fields
+
+        protected SpriteBatch spriteBatch;
+        protected Dictionary<string, UIScene> uiScenes;
+        protected UIScene activeUIScene;
+        protected string activeUISceneName;
+
+        #endregion Fields
+
+        #region Constructors
 
         /// <summary>
         /// Instanciate a ui scene manager to store all ui scenes (e.g. in-game ui)
@@ -27,6 +34,10 @@ namespace GDLibrary.Components.UI
             activeUIScene = null;
             activeUISceneName = "";
         }
+
+        #endregion Constructors
+
+        #region Event Handling
 
         protected override void SubscribeToEvents()
         {
@@ -53,6 +64,10 @@ namespace GDLibrary.Components.UI
 
             base.HandleEvent(eventData);
         }
+
+        #endregion Event Handling
+
+        #region Actions - Add, Remove, Find, Clear
 
         public bool SetActiveScene(string uiSceneName)
         {
@@ -108,6 +123,10 @@ namespace GDLibrary.Components.UI
                 uiScenes.Clear();
         }
 
+        #endregion Actions - Add, Remove, Find, Clear
+
+        #region Update & Draw
+
         public override void Update(GameTime gameTime)
         {
             //is this component paused because of the menu?
@@ -126,5 +145,7 @@ namespace GDLibrary.Components.UI
                 spriteBatch.End();
             }
         }
+
+        #endregion Update & Draw
     }
 }

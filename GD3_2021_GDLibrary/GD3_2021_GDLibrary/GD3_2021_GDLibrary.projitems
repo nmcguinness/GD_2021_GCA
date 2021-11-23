@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PhysicsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PausableComponents\PausableDrawableGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PausableComponents\PausableGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\UIMenuManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Physics\PhysicsDebugDrawer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\_Demo\EventSender.cs" />
     <Compile Include="..\..\GD3_2021_GDLibrary\GD3_2021_GDLibrary\Core\Utilities\GDDebug\PerfUtility.cs" />
