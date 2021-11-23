@@ -11,7 +11,7 @@
 
 ### Bugs
 - [ ] Fix camera drift on no mouse movement
-- [ ] Fix Mouse delta on FPC
+- [x] Fix Mouse delta on FPC
 - [ ] GameObject Clone texture sharing
 
 ### Tasks - Week 7

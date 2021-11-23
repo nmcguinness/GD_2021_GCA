@@ -177,7 +177,7 @@ namespace GDLibrary.Managers
             EventDispatcher.Subscribe(EventCategoryType.Sound, HandleEvent);
 
             //if we always want the SoundManager to be available then comment this line out
-            //base.SubscribeToEvents();
+            // base.SubscribeToEvents();
         }
 
         protected override void HandleEvent(EventData eventData)
@@ -188,8 +188,9 @@ namespace GDLibrary.Managers
             }
             else if (eventData.EventActionType == EventActionType.OnPlay3D)
             {
-                Play3D(eventData.Parameters[0] as string, eventData.Parameters[1] as AudioListener,
-                                                        eventData.Parameters[2] as AudioEmitter);
+                Play3D(eventData.Parameters[0] as string,
+                    eventData.Parameters[1] as AudioListener,
+                        eventData.Parameters[2] as AudioEmitter);
             }
             //add more if statements for each method that we want to support with events
 

@@ -70,11 +70,25 @@ namespace GDApp
 
         #endregion Constructors
 
+        public delegate void MyDelegate(string s, bool b);
+
+        public List<MyDelegate> delList = new List<MyDelegate>();
+
+        public void DoSomething(string msg, bool enableIt)
+        {
+        }
+
         /// <summary>
         /// Initialize engine, dictionaries, assets, level contents
         /// </summary>
         protected override void Initialize()
         {
+            //     function < void(string, bool) > fPtr = DoSomething;
+
+            var myDel = new MyDelegate(DoSomething);
+            myDel("sdfsdfdf", true);
+            delList.Add(DoSomething);
+
             //move here so that UISceneManager can use!
             _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
 
@@ -130,6 +144,11 @@ namespace GDApp
             //soundManager.Add(new GDLibrary.Managers.Cue("smokealarm",
             //    Content.Load<SoundEffect>("Assets/Sounds/Effects/smokealarm1"),
             //    SoundCategoryType.Alarm, new Vector3(1, 0, 0), false));
+
+            //object[] parameters = { "smokealarm"};
+
+            //EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
+            //    EventActionType.OnPlay, parameters));
         }
 
         /// <summary>
@@ -540,10 +559,28 @@ namespace GDApp
             if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.P))
             {
                 //DEMO - raise event
+                //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                //    EventActionType.OnPause));
+
+                object[] parameters = { nameTextObj };
+
+                EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
+                    EventActionType.OnRemoveObject, parameters));
+
+                ////renderManager.StatusType = StatusType.Off;
             }
             else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.U))
             {
                 //DEMO - raise event
+
+                object[] parameters = { "main game ui", nameTextObj };
+
+                EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
+                    EventActionType.OnAddObject, parameters));
+
+                //renderManager.StatusType = StatusType.Drawn;
+                //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                //  EventActionType.OnPlay));
             }
 
             base.Update(gameTime);

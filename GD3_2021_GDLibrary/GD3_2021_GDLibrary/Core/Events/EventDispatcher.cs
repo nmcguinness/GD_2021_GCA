@@ -108,7 +108,8 @@ namespace GDLibrary.Core
         {
             queue = new Queue<EventData>();
             sentinelSet = new HashSet<EventData>();
-            dictionary = new Dictionary<EventCategoryType, List<EventHandlerDelegate>>();
+            dictionary = new Dictionary<EventCategoryType,
+                List<EventHandlerDelegate>>();
         }
 
         #endregion Constructors
@@ -120,7 +121,8 @@ namespace GDLibrary.Core
         /// </summary>
         /// <param name="eventCategoryType">EventCategoryType</param>
         /// <param name="del">EventHandlerDelegate</para
-        public static void Subscribe(EventCategoryType eventCategoryType, EventHandlerDelegate del)
+        public static void Subscribe(EventCategoryType eventCategoryType,
+            EventHandlerDelegate del)
         {
             if (!dictionary.ContainsKey(eventCategoryType))
                 dictionary.Add(eventCategoryType, new List<EventHandlerDelegate>());
@@ -134,7 +136,8 @@ namespace GDLibrary.Core
         /// <param name="eventCategoryType">EventCategoryType</param>
         /// <param name="del">EventHandlerDelegate</param>
         /// <returns></returns>
-        public static bool Unsubscribe(EventCategoryType eventCategoryType, EventHandlerDelegate del)
+        public static bool Unsubscribe(EventCategoryType eventCategoryType,
+            EventHandlerDelegate del)
         {
             if (dictionary.ContainsKey(eventCategoryType))
             {
