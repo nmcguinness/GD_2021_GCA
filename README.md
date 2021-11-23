@@ -10,8 +10,9 @@
 - [x] Code additions in Week 6(Halloween)
 
 ### Bugs
-- [x] BUG: Mouse delta on FPC
-- [ ] BUG: GameObject Clone texture sharing
+- [ ] Fix camera drift on no mouse movement
+- [ ] Fix Mouse delta on FPC
+- [ ] GameObject Clone texture sharing
 
 ### Tasks - Week 7
 - [x] Add Clone to components
@@ -46,3 +47,4 @@
 - [ ] Add lighting engine
 - [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
+- [ ] Enable lighting turn off for skybox

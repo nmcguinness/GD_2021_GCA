@@ -29,7 +29,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Base\UIController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Events\EventDispatcher.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PhysicsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PausableComponents\PausableDrawableGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\PausableComponents\PausableGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\SoundManager.cs" />

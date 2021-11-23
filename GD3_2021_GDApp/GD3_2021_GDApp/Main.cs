@@ -1,6 +1,5 @@
 ﻿//#define DEMO
 
-using BEPUphysics.Entities;
 using GDLibrary;
 using GDLibrary.Components;
 using GDLibrary.Components.UI;
@@ -46,7 +45,7 @@ namespace GDApp
         /// <summary>
         /// Renders all ui objects
         /// </summary>
-        private PhysicsManager physicsManager;
+        //private PhysicsManager physicsManager;
 
         /// <summary>
         /// Quick lookup for all textures used within the game
@@ -56,7 +55,6 @@ namespace GDApp
         //temp
         private Scene activeScene;
 
-        private Entity box1;
         private GameObject archetypalCube;
         private UITextObject nameTextObj;
 
@@ -81,7 +79,7 @@ namespace GDApp
             _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
 
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1920, 1080);
+            InitializeEngine("My Game Title Goes Here", 1024, 768);
 
             //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
@@ -254,7 +252,7 @@ namespace GDApp
             eventDispatcher = new EventDispatcher(this);
 
             //add physics manager to enable CD/CR and physics
-            physicsManager = new PhysicsManager(this);
+            //physicsManager = new PhysicsManager(this);
 
             //instanciate scene manager to store all scenes
             sceneManager = new SceneManager(this);
@@ -271,7 +269,7 @@ namespace GDApp
             Application.GraphicsDevice = _graphics.GraphicsDevice;
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
-            Application.PhysicsManager = physicsManager;
+            //Application.PhysicsManager = physicsManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
             renderManager = new RenderManager(this, new ForwardRenderer(), false);
@@ -307,7 +305,7 @@ namespace GDApp
             Components.Add(uiSceneManager);
 
             //add physics manager to enable CD/CR and physics
-            Components.Add(physicsManager);
+            //Components.Add(physicsManager);
 
             //add sound
             Components.Add(soundManager);
@@ -321,7 +319,7 @@ namespace GDApp
             activeScene = new Scene("level 1");
             InitializeCameras(activeScene);
 
-            InitializeSkybox(activeScene, 500);
+            InitializeSkybox(activeScene, 1000);
             InitializeCubes(activeScene);
             InitializeModels(activeScene);
 

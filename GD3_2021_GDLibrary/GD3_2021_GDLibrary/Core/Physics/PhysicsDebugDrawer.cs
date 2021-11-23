@@ -2,12 +2,8 @@
 
 namespace GDLibrary.Core.Physics
 {
-    public class PhysicsDebugDrawer : DrawableGameComponent
+    public class PhysicsDebugDrawer : PausableDrawableGameComponent
     {
-        private Matrix world;
-        private Matrix view;
-        private Matrix projection;
-
         public PhysicsDebugDrawer(Game game) : base(game)
         {
         }
