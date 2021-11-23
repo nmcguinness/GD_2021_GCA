@@ -209,7 +209,10 @@ namespace GDApp
                 0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
 
             //add a demo time based behaviour - because we can!
-            healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
+            // healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
+
+            healthTextureObj.AddComponent(
+                            new UIProgressBarController(0, 8, 0));
 
             //add the ui element to the scene
             mainGameUIScene.Add(healthTextureObj);
