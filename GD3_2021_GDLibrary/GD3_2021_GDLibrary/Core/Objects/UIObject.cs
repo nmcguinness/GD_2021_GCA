@@ -558,6 +558,9 @@ namespace GDLibrary
             Font = font;
 
             //TODO - set bounding box
+            boundingBox = new Rectangle(0, 0,
+               (int)(defaultTexture.Width * transform.LocalScale.X),
+                (int)(defaultTexture.Height * transform.LocalScale.Y));
         }
 
         #endregion Constructors

@@ -232,9 +232,9 @@ namespace GDApp
                 Vector2.One, 0),
                 0, font, "Brutus Maximus");
 
-            nameTextObj.Origin = font.MeasureString(str) / 2;
+            //  nameTextObj.Origin = font.MeasureString(str) / 2;
 
-            nameTextObj.AddComponent(new UIExpandFadeBehaviour());
+            //  nameTextObj.AddComponent(new UIExpandFadeBehaviour());
 
             //add the ui element to the scene
             mainGameUIScene.Add(nameTextObj);
