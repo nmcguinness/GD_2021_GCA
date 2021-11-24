@@ -96,6 +96,12 @@ namespace GDLibrary.Managers
 
     public class PhysicsManager : PausableGameComponent
     {
+        #region Statics
+
+        private static readonly Vector3 GRAVITY = new Vector3(0, -9.81f, 0);
+
+        #endregion Statics
+
         #region Fields
 
         private PhysicsSystem physicSystem;
@@ -126,8 +132,8 @@ namespace GDLibrary.Managers
 
         #region Constructors
 
-        public PhysicsManager(Game game, StatusType statusType)
-            : this(game, statusType, -10 * Vector3.UnitY)
+        public PhysicsManager(Game game)
+          : this(game, StatusType.Updated, GRAVITY)
         {
         }
 

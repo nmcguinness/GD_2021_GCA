@@ -91,7 +91,7 @@ namespace GDLibrary
         #region Properties
 
         public string ID { get => id; protected set => id = value; }
-        protected string Name { get => name; set => name = value.Trim(); }
+        public string Name { get => name; protected set => name = value.Trim(); }
         public bool IsRunning { get => isRunning; private set => isRunning = value; }
         public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
         public Transform2D Transform { get => transform; set => transform = value; }
@@ -287,6 +287,11 @@ namespace GDLibrary
         /// </summary>
         protected Texture2D currentTexture;
 
+        /// <summary>
+        /// Stores the original dimensions of the source rectangle for this texture
+        /// </summary>
+        protected Rectangle originalSourceRectangle;
+
         #endregion Fields
 
         #region Properties
@@ -294,6 +299,17 @@ namespace GDLibrary
         public Texture2D DefaultTexture { get => defaultTexture; set => defaultTexture = value; }
         public Texture2D AlternateTexture { get => alternateTexture; set => alternateTexture = value; }
         public Rectangle SourceRectangle { get => sourceRectangle; set => sourceRectangle = value; }
+        public int SourceRectangleWidth { get => sourceRectangle.Width; set => sourceRectangle.Width = value; }
+        public int SourceRectangleHeight { get => sourceRectangle.Height; set => sourceRectangle.Height = value; }
+
+        public Rectangle OriginalSourceRectangle
+        {
+            get
+            {
+                return originalSourceRectangle;
+            }
+        }
+
         public Texture2D CurrentTexture { get => currentTexture; set => currentTexture = value; }
 
         #endregion Properties
@@ -340,7 +356,8 @@ namespace GDLibrary
         {
             DefaultTexture = defaultTexture;
             AlternateTexture = alternateTexture;
-            SourceRectangle = sourceRectangle;
+            //store the original source rectangle in case we change the source rectangle (i.e. UIProgressBarController)
+            originalSourceRectangle = SourceRectangle = sourceRectangle;
 
             //sets the texture used by default in the Draw() below
             CurrentTexture = defaultTexture;

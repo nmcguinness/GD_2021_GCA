@@ -360,25 +360,27 @@ namespace GDLibrary.Components
 
         public override void Update()
         {
+            if (isRotationDirty)
+            {
+                //rotationMatrix = Matrix.CreateFromYawPitchRoll(
+                //        MathHelper.ToRadians(localRotation.Y),
+                //        MathHelper.ToRadians(localRotation.X),
+                //        MathHelper.ToRadians(localRotation.Z));
+
+                rotationMatrix = Matrix.CreateRotationX(MathHelper.ToRadians(localRotation.X))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(localRotation.Y))
+                            * Matrix.CreateRotationZ(MathHelper.ToRadians(localRotation.Z));
+
+                isRotationDirty = false;
+            }
+
             if (isWorldDirty)
             {
                 worldMatrix = Matrix.Identity
                       * Matrix.CreateScale(localScale)
-                          * Matrix.CreateFromYawPitchRoll(
-                                  MathHelper.ToRadians(localRotation.Y),
-                                      MathHelper.ToRadians(localRotation.X),
-                                          MathHelper.ToRadians(localRotation.Z))
+                          * rotationMatrix
                           * Matrix.CreateTranslation(localTranslation);
                 isWorldDirty = false;
-            }
-
-            if (isRotationDirty)
-            {
-                rotationMatrix = Matrix.CreateFromYawPitchRoll(
-                        MathHelper.ToRadians(localRotation.Y),
-                        MathHelper.ToRadians(localRotation.X),
-                        MathHelper.ToRadians(localRotation.Z));
-                isRotationDirty = false;
             }
             base.Update();
         }

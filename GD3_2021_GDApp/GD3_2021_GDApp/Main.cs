@@ -39,13 +39,20 @@ namespace GDApp
         /// </summary>
         private UISceneManager uiSceneManager;
 
+        /// <summary>
+        /// Plays all 2D and 3D sounds
+        /// </summary>
         private SoundManager soundManager;
+
+        /// <summary>
+        /// Handles all system wide events between entities
+        /// </summary>
         private EventDispatcher eventDispatcher;
 
         /// <summary>
-        /// Renders all ui objects
+        /// Applies physics to all game objects with a Collider
         /// </summary>
-        //private PhysicsManager physicsManager;
+        private PhysicsManager physicsManager;
 
         /// <summary>
         /// Quick lookup for all textures used within the game
@@ -67,15 +74,150 @@ namespace GDApp
 
         #endregion Fields
 
-        #region Constructors
-
+        /// <summary>
+        /// Construct the Game object
+        /// </summary>
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// Set application data, input, title and scene manager
+        /// </summary>
+        private void InitializeEngine(string gameTitle, int width, int height)
+        {
+            //set game title
+            Window.Title = gameTitle;
+
+            //the most important element! add event dispatcher for system events
+            eventDispatcher = new EventDispatcher(this);
+
+            //add physics manager to enable CD/CR and physics
+            physicsManager = new PhysicsManager(this);
+
+            //instanciate scene manager to store all scenes
+            sceneManager = new SceneManager(this);
+
+            //create the ui scene manager to update and draw all ui scenes
+            uiSceneManager = new UISceneManager(this, _spriteBatch);
+
+            //add support for playing sounds
+            soundManager = new SoundManager(this);
+
+            //initialize global application data
+            Application.Main = this;
+            Application.Content = Content;
+            Application.GraphicsDevice = _graphics.GraphicsDevice;
+            Application.GraphicsDeviceManager = _graphics;
+            Application.SceneManager = sceneManager;
+            //Application.PhysicsManager = physicsManager;
+
+            //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
+            renderManager = new RenderManager(this, new ForwardRenderer(), false);
+
+            //instanciate screen (singleton) and set resolution etc
+            Screen.GetInstance().Set(width, height, true, true);
+
+            //instanciate input components and store reference in Input for global access
+            Input.Keys = new KeyboardComponent(this);
+            Input.Mouse = new MouseComponent(this);
+            Input.Mouse.Position = Screen.Instance.ScreenCentre;
+            Input.Gamepad = new GamepadComponent(this);
+
+            //************* add all input components to component list so that they will be updated and/or drawn ***********/
+
+            //add event dispatcher
+            Components.Add(eventDispatcher);
+
+            //add time support
+            Components.Add(Time.GetInstance(this));
+
+            //add input support
+            Components.Add(Input.Keys);
+            Components.Add(Input.Mouse);
+            Components.Add(Input.Gamepad);
+
+            //add scene manager to update game objects
+            Components.Add(sceneManager);
+
+            //add render manager to draw objects
+            Components.Add(renderManager);
+
+            //add ui scene manager to update and drawn ui objects
+            Components.Add(uiSceneManager);
+
+            //add physics manager to enable CD/CR and physics
+            Components.Add(physicsManager);
+
+            //add sound
+            Components.Add(soundManager);
+        }
+
+        /// <summary>
+        /// Not much happens in here as SceneManager, UISceneManager, MenuManager and Inputs are all GameComponents that automatically Update()
+        /// Normally we use this to add some temporary demo code in class - Don't forget to remove any temp code inside this method!
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void Update(GameTime gameTime)
+        {
+            //if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.P))
+            //{
+            //    //DEMO - raise event
+            //    //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+            //    //    EventActionType.OnPause));
+
+            //    object[] parameters = { nameTextObj };
+
+            //    EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
+            //        EventActionType.OnRemoveObject, parameters));
+
+            //    ////renderManager.StatusType = StatusType.Off;
+            //}
+            //else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.U))
+            //{
+            //    //DEMO - raise event
+
+            //    object[] parameters = { "main game ui", nameTextObj };
+
+            //    EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
+            //        EventActionType.OnAddObject, parameters));
+
+            //    //renderManager.StatusType = StatusType.Drawn;
+            //    //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+            //    //  EventActionType.OnPlay));
+            //}
+
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+            {
+                object[] parameters = { "health", 1 };
+                EventDispatcher.Raise(new EventData(EventCategoryType.UI,
+                    EventActionType.OnHealthDelta, parameters));
+            }
+            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+            {
+                object[] parameters = { "health", -1 };
+                EventDispatcher.Raise(new EventData(EventCategoryType.UI,
+                    EventActionType.OnHealthDelta, parameters));
+            }
+
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Not much happens in here as RenderManager, UISceneManager and MenuManager are all DrawableGameComponents that automatically Draw()
+        /// </summary>
+        /// <param name="gameTime"></param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.HotPink);
+            base.Draw(gameTime);
+        }
+
+        /******************************** Student Project-specific ********************************/
+
+        #region Student/Group Specific Code
 
         /// <summary>
         /// Initialize engine, dictionaries, assets, level contents
@@ -83,7 +225,7 @@ namespace GDApp
         protected override void Initialize()
         {
             //move here so that UISceneManager can use!
-            _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //data, input, scene manager
             InitializeEngine("My Game Title Goes Here", 1024, 768);
@@ -109,11 +251,8 @@ namespace GDApp
             base.Initialize();
         }
 
-        #region Initialization - Dictionaries & Assets
+        /******************************* Load/Unload Assets *******************************/
 
-        /// <summary>
-        /// Stores all re-used assets and archetypal game objects
-        /// </summary>
         private void InitializeDictionaries()
         {
             textureDictionary = new Dictionary<string, Texture2D>();
@@ -121,9 +260,6 @@ namespace GDApp
             modelDictionary = new Dictionary<string, Model>();
         }
 
-        /// <summary>
-        /// Load resources from file
-        /// </summary>
         private void LoadAssets()
         {
             LoadModels();
@@ -132,11 +268,17 @@ namespace GDApp
             LoadFonts();
         }
 
+        /// <summary>
+        /// Load models to dictionary
+        /// </summary>
         private void LoadModels()
         {
             modelDictionary.Add("sphere", Content.Load<Model>("Assets/Models/sphere"));
         }
 
+        /// <summary>
+        /// Load fonts to dictionary
+        /// </summary>
         private void LoadFonts()
         {
             fontDictionary.Add("ui", Content.Load<SpriteFont>("Assets/Fonts/ui"));
@@ -180,29 +322,49 @@ namespace GDApp
             textureDictionary.Add("ui_progress_32_8", Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
         }
 
-        protected override void LoadContent()
-        {
-            //  _spriteBatch = new SpriteBatch(GraphicsDevice); //Move to Initialize for UISceneManager
-        }
-
+        /// <summary>
+        /// Free all asset resources, dictionaries, network connections etc
+        /// </summary>
         protected override void UnloadContent()
         {
+            //TODO - add graceful dispose for content
             base.UnloadContent();
         }
 
-        #endregion Initialization - Dictionaries & Assets
+        /******************************* UI & Menu *******************************/
 
-        #region Initialization - UI & Menu
+        /// <summary>
+        /// Create a scene, add content, add to the scene manager, and load default scene
+        /// </summary>
+        private void InitializeLevel()
+        {
+            activeScene = new Scene("level 1");
+            InitializeCameras(activeScene);
+
+            InitializeSkybox(activeScene, 1000);
+            InitializeCubes(activeScene);
+            InitializeModels(activeScene);
+
+            sceneManager.Add(activeScene);
+            sceneManager.LoadScene("level 1");
+        }
 
         /// <summary>
         /// Adds menu and UI elements
         /// </summary>
-        private void InitializeUI()  //19.11.21
+        private void InitializeUI()
         {
             //TODO
             //InitializeGameMenu();
 
             InitializeGameUI();
+        }
+
+        /// <summary>
+        /// Adds main menu elements
+        /// </summary>
+        private void InitializeGameMenu()
+        {
         }
 
         /// <summary>
@@ -226,8 +388,8 @@ namespace GDApp
             //add a demo time based behaviour - because we can!
             healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
 
-            healthTextureObj.AddComponent(
-                            new UIProgressBarController(0, 8, 0));
+            //add a progress controller
+            healthTextureObj.AddComponent(new UIProgressBarController(4, 8));
 
             //add the ui element to the scene
             mainGameUIScene.Add(healthTextureObj);
@@ -280,103 +442,7 @@ namespace GDApp
             }
         }
 
-        #endregion Initialization - UI & Menu
-
-        #region Initialization - Engine, Cameras, Content
-
-        /// <summary>
-        /// Set application data, input, title and scene manager
-        /// </summary>
-        private void InitializeEngine(string gameTitle, int width, int height)
-        {
-            //set game title
-            Window.Title = gameTitle;
-
-            //the most important element! add event dispatcher for system events
-            eventDispatcher = new EventDispatcher(this);
-
-            //add physics manager to enable CD/CR and physics
-            //physicsManager = new PhysicsManager(this);
-
-            //instanciate scene manager to store all scenes
-            sceneManager = new SceneManager(this);
-
-            //create the ui scene manager to update and draw all ui scenes
-            uiSceneManager = new UISceneManager(this, _spriteBatch);
-
-            //add support for playing sounds
-            soundManager = new SoundManager(this);
-
-            //initialize global application data
-            Application.Main = this;
-            Application.Content = Content;
-            Application.GraphicsDevice = _graphics.GraphicsDevice;
-            Application.GraphicsDeviceManager = _graphics;
-            Application.SceneManager = sceneManager;
-            //Application.PhysicsManager = physicsManager;
-
-            //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer(), false);
-
-            //instanciate screen (singleton) and set resolution etc
-            Screen.GetInstance().Set(width, height, true, true);
-
-            //instanciate input components and store reference in Input for global access
-            Input.Keys = new KeyboardComponent(this);
-            Input.Mouse = new MouseComponent(this);
-            Input.Gamepad = new GamepadComponent(this);
-
-            //************* add all input components to component list so that they will be updated and/or drawn ***********/
-
-            //add event dispatcher
-            Components.Add(eventDispatcher);
-
-            //add time support
-            Components.Add(Time.GetInstance(this));
-
-            //add input support
-            Components.Add(Input.Keys);
-            Components.Add(Input.Mouse);
-            Components.Add(Input.Gamepad);
-
-            //add scene manager to update game objects
-            Components.Add(sceneManager);
-
-            //add render manager to draw objects
-            Components.Add(renderManager);
-
-            //add ui scene manager to update and drawn ui objects
-            Components.Add(uiSceneManager);
-
-            //add physics manager to enable CD/CR and physics
-            //Components.Add(physicsManager);
-
-            //add sound
-            Components.Add(soundManager);
-        }
-
-        /// <summary>
-        /// Create a scene, add content, add to the scene manager, and load default scene
-        /// </summary>
-        private void InitializeLevel()
-        {
-            activeScene = new Scene("level 1");
-            InitializeCameras(activeScene);
-
-            InitializeSkybox(activeScene, 1000);
-            InitializeCubes(activeScene);
-            InitializeModels(activeScene);
-
-            sceneManager.Add(activeScene);
-            sceneManager.LoadScene("level 1");
-        }
-
-        /// <summary>
-        /// Demo of the new physics manager and collidable objects
-        /// </summary>
-        private void InitializeCollidables()
-        {
-        }
+        /******************************* Non-Collidables *******************************/
 
         /// <summary>
         /// Set up the skybox using a QuadMesh
@@ -575,49 +641,21 @@ namespace GDApp
             }
         }
 
-        #endregion Initialization - Engine, Cameras, Content
+        /******************************* Collidables *******************************/
 
-        #region Update & Draw
-
-        protected override void Update(GameTime gameTime)
+        /// <summary>
+        /// Demo of the new physics manager and collidable objects
+        /// </summary>
+        private void InitializeCollidables(float worldScale = 500)
         {
-            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.P))
-            {
-                //DEMO - raise event
-                //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
-                //    EventActionType.OnPause));
-
-                object[] parameters = { nameTextObj };
-
-                EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
-                    EventActionType.OnRemoveObject, parameters));
-
-                ////renderManager.StatusType = StatusType.Off;
-            }
-            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.U))
-            {
-                //DEMO - raise event
-
-                object[] parameters = { "main game ui", nameTextObj };
-
-                EventDispatcher.Raise(new EventData(EventCategoryType.UiObject,
-                    EventActionType.OnAddObject, parameters));
-
-                //renderManager.StatusType = StatusType.Drawn;
-                //EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
-                //  EventActionType.OnPlay));
-            }
-
-            base.Update(gameTime);
+            //     InitializeCollidableGround(worldScale);
         }
 
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.HotPink);
-            base.Draw(gameTime);
-        }
+        #endregion Student/Group Specific Code
 
-        #endregion Update & Draw
+        /******************************* Demo (Remove For Release) *******************************/
+
+        #region Demo Code
 
 #if DEMO
 
@@ -689,5 +727,7 @@ namespace GDApp
         }
 
 #endif
+
+        #endregion Demo Code
     }
 }
