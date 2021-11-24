@@ -52,10 +52,17 @@ namespace GDApp
         /// </summary>
         private Dictionary<string, Texture2D> textureDictionary;
 
-        //temp
-        private Scene activeScene;
+        /// <summary>
+        /// Quick lookup for all fonts used within the game
+        /// </summary>
+        private Dictionary<string, SpriteFont> fontDictionary;
 
-        private GameObject archetypalCube;
+        /// <summary>
+        /// Quick lookup for all models used within the game
+        /// </summary>
+        private Dictionary<string, Model> modelDictionary;
+
+        private Scene activeScene;
         private UITextObject nameTextObj;
 
         #endregion Fields
@@ -70,25 +77,11 @@ namespace GDApp
 
         #endregion Constructors
 
-        public delegate void MyDelegate(string s, bool b);
-
-        public List<MyDelegate> delList = new List<MyDelegate>();
-
-        public void DoSomething(string msg, bool enableIt)
-        {
-        }
-
         /// <summary>
         /// Initialize engine, dictionaries, assets, level contents
         /// </summary>
         protected override void Initialize()
         {
-            //     function < void(string, bool) > fPtr = DoSomething;
-
-            var myDel = new MyDelegate(DoSomething);
-            myDel("sdfsdfdf", true);
-            delList.Add(DoSomething);
-
             //move here so that UISceneManager can use!
             _spriteBatch = new SpriteBatch(GraphicsDevice); //19.11.21
 
@@ -124,6 +117,8 @@ namespace GDApp
         private void InitializeDictionaries()
         {
             textureDictionary = new Dictionary<string, Texture2D>();
+            fontDictionary = new Dictionary<string, SpriteFont>();
+            modelDictionary = new Dictionary<string, Model>();
         }
 
         /// <summary>
@@ -131,8 +126,22 @@ namespace GDApp
         /// </summary>
         private void LoadAssets()
         {
+            LoadModels();
             LoadTextures();
             LoadSounds();
+            LoadFonts();
+        }
+
+        private void LoadModels()
+        {
+            modelDictionary.Add("sphere", Content.Load<Model>("Assets/Models/sphere"));
+        }
+
+        private void LoadFonts()
+        {
+            fontDictionary.Add("ui", Content.Load<SpriteFont>("Assets/Fonts/ui"));
+            fontDictionary.Add("menu", Content.Load<SpriteFont>("Assets/Fonts/menu"));
+            fontDictionary.Add("debug", Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"));
         }
 
         /// <summary>
@@ -158,6 +167,7 @@ namespace GDApp
         {
             //debug
             textureDictionary.Add("checkerboard", Content.Load<Texture2D>("Assets/Demo/Textures/checkerboard"));
+            textureDictionary.Add("mona lisa", Content.Load<Texture2D>("Assets/Demo/Textures/mona lisa"));
 
             //skybox
             textureDictionary.Add("skybox_front", Content.Load<Texture2D>("Assets/Textures/Skybox/front"));
@@ -165,6 +175,9 @@ namespace GDApp
             textureDictionary.Add("skybox_right", Content.Load<Texture2D>("Assets/Textures/Skybox/right"));
             textureDictionary.Add("skybox_back", Content.Load<Texture2D>("Assets/Textures/Skybox/back"));
             textureDictionary.Add("skybox_sky", Content.Load<Texture2D>("Assets/Textures/Skybox/sky"));
+
+            //ui
+            textureDictionary.Add("ui_progress_32_8", Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
         }
 
         protected override void LoadContent()
@@ -208,7 +221,7 @@ namespace GDApp
                 new Transform2D(new Vector2(50, 600),
                 new Vector2(8, 2),
                 MathHelper.ToRadians(-90)),
-                0, Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
+                0, textureDictionary["ui_progress_32_8"]);
 
             //add a demo time based behaviour - because we can!
             healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
@@ -223,7 +236,7 @@ namespace GDApp
 
             #region Add Text
 
-            var font = Content.Load<SpriteFont>("Assets/Fonts/ui");
+            var font = fontDictionary["ui"];
             var str = "player name";
 
             //create the UI element
@@ -233,7 +246,6 @@ namespace GDApp
                 0, font, "Brutus Maximus");
 
             //  nameTextObj.Origin = font.MeasureString(str) / 2;
-
             //  nameTextObj.AddComponent(new UIExpandFadeBehaviour());
 
             //add the ui element to the scene
@@ -262,7 +274,7 @@ namespace GDApp
                 Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(
                     this,
                     _spriteBatch,
-                    Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"),
+                    fontDictionary["debug"],
                     new Vector2(40, _graphics.PreferredBackBufferHeight - 40),
                     Color.White));
             }
@@ -506,7 +518,7 @@ namespace GDApp
             #region Archetype
 
             var material = new BasicMaterial("model material");
-            material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/checkerboard");
+            material.Texture = textureDictionary["checkerboard"];
             material.Shader = new BasicShader(Application.Content);
 
             var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
@@ -515,7 +527,7 @@ namespace GDApp
             var renderer = new ModelRenderer();
             renderer.Material = material;
             archetypalSphere.AddComponent(renderer);
-            renderer.Model = Content.Load<Model>("Assets/Models/sphere");
+            renderer.Model = modelDictionary["sphere"];
 
             //downsize the model a little because the sphere is quite large
             archetypalSphere.Transform.SetScale(0.125f, 0.125f, 0.125f);
@@ -541,7 +553,7 @@ namespace GDApp
             #region Archetype
 
             var material = new BasicMaterial("simple diffuse");
-            material.Texture = Content.Load<Texture2D>("Assets/Demo/Textures/mona lisa");
+            material.Texture = textureDictionary["mona lisa"];
             material.Shader = new BasicShader(Application.Content);
 
             var archetypalCube = new GameObject("cube", GameObjectType.Architecture);
@@ -609,6 +621,14 @@ namespace GDApp
 
 #if DEMO
 
+        public delegate void MyDelegate(string s, bool b);
+
+        public List<MyDelegate> delList = new List<MyDelegate>();
+
+        public void DoSomething(string msg, bool enableIt)
+        {
+        }
+
         private void InitializeEditorHelpers()
         {
             //a game object to record camera positions to an XML file for use in a curve later
@@ -627,6 +647,9 @@ namespace GDApp
 
         private void EventSenderDemo()
         {
+            var myDel = new MyDelegate(DoSomething);
+            myDel("sdfsdfdf", true);
+            delList.Add(DoSomething);
         }
 
         private void CurveDemo()
