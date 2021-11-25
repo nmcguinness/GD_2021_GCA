@@ -1,4 +1,5 @@
 ﻿using GDLibrary.Core;
+using System;
 
 namespace GDLibrary.Components.UI
 {
@@ -78,11 +79,6 @@ namespace GDLibrary.Components.UI
             }
         }
 
-        public override void Awake()
-        {
-            //try to cast the parent that this component is attached to
-            parentUITextureObject = uiObject as UITextureObject;
-        }
         public override void Update()
         {
             //TODO - wasteful, called each update - refactor
@@ -92,6 +88,9 @@ namespace GDLibrary.Components.UI
 
         protected void UpdateSourceRectangle()
         {
+            //try to cast the parent that this component is attached to
+            parentUITextureObject = uiObject as UITextureObject;
+
             if (parentUITextureObject == null)
                 return;
 
@@ -99,7 +98,7 @@ namespace GDLibrary.Components.UI
             var widthMultiplier = (float)currentValue / maxValue;
 
             //now set the amount of visible rectangle using the current value
-            parentUITextureObject.SourceRectangleWidth = (int)(widthMultiplier * parentUITextureObject.OriginalSourceRectangle.Width);
+            parentUITextureObject.SourceRectangleWidth = (int)Math.Round(widthMultiplier * parentUITextureObject.OriginalSourceRectangle.Width);
         }
 
         #endregion Event Handling

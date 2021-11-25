@@ -8,12 +8,15 @@
 
 ### Explain
 - [x] Code additions in Week 6(Halloween)
+- [ ] UIProgressBarController using Events - Main::Update
+- [ ] ContentDictionary - Main::modelDictionary and Main::fontDictionary
 
 ### Bugs
-- [ ] Fix camera drift on no mouse movement
 - [x] Fix Mouse delta on FPC
-- [ ] GameObject Clone texture sharing
+- [x] GameObject Clone texture sharing - fixed by simplifying creation of Renderer, Mesh, and Shader
+- [ ] Fix camera drift on no mouse movement
 - [ ] Alpha fade on ui text
+- [ ] Bug on collider not following Transform rotation
 
 ### Tasks - Week 7
 - [x] Add Clone to components
@@ -39,13 +42,20 @@
 - [x] Added ui game objects and ui scene manager for onscreen elements
 - [x] Add Menu/UI support
 - [x] Added EventDispatcher
+- [x] Added and improved ContentDictionary with demo Main::modelDictionary and Main::fontDictionary
 - [x] Added support to UISceneManager for add/remove ui objects
-- [ ] Added an untested sound manager
-- [ ] Add support for removing/adding objects to the scene manager
-- [ ] Add support for removing/adding objects to the ui scene manager
-- [ ] Add Tween functions see [Easing Functions](https://easings.net/)
+- [x] Enable lighting turn off for skybox
+- [x] Change GameObject::IsStatic to IsPersistent
+- [ ] Improve Camera and add collidable camera controller
 - [ ] Add physics engine
+- [ ] Add trianglemesh support
+- [ ] Add picking with mouse
+- [ ] Added an untested sound manager
+- [ ] Add support for removing/adding objects to the scene manager through events
+- [ ] Add support for removing/adding objects to the ui scene manager through events
+- [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
-- [ ] Enable lighting turn off for skybox
+
+

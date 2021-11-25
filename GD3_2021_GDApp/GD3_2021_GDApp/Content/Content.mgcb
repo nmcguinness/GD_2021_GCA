@@ -37,6 +37,13 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Demo/Textures/mona lisa.jpg
 
+#begin Assets/Fonts/debug.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/debug.spritefont
+
 #begin Assets/Fonts/menu.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -377,18 +384,6 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/UI/Controls/genericbtn.png
 
-#begin Assets/Textures/UI/Controls/progress_gradient.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Assets/Textures/UI/Controls/progress_gradient.png
-
 #begin Assets/Textures/UI/Controls/progress_white.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -437,7 +432,7 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/UI/Controls/reticuleOpen.png
 
-#begin Assets/Textures/UI/Progress/ui_progress_32_8.png
+#begin Assets/Textures/UI/Controls/ui_progress_32_8.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -447,5 +442,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Assets/Textures/UI/Progress/ui_progress_32_8.png
+/build:Assets/Textures/UI/Controls/ui_progress_32_8.png
 

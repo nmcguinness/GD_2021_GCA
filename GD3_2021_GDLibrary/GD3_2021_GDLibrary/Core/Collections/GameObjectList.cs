@@ -31,7 +31,7 @@ namespace GDLibrary.Collections
         /// </summary>
         private static readonly int DYNAMIC_LIST_DEFAULT_SIZE = 10;
 
-        protected List<GameObject> staticList;
+        protected List<GameObject> presistentList;
         protected List<GameObject> dynamicList;
         protected List<Renderer> renderers;
         protected List<Controller> controllers;
@@ -64,7 +64,7 @@ namespace GDLibrary.Collections
 
         public GameObjectList()
         {
-            staticList = new List<GameObject>(STATIC_LIST_DEFAULT_SIZE);
+            presistentList = new List<GameObject>(STATIC_LIST_DEFAULT_SIZE);
             dynamicList = new List<GameObject>(DYNAMIC_LIST_DEFAULT_SIZE);
             renderers = new List<Renderer>(STATIC_LIST_DEFAULT_SIZE);
             controllers = new List<Controller>(STATIC_LIST_DEFAULT_SIZE);
@@ -81,10 +81,10 @@ namespace GDLibrary.Collections
 
         public virtual void Update()
         {
-            for (int i = 0; i < staticList.Count; i++)
+            for (int i = 0; i < presistentList.Count; i++)
             {
-                if (staticList[i].IsEnabled)
-                    staticList[i].Update();
+                if (presistentList[i].IsEnabled)
+                    presistentList[i].Update();
             }
 
             for (int i = 0; i < dynamicList.Count; i++)
@@ -96,7 +96,7 @@ namespace GDLibrary.Collections
 
         public virtual void Unload()
         {
-            foreach (GameObject gameObject in staticList)
+            foreach (GameObject gameObject in presistentList)
                 gameObject.Dispose();
 
             foreach (GameObject gameObject in dynamicList)
@@ -109,7 +109,7 @@ namespace GDLibrary.Collections
 
         protected void Clear()
         {
-            staticList.Clear();
+            presistentList.Clear();
             dynamicList.Clear();
             controllers.Clear();
             behaviours.Clear();
@@ -125,8 +125,8 @@ namespace GDLibrary.Collections
         public void Add(Scene scene, GameObject gameObject)
         {
             //add to the appropriate list of objects in the scene
-            if (gameObject.IsStatic)
-                staticList.Add(gameObject);
+            if (gameObject.IsPersistent)
+                presistentList.Add(gameObject);
             else
                 dynamicList.Add(gameObject);
 
@@ -147,15 +147,15 @@ namespace GDLibrary.Collections
 
         public void Remove(GameObject obj)
         {
-            if (obj.IsStatic)
-                staticList.Add(obj);
+            if (obj.IsPersistent)
+                presistentList.Add(obj);
             else
                 dynamicList.Add(obj);
         }
 
         public GameObject Find(Predicate<GameObject> predicate)
         {
-            GameObject found = staticList.Find(predicate);
+            GameObject found = presistentList.Find(predicate);
             if (found == null)
                 found = dynamicList.Find(predicate);
 
@@ -164,7 +164,7 @@ namespace GDLibrary.Collections
 
         public List<GameObject> FindAll(Predicate<GameObject> predicate)
         {
-            List<GameObject> found = staticList.FindAll(predicate);
+            List<GameObject> found = presistentList.FindAll(predicate);
             if (found == null)
                 found = dynamicList.FindAll(predicate);
 

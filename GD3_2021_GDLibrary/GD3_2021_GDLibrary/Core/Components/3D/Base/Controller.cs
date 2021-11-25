@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GDLibrary.Components
+﻿namespace GDLibrary.Components
 {
     /// <summary>
     /// Parent class for any controller component that

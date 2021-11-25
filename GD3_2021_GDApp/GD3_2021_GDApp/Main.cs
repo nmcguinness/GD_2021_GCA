@@ -1,6 +1,7 @@
 ﻿//#define DEMO
 
 using GDLibrary;
+using GDLibrary.Collections;
 using GDLibrary.Components;
 using GDLibrary.Components.UI;
 using GDLibrary.Core;
@@ -10,6 +11,8 @@ using GDLibrary.Inputs;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Renderers;
+using JigLibX.Collision;
+using JigLibX.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -62,15 +65,16 @@ namespace GDApp
         /// <summary>
         /// Quick lookup for all fonts used within the game
         /// </summary>
-        private Dictionary<string, SpriteFont> fontDictionary;
+        private ContentDictionary<SpriteFont> fontDictionary;
 
         /// <summary>
         /// Quick lookup for all models used within the game
         /// </summary>
-        private Dictionary<string, Model> modelDictionary;
+        private ContentDictionary<Model> modelDictionary;
 
         private Scene activeScene;
         private UITextObject nameTextObj;
+        private Collider collider;
 
         #endregion Fields
 
@@ -112,7 +116,7 @@ namespace GDApp
             Application.GraphicsDevice = _graphics.GraphicsDevice;
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
-            //Application.PhysicsManager = physicsManager;
+            Application.PhysicsManager = physicsManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
             renderManager = new RenderManager(this, new ForwardRenderer(), false);
@@ -139,6 +143,9 @@ namespace GDApp
             Components.Add(Input.Mouse);
             Components.Add(Input.Gamepad);
 
+            //add physics manager to enable CD/CR and physics
+            Components.Add(physicsManager);
+
             //add scene manager to update game objects
             Components.Add(sceneManager);
 
@@ -147,9 +154,6 @@ namespace GDApp
 
             //add ui scene manager to update and drawn ui objects
             Components.Add(uiSceneManager);
-
-            //add physics manager to enable CD/CR and physics
-            Components.Add(physicsManager);
 
             //add sound
             Components.Add(soundManager);
@@ -211,7 +215,7 @@ namespace GDApp
         /// <param name="gameTime"></param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.HotPink);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
         }
 
@@ -228,7 +232,7 @@ namespace GDApp
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1024, 768);
+            InitializeEngine("My Game Title Goes Here", 1920, 1080);
 
             //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
@@ -256,8 +260,10 @@ namespace GDApp
         private void InitializeDictionaries()
         {
             textureDictionary = new Dictionary<string, Texture2D>();
-            fontDictionary = new Dictionary<string, SpriteFont>();
-            modelDictionary = new Dictionary<string, Model>();
+
+            //why not try the new and improved ContentDictionary instead of a basic Dictionary?
+            fontDictionary = new ContentDictionary<SpriteFont>();
+            modelDictionary = new ContentDictionary<Model>();
         }
 
         private void LoadAssets()
@@ -273,7 +279,9 @@ namespace GDApp
         /// </summary>
         private void LoadModels()
         {
-            modelDictionary.Add("sphere", Content.Load<Model>("Assets/Models/sphere"));
+            //notice with the ContentDictionary we dont have to worry about Load() or a name (its assigned from pathname)
+            modelDictionary.Add("Assets/Models/sphere");
+            modelDictionary.Add("Assets/Models/cube");
         }
 
         /// <summary>
@@ -281,9 +289,9 @@ namespace GDApp
         /// </summary>
         private void LoadFonts()
         {
-            fontDictionary.Add("ui", Content.Load<SpriteFont>("Assets/Fonts/ui"));
-            fontDictionary.Add("menu", Content.Load<SpriteFont>("Assets/Fonts/menu"));
-            fontDictionary.Add("debug", Content.Load<SpriteFont>("Assets/GDDebug/Fonts/ui_debug"));
+            fontDictionary.Add("Assets/Fonts/ui");
+            fontDictionary.Add("Assets/Fonts/menu");
+            fontDictionary.Add("Assets/Fonts/debug");
         }
 
         /// <summary>
@@ -318,8 +326,15 @@ namespace GDApp
             textureDictionary.Add("skybox_back", Content.Load<Texture2D>("Assets/Textures/Skybox/back"));
             textureDictionary.Add("skybox_sky", Content.Load<Texture2D>("Assets/Textures/Skybox/sky"));
 
+            //environment
+            textureDictionary.Add("grass", Content.Load<Texture2D>("Assets/Textures/Foliage/Ground/grass1"));
+
             //ui
-            textureDictionary.Add("ui_progress_32_8", Content.Load<Texture2D>("Assets/Textures/UI/Progress/ui_progress_32_8"));
+            textureDictionary.Add("ui_progress_32_8", Content.Load<Texture2D>("Assets/Textures/UI/Controls/ui_progress_32_8"));
+            textureDictionary.Add("progress_white", Content.Load<Texture2D>("Assets/Textures/UI/Controls/progress_white"));
+
+            //props
+            textureDictionary.Add("crate1", Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1"));
         }
 
         /// <summary>
@@ -328,6 +343,11 @@ namespace GDApp
         protected override void UnloadContent()
         {
             //TODO - add graceful dispose for content
+
+            //remove all models used for the game and free RAM
+            modelDictionary?.Dispose();
+            fontDictionary?.Dispose();
+
             base.UnloadContent();
         }
 
@@ -338,12 +358,16 @@ namespace GDApp
         /// </summary>
         private void InitializeLevel()
         {
+            float worldScale = 1000;
             activeScene = new Scene("level 1");
+
             InitializeCameras(activeScene);
 
-            InitializeSkybox(activeScene, 1000);
-            InitializeCubes(activeScene);
-            InitializeModels(activeScene);
+            //  InitializeSkybox(activeScene, worldScale);
+            //InitializeCubes(activeScene);
+            //InitializeModels(activeScene);
+
+            InitializeCollidables(activeScene, worldScale);
 
             sceneManager.Add(activeScene);
             sceneManager.LoadScene("level 1");
@@ -377,19 +401,25 @@ namespace GDApp
 
             #region Add Health Bar
 
+            //add a health bar in the centre of the game window
+            var texture = textureDictionary["progress_white"];
+            var position = new Vector2(_graphics.PreferredBackBufferWidth / 2, 50);
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
             //create the UI element
             var healthTextureObj = new UITextureObject("health",
                 UIObjectType.Texture,
-                new Transform2D(new Vector2(50, 600),
-                new Vector2(8, 2),
-                MathHelper.ToRadians(-90)),
-                0, textureDictionary["ui_progress_32_8"]);
+                new Transform2D(position, new Vector2(2, 0.5f), 0),
+                0,
+                Color.White,
+                origin,
+                texture);
 
             //add a demo time based behaviour - because we can!
             healthTextureObj.AddComponent(new UITimeColorFlipBehaviour(Color.White, Color.Red, 1000));
 
             //add a progress controller
-            healthTextureObj.AddComponent(new UIProgressBarController(4, 8));
+            healthTextureObj.AddComponent(new UIProgressBarController(5, 10));
 
             //add the ui element to the scene
             mainGameUIScene.Add(healthTextureObj);
@@ -403,7 +433,7 @@ namespace GDApp
 
             //create the UI element
             nameTextObj = new UITextObject(str, UIObjectType.Text,
-                new Transform2D(new Vector2(512, 386),
+                new Transform2D(new Vector2(50, 50),
                 Vector2.One, 0),
                 0, font, "Brutus Maximus");
 
@@ -451,64 +481,61 @@ namespace GDApp
         /// <param name="worldScale">float Value used to scale skybox normally 250 - 1000</param>
         private void InitializeSkybox(Scene level, float worldScale = 500)
         {
-            #region Archetype
+            #region Reusable - You can copy and re-use this code elsewhere, if required
 
-            var material = new BasicMaterial("simple diffuse");
-            material.Texture = textureDictionary["checkerboard"];
-            material.Shader = new BasicShader(Application.Content);
+            //re-use the code on the gfx card
+            var shader = new BasicShader(Application.Content, false, true);
+            //re-use the vertices and indices of the primitive
+            var mesh = new QuadMesh();
+            //create an archetype that we can clone from
+            var archetypalQuad = new GameObject("quad", GameObjectType.Skybox, true);
 
-            var archetypalQuad = new GameObject("quad", GameObjectType.Skybox);
-            archetypalQuad.IsStatic = false;
-            var renderer = new MeshRenderer();
-            renderer.Material = material;
-            archetypalQuad.AddComponent(renderer);
-            renderer.Mesh = new QuadMesh();
+            #endregion Reusable - You can copy and re-use this code elsewhere, if required
 
-            #endregion Archetype
-
+            GameObject clone = null;
             //back
-            GameObject back = archetypalQuad.Clone() as GameObject;
-            back.Name = "skybox_back";
-            material.Texture = textureDictionary["skybox_back"];
-            back.Transform.Translate(0, 0, -worldScale / 2.0f);
-            back.Transform.Scale(worldScale, worldScale, null);
-            level.Add(back);
+            clone = archetypalQuad.Clone() as GameObject;
+            clone.Name = "skybox_back";
+            clone.Transform.Translate(0, 0, -worldScale / 2.0f);
+            clone.Transform.Scale(worldScale, worldScale, 1);
+            clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("skybox_back_material", shader, Color.White, 1, textureDictionary["skybox_back"])));
+            level.Add(clone);
 
             //left
-            GameObject left = archetypalQuad.Clone() as GameObject;
-            left.Name = "skybox_left";
-            material.Texture = textureDictionary["skybox_left"];
-            left.Transform.Translate(-worldScale / 2.0f, 0, 0);
-            left.Transform.Scale(worldScale, worldScale, null);
-            left.Transform.Rotate(0, 90, 0);
-            level.Add(left);
+            clone = archetypalQuad.Clone() as GameObject;
+            clone.Name = "skybox_left";
+            clone.Transform.Translate(-worldScale / 2.0f, 0, 0);
+            clone.Transform.Scale(worldScale, worldScale, null);
+            clone.Transform.Rotate(0, 90, 0);
+            clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("skybox_left_material", shader, Color.White, 1, textureDictionary["skybox_left"])));
+            level.Add(clone);
 
             //right
-            GameObject right = archetypalQuad.Clone() as GameObject;
-            right.Name = "skybox_right";
-            material.Texture = textureDictionary["skybox_right"];
-            right.Transform.Translate(worldScale / 2.0f, 0, 0);
-            right.Transform.Scale(worldScale, worldScale, null);
-            right.Transform.Rotate(0, -90, 0);
-            level.Add(right);
+            clone = archetypalQuad.Clone() as GameObject;
+            clone.Name = "skybox_right";
+            clone.Transform.Translate(worldScale / 2.0f, 0, 0);
+            clone.Transform.Scale(worldScale, worldScale, null);
+            clone.Transform.Rotate(0, -90, 0);
+            clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("skybox_right_material", shader, Color.White, 1, textureDictionary["skybox_right"])));
+            level.Add(clone);
 
             //front
-            GameObject front = archetypalQuad.Clone() as GameObject;
-            front.Name = "skybox_front";
-            material.Texture = textureDictionary["skybox_front"];
-            front.Transform.Translate(0, 0, worldScale / 2.0f);
-            front.Transform.Scale(worldScale, worldScale, null);
-            front.Transform.Rotate(0, -180, 0);
-            level.Add(front);
+            clone = archetypalQuad.Clone() as GameObject;
+            clone.Name = "skybox_front";
+            clone.Transform.Translate(0, 0, worldScale / 2.0f);
+            clone.Transform.Scale(worldScale, worldScale, null);
+            clone.Transform.Rotate(0, -180, 0);
+            clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("skybox_front_material", shader, Color.White, 1, textureDictionary["skybox_front"])));
+            level.Add(clone);
 
             //top
-            GameObject top = archetypalQuad.Clone() as GameObject;
-            top.Name = "skybox_sky";
-            material.Texture = textureDictionary["skybox_sky"];
-            top.Transform.Translate(0, worldScale / 2.0f, 0);
-            top.Transform.Scale(worldScale, worldScale, null);
-            top.Transform.Rotate(90, 0, 0);
-            level.Add(top);
+            clone = archetypalQuad.Clone() as GameObject;
+            clone.Name = "skybox_sky";
+            clone.Transform.Translate(0, worldScale / 2.0f, 0);
+            clone.Transform.Scale(worldScale, worldScale, null);
+            clone.Transform.Rotate(90, -90, 0);
+            clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("skybox_sky_material", shader, Color.White, 1, textureDictionary["skybox_sky"])));
+            level.Add(clone);
         }
 
         /// <summary>
@@ -522,17 +549,14 @@ namespace GDApp
             //add camera game object
             var camera = new GameObject("main camera", GameObjectType.Camera);
 
-            //set viewport
-            //var viewportLeft = new Viewport(0, 0,
-            //    _graphics.PreferredBackBufferWidth / 2,
-            //    _graphics.PreferredBackBufferHeight);
-
             //add components
+            //here is where we can set a smaller viewport e.g. for split screen
+            //e.g. new Viewport(0, 0, _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight)
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
             camera.AddComponent(new FirstPersonController(0.05f, 0.025f, 0.00009f));
 
             //set initial position
-            camera.Transform.SetTranslation(0, 0, 15);
+            camera.Transform.SetTranslation(0, 2, 10);
 
             //add to level
             level.Add(camera);
@@ -543,20 +567,15 @@ namespace GDApp
 
             //add curve for camera translation
             var translationCurve = new Curve3D(CurveLoopType.Cycle);
-            translationCurve.Add(new Vector3(0, 0, 10), 0);
-            translationCurve.Add(new Vector3(0, 5, 15), 1000);
-            translationCurve.Add(new Vector3(0, 0, 20), 2000);
-            translationCurve.Add(new Vector3(0, -5, 25), 3000);
-            translationCurve.Add(new Vector3(0, 0, 30), 4000);
-            translationCurve.Add(new Vector3(0, 0, 10), 6000);
+            translationCurve.Add(new Vector3(0, 1, 10), 0);
+            translationCurve.Add(new Vector3(0, 6, 15), 1000);
+            translationCurve.Add(new Vector3(0, 1, 20), 2000);
+            translationCurve.Add(new Vector3(0, -6, 25), 3000);
+            translationCurve.Add(new Vector3(0, 1, 30), 4000);
+            translationCurve.Add(new Vector3(0, 1, 10), 6000);
 
             //add camera game object
             var curveCamera = new GameObject("curve camera", GameObjectType.Camera);
-
-            //set viewport
-            //var viewportRight = new Viewport(_graphics.PreferredBackBufferWidth / 2, 0,
-            //    _graphics.PreferredBackBufferWidth / 2,
-            //    _graphics.PreferredBackBufferHeight);
 
             //add components
             curveCamera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
@@ -575,80 +594,81 @@ namespace GDApp
             // Time.Instance.TimeScale = 0.1f;
         }
 
-        /// <summary>
-        /// Add demo game objects based on FBX vertex data
-        /// </summary>
-        /// <param name="level"></param>
-        private void InitializeModels(Scene level)
-        {
-            #region Archetype
-
-            var material = new BasicMaterial("model material");
-            material.Texture = textureDictionary["checkerboard"];
-            material.Shader = new BasicShader(Application.Content);
-
-            var archetypalSphere = new GameObject("sphere", GameObjectType.Consumable);
-            archetypalSphere.IsStatic = false;
-
-            var renderer = new ModelRenderer();
-            renderer.Material = material;
-            archetypalSphere.AddComponent(renderer);
-            renderer.Model = modelDictionary["sphere"];
-
-            //downsize the model a little because the sphere is quite large
-            archetypalSphere.Transform.SetScale(0.125f, 0.125f, 0.125f);
-
-            #endregion Archetype
-
-            var count = 0;
-            for (var i = -8; i <= 8; i += 2)
-            {
-                var clone = archetypalSphere.Clone() as GameObject;
-                clone.Name = $"{clone.Name} - {count++}";
-                clone.Transform.SetTranslation(-5, i, 0);
-                level.Add(clone);
-            }
-        }
-
-        /// <summary>
-        /// Add demo game objects based on user-defined vertices and indices
-        /// </summary>
-        /// <param name="level"></param>
-        private void InitializeCubes(Scene level)
-        {
-            #region Archetype
-
-            var material = new BasicMaterial("simple diffuse");
-            material.Texture = textureDictionary["mona lisa"];
-            material.Shader = new BasicShader(Application.Content);
-
-            var archetypalCube = new GameObject("cube", GameObjectType.Architecture);
-            var renderer = new MeshRenderer();
-            renderer.Material = material;
-            archetypalCube.AddComponent(renderer);
-            renderer.Mesh = new CubeMesh();
-
-            #endregion Archetype
-
-            var count = 0;
-            for (var i = 1; i <= 8; i += 2)
-            {
-                var clone = archetypalCube.Clone() as GameObject;
-                clone.Name = $"{clone.Name} - {count++}";
-                clone.Transform.SetTranslation(i, 0, 0);
-                clone.Transform.SetScale(1, i, 1);
-                level.Add(clone);
-            }
-        }
-
         /******************************* Collidables *******************************/
 
         /// <summary>
         /// Demo of the new physics manager and collidable objects
         /// </summary>
-        private void InitializeCollidables(float worldScale = 500)
+        private void InitializeCollidables(Scene level, float worldScale = 500)
         {
-            //     InitializeCollidableGround(worldScale);
+            InitializeCollidableGround(level, worldScale);
+            InitializeCollidableCubes(level);
+        }
+
+        private void InitializeCollidableGround(Scene level, float worldScale)
+        {
+            #region Reusable - You can copy and re-use this code elsewhere, if required
+
+            //re-use the code on the gfx card
+            var shader = new BasicShader(Application.Content, false, true);
+            //re-use the vertices and indices of the model
+            var mesh = new QuadMesh();
+
+            #endregion Reusable - You can copy and re-use this code elsewhere, if required
+
+            //create the ground
+            var ground = new GameObject("ground", GameObjectType.Environment, true);
+            ground.Transform.SetRotation(-90, 0, 0);
+            ground.Transform.SetScale(worldScale, worldScale, 1);
+            ground.AddComponent(new MeshRenderer(mesh, new BasicMaterial("grass_material", shader, Color.White, 1, textureDictionary["grass"])));
+            level.Add(ground);
+
+            //add Collision Surface(s)
+            collider = new Collider();
+            ground.AddComponent(collider);
+            collider.AddPrimitive(new JigLibX.Geometry.Plane(ground.Transform.Up, ground.Transform.LocalTranslation), new MaterialProperties(0.8f, 0.8f, 0.7f));
+            collider.Enable(true, 1);
+
+            //add To Scene Manager
+            level.Add(ground);
+        }
+
+        private void InitializeCollidableCubes(Scene level)
+        {
+            #region Reusable - You can copy and re-use this code elsewhere, if required
+
+            //re-use the code on the gfx card
+            var shader = new BasicShader(Application.Content, false, true);
+            //re-use the model
+            var model = modelDictionary["cube"];
+            //clone the cube
+            var cube = new GameObject("cube", GameObjectType.Environment, false);
+
+            #endregion Reusable - You can copy and re-use this code elsewhere, if required
+
+            GameObject clone = null;
+
+            for (int i = 5; i < 40; i += 5)
+            {
+                //create the cube
+                clone = cube.Clone() as GameObject;
+                clone.Name = "cube 1";
+                clone.Transform.Translate(0, 5 + i, 0);
+                clone.AddComponent(new ModelRenderer(model, new BasicMaterial("cube_material", shader, Color.White, 1, textureDictionary["crate1"])));
+
+                //add Collision Surface(s)
+                collider = new Collider();
+                clone.AddComponent(collider);
+                collider.AddPrimitive(new Box(
+                    cube.Transform.LocalTranslation,
+                    cube.Transform.LocalRotation,
+                    cube.Transform.LocalScale),
+                    new MaterialProperties(0.8f, 0.8f, 0.7f));
+                collider.Enable(false, 10);
+
+                //add To Scene Manager
+                level.Add(clone);
+            }
         }
 
         #endregion Student/Group Specific Code

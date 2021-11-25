@@ -44,7 +44,7 @@ namespace GDLibrary.Components
 
         #region Constructors
 
-        public Scene(string name) : base(name)
+        public Scene(string name) : base(name, GameObjectType.Scene)
         {
             gameObjects = new GameObjectList();
         }
@@ -55,6 +55,7 @@ namespace GDLibrary.Components
 
         public override void Update()
         {
+            //TODO - is this done twice?
             //update any components attached to this scene
             base.Update();
 

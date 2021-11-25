@@ -17,6 +17,7 @@ namespace GDLibrary.Managers
         protected Dictionary<string, UIScene> uiScenes;
         protected UIScene activeUIScene;
         protected string activeUISceneName;
+        private SamplerState samplerState;
 
         #endregion Fields
 
@@ -33,6 +34,10 @@ namespace GDLibrary.Managers
             uiScenes = new Dictionary<string, UIScene>();
             activeUIScene = null;
             activeUISceneName = "";
+
+            //add point filtering to prevent smearing of textures as a result of filter averaging
+            samplerState = new SamplerState();
+            samplerState.Filter = TextureFilter.Point;
         }
 
         #endregion Constructors
@@ -140,7 +145,7 @@ namespace GDLibrary.Managers
             if (IsDrawn)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront,
-                    BlendState.AlphaBlend, null, null);
+                    BlendState.AlphaBlend, samplerState, null);
                 activeUIScene?.Draw(spriteBatch);
                 spriteBatch.End();
             }

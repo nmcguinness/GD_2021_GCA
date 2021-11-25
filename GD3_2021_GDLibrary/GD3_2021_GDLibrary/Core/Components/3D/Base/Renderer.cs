@@ -42,8 +42,9 @@ namespace GDLibrary.Components
 
         #region Constructors
 
-        public Renderer() : base()
+        public Renderer(Material material) : base()
         {
+            this.material = material;
             boundingSphere = new BoundingSphere();
             boundingBox = new BoundingBox();
         }

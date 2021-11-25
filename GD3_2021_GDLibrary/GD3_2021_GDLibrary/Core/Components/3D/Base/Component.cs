@@ -144,21 +144,12 @@ namespace GDLibrary.Components
 
         #endregion Constructors
 
-        #region Update
-
-        public virtual void Update()
-        {
-            //Overridden in child class
-        }
-
-        #endregion Update
-
         #region Actions - Activation
 
         /// <summary>
         /// Called when the component is first instanciated
         /// </summary>
-        public virtual void Awake()
+        public virtual void Awake(GameObject gameObject)
         {
             if (gameObject == null)
                 throw new NullReferenceException("This component is not attached to a game object!");
@@ -193,6 +184,15 @@ namespace GDLibrary.Components
         }
 
         #endregion Actions - Activation
+
+        #region Update
+
+        public virtual void Update()
+        {
+            //Overridden in child class
+        }
+
+        #endregion Update
 
         #region Actions - Components
 

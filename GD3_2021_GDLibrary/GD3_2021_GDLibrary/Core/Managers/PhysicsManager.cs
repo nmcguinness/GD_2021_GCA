@@ -156,9 +156,9 @@ namespace GDLibrary.Managers
             physicSystem.CollisionSystem.UseSweepTests = true;
 
             //affect accuracy and the overhead == time required
-            physicSystem.NumCollisionIterations = 8;
+            physicSystem.NumCollisionIterations = 4;
             physicSystem.NumContactIterations = 8;
-            physicSystem.NumPenetrationRelaxtionTimesteps = 12;
+            physicSystem.NumPenetrationRelaxationTimesteps = 15;
 
             #region SETTING_COLLISION_ACCURACY
 

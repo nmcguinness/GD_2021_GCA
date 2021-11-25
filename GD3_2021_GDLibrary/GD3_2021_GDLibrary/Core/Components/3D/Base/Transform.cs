@@ -93,6 +93,10 @@ namespace GDLibrary.Components
             {
                 return worldMatrix;
             }
+            set
+            {
+                worldMatrix = value;
+            }
         }
 
         public Vector3 Forward => worldMatrix.Forward;
@@ -280,6 +284,7 @@ namespace GDLibrary.Components
         {
             localRotation.Set(x, y, z);
             isWorldDirty = true;
+            isRotationDirty = true;
             PropertyChanged?.Invoke();
         }
 
@@ -291,6 +296,7 @@ namespace GDLibrary.Components
         {
             localRotation.Set(ref newRotation);
             isWorldDirty = true;
+            isRotationDirty = true;
             PropertyChanged?.Invoke();
         }
 
@@ -309,10 +315,10 @@ namespace GDLibrary.Components
         /// <param name="newRotation"></param>
         public void SetRotation(ref Matrix matrix)
         {
-            var quaternion = Quaternion.CreateFromRotationMatrix(matrix);
-            var rotation = quaternion.ToEuler();
+            var rotation = Quaternion.CreateFromRotationMatrix(matrix).ToEuler();
             localRotation.Set(rotation.X, rotation.Y, rotation.Z);
             isWorldDirty = true;
+            isRotationDirty = true;
             PropertyChanged?.Invoke();
         }
 
@@ -361,28 +367,27 @@ namespace GDLibrary.Components
         public override void Update()
         {
             if (isRotationDirty)
-            {
-                //rotationMatrix = Matrix.CreateFromYawPitchRoll(
-                //        MathHelper.ToRadians(localRotation.Y),
-                //        MathHelper.ToRadians(localRotation.X),
-                //        MathHelper.ToRadians(localRotation.Z));
-
-                rotationMatrix = Matrix.CreateRotationX(MathHelper.ToRadians(localRotation.X))
-                        * Matrix.CreateRotationY(MathHelper.ToRadians(localRotation.Y))
-                            * Matrix.CreateRotationZ(MathHelper.ToRadians(localRotation.Z));
-
-                isRotationDirty = false;
-            }
+                UpdateRotationMatrix();
 
             if (isWorldDirty)
-            {
-                worldMatrix = Matrix.Identity
+                UpdateWorldMatrix();
+        }
+
+        private void UpdateRotationMatrix()
+        {
+            rotationMatrix = Matrix.CreateRotationX(MathHelper.ToRadians(localRotation.X))
+                      * Matrix.CreateRotationY(MathHelper.ToRadians(localRotation.Y))
+                          * Matrix.CreateRotationZ(MathHelper.ToRadians(localRotation.Z));
+            isRotationDirty = false;
+        }
+
+        private void UpdateWorldMatrix()
+        {
+            worldMatrix = Matrix.Identity
                       * Matrix.CreateScale(localScale)
                           * rotationMatrix
                           * Matrix.CreateTranslation(localTranslation);
-                isWorldDirty = false;
-            }
-            base.Update();
+            isWorldDirty = false;
         }
 
         #endregion Actions - Modify Scale, Rotation, Translation

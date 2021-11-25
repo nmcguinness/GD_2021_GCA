@@ -21,7 +21,8 @@ namespace GDLibrary.Components
         {
             this.fovScrollDeltaInRadians = fovScrollDeltaInRadians;
         }
-        public override void Awake()
+
+        public override void Awake(GameObject gameObject)
         {
             camera = GetComponent<Camera>();
 

@@ -335,6 +335,16 @@ namespace GDLibrary
         {
         }
 
+        public UITextureObject(string name, UIObjectType uiObjectType,
+            Transform2D transform, float depth,
+            Color color, Vector2 origin,
+            Texture2D defaultTexture)
+        : this(name, uiObjectType, transform, depth,
+            color, SpriteEffects.None, origin, defaultTexture, null,
+            new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
+        {
+        }
+
         /// <summary>
         /// Construct a ui texture object where we want to set all draw related settings (e.g. source rectangle, color, origin)
         /// </summary>
@@ -349,10 +359,10 @@ namespace GDLibrary
         /// <param name="alternateTexture"></param>
         /// <param name="sourceRectangle"></param>
         public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
-            Color color, SpriteEffects spriteEffects, Vector2 origin,
-            Texture2D defaultTexture, Texture2D alternateTexture,
-            Rectangle sourceRectangle)
-        : base(name, uiObjectType, transform, depth, color, spriteEffects, origin)
+        Color color, SpriteEffects spriteEffects, Vector2 origin,
+        Texture2D defaultTexture, Texture2D alternateTexture,
+        Rectangle sourceRectangle)
+    : base(name, uiObjectType, transform, depth, color, spriteEffects, origin)
         {
             DefaultTexture = defaultTexture;
             AlternateTexture = alternateTexture;

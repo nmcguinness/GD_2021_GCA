@@ -1,4 +1,5 @@
 #region Using Statements
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,11 +9,11 @@ using JigLibX.Geometry;
 using JigLibX.Math;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+
 #endregion
 
 namespace JigLibX.Physics
 {
-
     /// <summary>
     ///Looks after (but doesn't own) a collection of bodies and runs
     ///their updates. Doesn't deal with collision detection - it will
@@ -41,14 +42,17 @@ namespace JigLibX.Physics
             /// Fast
             /// </summary>
             Fast,
+
             /// <summary>
             /// Normal
             /// </summary>
             Normal,
+
             /// <summary>
             /// Combined
             /// </summary>
             Combined,
+
             /// <summary>
             /// Accumulated
             /// </summary>
@@ -56,6 +60,7 @@ namespace JigLibX.Physics
         }
 
         #region private class Contact
+
         // A class can be handled much faster within lists.
         /// <summary>
         /// Clas Contact
@@ -63,6 +68,7 @@ namespace JigLibX.Physics
         private class Contact
         {
             #region private struct BodyPair
+
             /// <summary>
             /// Struct BodyPair
             /// </summary>
@@ -72,14 +78,17 @@ namespace JigLibX.Physics
                 /// BodyA
                 /// </summary>
                 public Body BodyA;
+
                 /// <summary>
                 /// BodyB
                 /// </summary>
                 public Body BodyB;
+
                 /// <summary>
                 /// RA
                 /// </summary>
                 public Vector3 RA;
+
                 /// <summary>
                 /// Only the bodies are used for the
                 /// comparison-
@@ -91,7 +100,6 @@ namespace JigLibX.Physics
                 /// <param name="rB"></param>
                 public BodyPair(Body bodyA, Body bodyB, ref Vector3 rA, ref Vector3 rB)
                 {
-
                     // if (bodyA > bodyB) {mBodyA = bodyA; mBodyB = bodyB; mRA = rA;}
                     // else {mBodyA = bodyB; mBodyB = bodyA; mRA = rB;}
                     int skinId = -1;
@@ -114,7 +122,6 @@ namespace JigLibX.Physics
                 /// <param name="bodyB"></param>
                 public BodyPair(Body bodyA, Body bodyB)
                 {
-
                     // if (bodyA > bodyB) {mBodyA = bodyA; mBodyB = bodyB; mRA = rA;}
                     // else {mBodyA = bodyB; mBodyB = bodyA; mRA = rB;}
                     int skinId = -1;
@@ -136,6 +143,7 @@ namespace JigLibX.Physics
             #endregion
 
             #region public struct CachedImpulse
+
             /// <summary>
             /// Struct CachedImpulse
             /// </summary>
@@ -145,10 +153,12 @@ namespace JigLibX.Physics
                 /// NormalImpulse
                 /// </summary>
                 public float NormalImpulse;
+
                 /// <summary>
                 /// NormalImpulseAux
                 /// </summary>
                 public float NormalImpulseAux;
+
                 /// <summary>
                 /// FrictionImpulse
                 /// </summary>
@@ -166,20 +176,21 @@ namespace JigLibX.Physics
                     this.NormalImpulseAux = normalImpulseAux;
                     this.FrictionImpulse = frictionImpulse;
                 }
-
             }
 
             #endregion
+
             /// <summary>
             /// Pair
             /// </summary>
             public BodyPair Pair;
+
             /// <summary>
             /// Impulse
             /// </summary>
             public CachedImpulse Impulse;
-
         }
+
         #endregion
 
         private CollisionSystem collisionSystem;
@@ -191,12 +202,14 @@ namespace JigLibX.Physics
         private List<Constraint> constraints = new List<Constraint>();
 
         private List<Contact> catchedContacts = new List<Contact>();
+
         /// <summary>
         /// List of islands
         /// </summary>
         public List<CollisionIsland> islands = new List<CollisionIsland>();
 
         private delegate void PreProcessCollisionFn(CollisionInfo collision, float dt);
+
         private delegate bool ProcessCollisionFn(CollisionInfo collision, float dt, bool firstContact);
 
         private PreProcessCollisionFn preProcessContactFn;
@@ -214,7 +227,7 @@ namespace JigLibX.Physics
 
         private int numCollisionIterations = 4;
         private int numContactIterations = 12;
-        private int numPenetrationRelaxtionTimesteps = 3;
+        private int numPenetrationRelaxationTimesteps = 3;
 
         private float allowedPenetration = 0.01f;
 
@@ -255,7 +268,7 @@ namespace JigLibX.Physics
         }
 
         /// <summary>
-        /// Returns a readonly collection of all Constraints registered. To add or remove 
+        /// Returns a readonly collection of all Constraints registered. To add or remove
         /// Constraints use AddConstraint or RemoveConstraint.
         /// </summary>
         public ReadOnlyCollection<Constraint> Constraints
@@ -264,7 +277,7 @@ namespace JigLibX.Physics
         }
 
         /// <summary>
-        /// Returns a readonly collection of all Controllers registered. To add or remove 
+        /// Returns a readonly collection of all Controllers registered. To add or remove
         /// Controllers use AddController or RemoveController.
         /// </summary>
         public ReadOnlyCollection<Controller> Controllers
@@ -533,7 +546,8 @@ namespace JigLibX.Physics
             }
         }
 
-        Random rand = new Random();
+        private Random rand = new Random();
+
         /// <summary>
         /// DetectAllCollisions
         /// </summary>
@@ -580,7 +594,6 @@ namespace JigLibX.Physics
 
             for (i = 0; i < numActiveBodies; ++i)
                 activeBodies[i].RestoreState();
-
         }
 
         /// <summary>
@@ -716,6 +729,7 @@ namespace JigLibX.Physics
                     if (!body0.Immovable)
                     {
                         #region INLINE: denominator = body0.InvMass + Vector3.Dot(T, Vector3.Cross(body0.WorldInvInertia * (Vector3.Cross(ptInfo.R0, T)), ptInfo.R0));
+
                         float num0 = (ptInfo.Info.R0.Y * T.Z) - (ptInfo.Info.R0.Z * T.Y);
                         float num1 = (ptInfo.Info.R0.Z * T.X) - (ptInfo.Info.R0.X * T.Z);
                         float num2 = (ptInfo.Info.R0.X * T.Y) - (ptInfo.Info.R0.Y * T.X);
@@ -729,12 +743,14 @@ namespace JigLibX.Physics
                         num2 = (num3 * ptInfo.Info.R0.Y) - (num4 * ptInfo.Info.R0.X);
 
                         denominator = body0.InverseMass + ((num0 * T.X) + (num1 * T.Y) + (num2 * T.Z));
+
                         #endregion
                     }
 
                     if ((body1 != null) && (!body1.Immovable))
                     {
                         #region INLINE: denominator += body1.InvMass + Vector3.Dot(T, Vector3.Cross(body1.WorldInvInertia * (Vector3.Cross(ptInfo.R1, T)), ptInfo.R1));
+
                         float num0 = (ptInfo.Info.R1.Y * T.Z) - (ptInfo.Info.R1.Z * T.Y);
                         float num1 = (ptInfo.Info.R1.Z * T.X) - (ptInfo.Info.R1.X * T.Z);
                         float num2 = (ptInfo.Info.R1.X * T.Y) - (ptInfo.Info.R1.Y * T.X);
@@ -748,6 +764,7 @@ namespace JigLibX.Physics
                         num2 = (num3 * ptInfo.Info.R1.Y) - (num4 * ptInfo.Info.R1.X);
 
                         denominator += body1.InverseMass + ((num0 * T.X) + (num1 * T.Y) + (num2 * T.Z));
+
                         #endregion
                     }
 
@@ -768,11 +785,8 @@ namespace JigLibX.Physics
                         body0.ApplyBodyWorldImpulse(ref T, ref ptInfo.Info.R0);
                         if (body1 != null)
                             body1.ApplyNegativeBodyWorldImpulse(ref T, ref ptInfo.Info.R1);
-
                     }
-
                 } // end of friction
-
             }
 
             if (gotOne)
@@ -783,7 +797,6 @@ namespace JigLibX.Physics
             }
 
             return gotOne;
-
         }
 
         /// <summary>
@@ -803,7 +816,7 @@ namespace JigLibX.Physics
             Vector3 N = collision.DirToBody0;
 
             bool gotOne = false;
-            for (int pos = collision.NumCollPts; pos-- != 0; )
+            for (int pos = collision.NumCollPts; pos-- != 0;)
             {
                 CollPointInfo ptInfo = collision.PointInfo[pos];
 
@@ -909,7 +922,6 @@ namespace JigLibX.Physics
             }
 
             return gotOne;
-
         }
 
         /// <summary>
@@ -930,7 +942,7 @@ namespace JigLibX.Physics
 
             bool gotOne = false;
 
-            for (int pos = collision.NumCollPts; pos-- != 0; )
+            for (int pos = collision.NumCollPts; pos-- != 0;)
             {
                 CollPointInfo ptInfo = collision.PointInfo[pos];
                 float normalImpulse;
@@ -982,10 +994,7 @@ namespace JigLibX.Physics
 
                         // prepare our return value
                         gotOne = true;
-
                     }
-
-
                 }
 
                 // now the correction impulse
@@ -1032,12 +1041,10 @@ namespace JigLibX.Physics
 
                         body0.ApplyBodyWorldImpulseAux(ref impulse, ref ptInfo.Info.R0);
                         if (body1 != null)
-                            body1.ApplyNegativeBodyWorldImpulseAux(ref impulse,ref ptInfo.Info.R1);
+                            body1.ApplyNegativeBodyWorldImpulseAux(ref impulse, ref ptInfo.Info.R1);
                         //prepare our return value
                         gotOne = true;
-
                     }
-
                 }
 
                 // For friction, work out the impulse in the opposite direction to
@@ -1079,6 +1086,7 @@ namespace JigLibX.Physics
                         if (!body0.Immovable)
                         {
                             #region INLINE: denominator = body0.InvMass + Vector3.Dot(T, Vector3.Cross(body0.WorldInvInertia * (Vector3.Cross(ptInfo.R0, T)), ptInfo.R0));
+
                             float num0 = ptInfo.Info.R0.Y * T.Z - ptInfo.Info.R0.Z * T.Y;
                             float num1 = ptInfo.Info.R0.Z * T.X - ptInfo.Info.R0.X * T.Z;
                             float num2 = ptInfo.Info.R0.X * T.Y - ptInfo.Info.R0.Y * T.X;
@@ -1092,12 +1100,14 @@ namespace JigLibX.Physics
                             num2 = num3 * ptInfo.Info.R0.Y - num4 * ptInfo.Info.R0.X;
 
                             denominator = body0.InverseMass + ((num0 * T.X) + (num1 * T.Y) + (num2 * T.Z));
+
                             #endregion
                         }
 
                         if ((body1 != null) && (!body1.Immovable))
                         {
                             #region INLINE: denominator += body1.InvMass + Vector3.Dot(T, Vector3.Cross(body1.WorldInvInertia * (Vector3.Cross(ptInfo.R1, T)), ptInfo.R1));
+
                             float num0 = ptInfo.Info.R1.Y * T.Z - ptInfo.Info.R1.Z * T.Y;
                             float num1 = ptInfo.Info.R1.Z * T.X - ptInfo.Info.R1.X * T.Z;
                             float num2 = ptInfo.Info.R1.X * T.Y - ptInfo.Info.R1.Y * T.X;
@@ -1111,6 +1121,7 @@ namespace JigLibX.Physics
                             num2 = num3 * ptInfo.Info.R1.Y - num4 * ptInfo.Info.R1.X;
 
                             denominator += body1.InverseMass + ((num0 * T.X) + (num1 * T.Y) + (num2 * T.Z));
+
                             #endregion
                         }
 
@@ -1122,7 +1133,7 @@ namespace JigLibX.Physics
                             Vector3.Multiply(ref T, impulseToReverse, out frictionImpulseVec);
 
                             Vector3 origAccumulatedFrictionImpulse = ptInfo.AccumulatedFrictionImpulse;
-                            
+
                             //ptInfo.AccumulatedFrictionImpulse += frictionImpulseVec;
                             Vector3.Add(ref ptInfo.AccumulatedFrictionImpulse, ref frictionImpulseVec, out ptInfo.AccumulatedFrictionImpulse);
 
@@ -1144,10 +1155,8 @@ namespace JigLibX.Physics
                             body0.ApplyBodyWorldImpulse(ref actualFrictionImpulse, ref ptInfo.Info.R0);
                             if (body1 != null)
                                 body1.ApplyNegativeBodyWorldImpulse(ref actualFrictionImpulse, ref ptInfo.Info.R1);
-
                         }
                     } // end of friction
-
                 }
             }
 
@@ -1159,7 +1168,6 @@ namespace JigLibX.Physics
             }
 
             return gotOne;
-
         }
 
         /// <summary>
@@ -1189,7 +1197,7 @@ namespace JigLibX.Physics
             // the fastest possible way to allocate short living arrays of primitive types
             float* impulses = stackalloc float[CollisionInfo.MaxCollisionPoints];
 
-            for (pos = collision.NumCollPts; pos-- != 0; )
+            for (pos = collision.NumCollPts; pos-- != 0;)
             {
                 CollPointInfo ptInfo = collision.PointInfo[pos];
                 impulses[pos] = 0.0f;
@@ -1234,7 +1242,7 @@ namespace JigLibX.Physics
 
             // apply all these impulses (as well as subsequently applying an
             // impulse at an averaged position)
-            for (pos = collision.NumCollPts; pos-- != 0; )
+            for (pos = collision.NumCollPts; pos-- != 0;)
             {
                 if (impulses[pos] > JiggleMath.Epsilon)
                 {
@@ -1303,10 +1311,8 @@ namespace JigLibX.Physics
                 }
             }
 
-
-
             // Now do friction point by point
-            for (pos = collision.NumCollPts; pos-- != 0; )
+            for (pos = collision.NumCollPts; pos-- != 0;)
             {
                 // For friction, work out the impulse in the opposite direction to
                 // the tangential velocity that would be required to bring this
@@ -1332,7 +1338,6 @@ namespace JigLibX.Physics
 
                     // calculate an "inelastic collision" to zero the relative vel
                     float denominator = 0.0f;
-
 
                     if (!body0.Immovable)
                     {
@@ -1429,10 +1434,9 @@ namespace JigLibX.Physics
                     Vector3 actualImpulse = (ptInfo.AccumulatedNormalImpulseAux - orig) * N;
 
                     if (body0 != null)
-                        body0.ApplyBodyWorldImpulseAux(ref actualImpulse,ref ptInfo.Info.R0);
+                        body0.ApplyBodyWorldImpulseAux(ref actualImpulse, ref ptInfo.Info.R0);
                     if (body1 != null)
-                        body1.ApplyNegativeBodyWorldImpulseAux(ref actualImpulse,ref ptInfo.Info.R1);
-
+                        body1.ApplyNegativeBodyWorldImpulseAux(ref actualImpulse, ref ptInfo.Info.R1);
                 }
             }
 
@@ -1459,7 +1463,7 @@ namespace JigLibX.Physics
 
             //always calc the following
             Vector3 N = collision.DirToBody0;
-            float timescale = numPenetrationRelaxtionTimesteps * dt;
+            float timescale = numPenetrationRelaxationTimesteps * dt;
 
             for (int pos = 0; pos < collision.NumCollPts; ++pos)
             {
@@ -1471,6 +1475,7 @@ namespace JigLibX.Physics
                 else
                 {
                     #region INLINE: ptInfo.Denominator = body0.InvMass + Vector3.Dot(N, Vector3.Cross(body0.WorldInvInertia * (Vector3.Cross(ptInfo.R0, N)), ptInfo.R0));
+
                     float num0 = (ptInfo.Info.R0.Y * N.Z) - (ptInfo.Info.R0.Z * N.Y);
                     float num1 = (ptInfo.Info.R0.Z * N.X) - (ptInfo.Info.R0.X * N.Z);
                     float num2 = (ptInfo.Info.R0.X * N.Y) - (ptInfo.Info.R0.Y * N.X);
@@ -1484,12 +1489,14 @@ namespace JigLibX.Physics
                     num2 = (num3 * ptInfo.Info.R0.Y) - (num4 * ptInfo.Info.R0.X);
 
                     ptInfo.Denominator = body0.InverseMass + ((num0 * N.X) + (num1 * N.Y) + (num2 * N.Z));
+
                     #endregion
                 }
 
                 if ((body1 != null) && !body1.Immovable)
                 {
                     #region INLINE: ptInfo.Denominator += body1.InvMass + Vector3.Dot(N, Vector3.Cross(body1.WorldInvInertia * (Vector3.Cross(ptInfo.R1, N)), ptInf1.R0));
+
                     float num0 = (ptInfo.Info.R1.Y * N.Z) - (ptInfo.Info.R1.Z * N.Y);
                     float num1 = (ptInfo.Info.R1.Z * N.X) - (ptInfo.Info.R1.X * N.Z);
                     float num2 = (ptInfo.Info.R1.X * N.Y) - (ptInfo.Info.R1.Y * N.X);
@@ -1503,6 +1510,7 @@ namespace JigLibX.Physics
                     num2 = (num3 * ptInfo.Info.R1.Y) - (num4 * ptInfo.Info.R1.X);
 
                     ptInfo.Denominator += body1.InverseMass + ((num0 * N.X) + (num1 * N.Y) + (num2 * N.Z));
+
                     #endregion
                 }
 
@@ -1562,12 +1570,12 @@ namespace JigLibX.Physics
 
             // always calc the following
             Vector3 N = collision.DirToBody0;
-            float timescale = numPenetrationRelaxtionTimesteps * dt;
+            float timescale = numPenetrationRelaxationTimesteps * dt;
 
             const int keep = 3;
             if (collision.NumCollPts > keep)
             {
-                Array.Sort( collision.PointInfo, MoreCollPtPenetration);
+                Array.Sort(collision.PointInfo, MoreCollPtPenetration);
                 collision.NumCollPts = keep;
             }
 
@@ -1619,9 +1627,7 @@ namespace JigLibX.Physics
                 }
                 if (ptInfo.MinSeparationVel > maxVelMag)
                     ptInfo.MinSeparationVel = maxVelMag;
-
             }
-
         }
 
         /// <summary>
@@ -1639,7 +1645,7 @@ namespace JigLibX.Physics
 
             // always calc the following
             Vector3 N = collision.DirToBody0;
-            float timescale = numPenetrationRelaxtionTimesteps * dt;
+            float timescale = numPenetrationRelaxationTimesteps * dt;
 
             for (int pos = 0; pos < collision.NumCollPts; ++pos)
             {
@@ -1652,6 +1658,7 @@ namespace JigLibX.Physics
                 else
                 {
                     #region INLINE: ptInfo.Denominator = body0.InvMass + Vector3.Dot(N, Vector3.Cross(body0.WorldInvInertia * (Vector3.Cross(ptInfo.R0, N)), ptInfo.R0));
+
                     float num0 = ptInfo.Info.R0.Y * N.Z - ptInfo.Info.R0.Z * N.Y;
                     float num1 = ptInfo.Info.R0.Z * N.X - ptInfo.Info.R0.X * N.Z;
                     float num2 = ptInfo.Info.R0.X * N.Y - ptInfo.Info.R0.Y * N.X;
@@ -1665,12 +1672,14 @@ namespace JigLibX.Physics
                     num2 = num3 * ptInfo.Info.R0.Y - num4 * ptInfo.Info.R0.X;
 
                     ptInfo.Denominator = body0.InverseMass + ((num0 * N.X) + (num1 * N.Y) + (num2 * N.Z));
+
                     #endregion
                 }
 
                 if ((body1 != null) && !body1.Immovable)
                 {
                     #region INLINE: ptInfo.Denominator += body1.InvMass + Vector3.Dot(N, Vector3.Cross(body1.WorldInvInertia * (Vector3.Cross(ptInfo.R1, N)), ptInf1.R0));
+
                     float num0 = ptInfo.Info.R1.Y * N.Z - ptInfo.Info.R1.Z * N.Y;
                     float num1 = ptInfo.Info.R1.Z * N.X - ptInfo.Info.R1.X * N.Z;
                     float num2 = ptInfo.Info.R1.X * N.Y - ptInfo.Info.R1.Y * N.X;
@@ -1684,9 +1693,9 @@ namespace JigLibX.Physics
                     num2 = num3 * ptInfo.Info.R1.Y - num4 * ptInfo.Info.R1.X;
 
                     ptInfo.Denominator += body1.InverseMass + ((num0 * N.X) + (num1 * N.Y) + (num2 * N.Z));
+
                     #endregion
                 }
-
 
                 if (ptInfo.Denominator < JiggleMath.Epsilon)
                     ptInfo.Denominator = JiggleMath.Epsilon;
@@ -1757,7 +1766,6 @@ namespace JigLibX.Physics
 
                         if (catchedContacts[i].Pair.BodyA != collision.SkinInfo.Skin0.Owner)
                             ptInfo.AccumulatedFrictionImpulse *= -1;
-
                     }
                 }
 
@@ -1782,9 +1790,9 @@ namespace JigLibX.Physics
                     //Vector3 impulse = N * ptInfo.AccumulatedNormalImpulseAux;
                     Vector3 impulse;
                     Vector3.Multiply(ref N, ptInfo.AccumulatedNormalImpulseAux, out impulse);
-                    body0.ApplyBodyWorldImpulseAux(ref impulse,ref ptInfo.Info.R0);
+                    body0.ApplyBodyWorldImpulseAux(ref impulse, ref ptInfo.Info.R0);
                     if (body1 != null)
-                        body1.ApplyNegativeBodyWorldImpulseAux(ref impulse,ref ptInfo.Info.R1);
+                        body1.ApplyNegativeBodyWorldImpulseAux(ref impulse, ref ptInfo.Info.R1);
                 }
             }
         }
@@ -1800,14 +1808,17 @@ namespace JigLibX.Physics
                     preProcessCollisionFn = preProcessContactFn = PreProcessCollisionFast;
                     processCollisionFn = processContactFn = ProcessCollisionFast;
                     break;
+
                 case Solver.Normal:
                     preProcessCollisionFn = preProcessContactFn = PreProcessCollision;
                     processCollisionFn = processContactFn = ProcessCollision;
                     break;
+
                 case Solver.Combined:
                     preProcessCollisionFn = preProcessContactFn = PreProcessCollision;
                     processCollisionFn = processContactFn = ProcessCollisionCombined;
                     break;
+
                 case Solver.Accumulated:
                     preProcessCollisionFn = PreProcessCollision;
                     processCollisionFn = ProcessCollision;
@@ -1834,7 +1845,7 @@ namespace JigLibX.Physics
                 constraints[i].PreApply(dt);
             }
 
-            // prepare all the collisions 
+            // prepare all the collisions
             if (forceInelastic)
             {
                 for (int i = 0; i < numCollisions; ++i)
@@ -1892,7 +1903,6 @@ namespace JigLibX.Physics
             get { return currentPhysicsSystem; }
             set { currentPhysicsSystem = value; }
         }
-
 
         /// <summary>
         /// If there is to be any collision detection, this physics system
@@ -1983,7 +1993,6 @@ namespace JigLibX.Physics
             }
         }
 
-     
         /// <summary>
         /// Integrates the system forwards by dt - the caller is
         /// responsible for making sure that repeated calls to this use
@@ -1992,7 +2001,6 @@ namespace JigLibX.Physics
         /// <param name="dt"></param>
         public void Integrate(float dt)
         {
-
             oldTime = targetTime;
             targetTime += dt;
 
@@ -2046,7 +2054,6 @@ namespace JigLibX.Physics
                 for (int i = 0; i < activeBodies.Count; ++i)
                     activeBodies[i].RestoreState();
             }
-
         }
 
         /// <summary>
@@ -2095,10 +2102,10 @@ namespace JigLibX.Physics
         /// <summary>
         /// Gets or Sets numPenetrationRelaxtionTimesteps
         /// </summary>
-        public int NumPenetrationRelaxtionTimesteps
+        public int NumPenetrationRelaxationTimesteps
         {
-            set { this.numPenetrationRelaxtionTimesteps = value; }
-            get { return this.numPenetrationRelaxtionTimesteps; }
+            set { this.numPenetrationRelaxationTimesteps = value; }
+            get { return this.numPenetrationRelaxationTimesteps; }
         }
 
         /// <summary>
@@ -2204,7 +2211,6 @@ namespace JigLibX.Physics
                     for (int i = 0; i < numBodies; ++i)
                         bodies[i].SetActive();
                 }
-
             }
         }
 
@@ -2253,7 +2259,7 @@ namespace JigLibX.Physics
             }
             catchedContacts.Clear();
 
-            for (int i = collisions.Count; i-- != 0; )
+            for (int i = collisions.Count; i-- != 0;)
             {
                 CollisionInfo collInfo = collisions[i];
                 for (int pos = 0; pos < collInfo.NumCollPts; ++pos)
@@ -2263,7 +2269,6 @@ namespace JigLibX.Physics
                     int skinId1 = -1;
                     if (collInfo.SkinInfo.Skin1.Owner != null) skinId1 = collInfo.SkinInfo.Skin1.Owner.ID;
 
-
                     Vector3 fricImpulse = (collInfo.SkinInfo.Skin0.Owner.ID > skinId1) ?
                         ptInfo.AccumulatedFrictionImpulse : -ptInfo.AccumulatedFrictionImpulse;
 
@@ -2271,7 +2276,7 @@ namespace JigLibX.Physics
                     {
                         freeContacts.Push(new Contact());
                     }
-                
+
                     Contact contact = freeContacts.Pop();
                     contact.Impulse = new Contact.CachedImpulse(ptInfo.AccumulatedNormalImpulse, ptInfo.AccumulatedNormalImpulseAux, ref fricImpulse);
                     contact.Pair = new Contact.BodyPair(collInfo.SkinInfo.Skin0.Owner, collInfo.SkinInfo.Skin1.Owner, ref ptInfo.Info.R0, ref ptInfo.Info.R1);
@@ -2282,4 +2287,3 @@ namespace JigLibX.Physics
         }
     }
 }
-

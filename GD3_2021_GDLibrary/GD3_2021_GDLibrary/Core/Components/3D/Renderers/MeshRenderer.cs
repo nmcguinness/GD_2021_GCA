@@ -10,8 +10,14 @@ namespace GDLibrary.Components
     /// </summary>
     public class MeshRenderer : Renderer
     {
+        #region Fields
+
         //TODO - generalise for any IVertexType
         protected Mesh mesh;
+
+        #endregion Fields
+
+        #region Properties
 
         //TODO - If mesh data is changed then we must re-set the data in the buffers. Same for ModelRenderer too.
         public Mesh Mesh
@@ -33,13 +39,17 @@ namespace GDLibrary.Components
             }
         }
 
-        public override void Draw(GraphicsDevice device)
+        #endregion Properties
+
+        #region Constructors
+
+        public MeshRenderer(Mesh mesh, Material material)
+        : base(material)
         {
-            device.SetVertexBuffer(mesh.VertexBuffer);
-            device.Indices = mesh.IndexBuffer;
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
-                0, 0, mesh.IndexBuffer.IndexCount / 3);
+            Mesh = mesh;
         }
+
+        #endregion Constructors
 
         public override void SetBoundingVolume()
         {
@@ -71,16 +81,18 @@ namespace GDLibrary.Components
             boundingSphere.Center = transform.LocalTranslation;
         }
 
-        #region Actions - Housekeeping
+        public override void Draw(GraphicsDevice device)
+        {
+            device.SetVertexBuffer(mesh.VertexBuffer);
+            device.Indices = mesh.IndexBuffer;
+            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.IndexBuffer.IndexCount / 3);
+        }
 
-        //TODO - Dispose
+        #region Actions - Housekeeping
 
         public override object Clone()
         {
-            var clone = new MeshRenderer();
-            clone.material = material.Clone() as Material;
-            clone.Mesh = mesh.Clone() as Mesh;
-            return clone;
+            return new MeshRenderer(mesh, material.Clone() as Material);
         }
 
         #endregion Actions - Housekeeping

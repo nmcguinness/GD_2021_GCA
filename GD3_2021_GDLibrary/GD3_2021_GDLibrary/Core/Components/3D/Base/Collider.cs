@@ -8,7 +8,7 @@ namespace GDLibrary.Components
     /// <summary>
     /// Provides physics behaviour for the game object
     /// </summary>
-    public class ColliderBehaviour : Behaviour
+    public class Collider : Component
     {
         #region Fields
 
@@ -31,13 +31,18 @@ namespace GDLibrary.Components
 
         #endregion Properties
 
-        #region Actions - Physics setup related
+        #region Constructors
 
-        /// <summary>
-        /// Called after the component is constructed in the SceneManager to setup physics stuff
-        /// </summary>
-        public override void Awake()
+        public Collider()
         {
+        }
+
+        #endregion Constructors
+
+        public override void Awake(GameObject gameObject)
+        {
+            //cache the transform
+            transform = gameObject.Transform;
             //instanciate a new body
             Body = new Body();
             //set the parent gam object to be the attached drawn object (used when collisions occur)
@@ -48,6 +53,8 @@ namespace GDLibrary.Components
             Body.CollisionSkin = Collision;
         }
 
+        #region Actions - Physics setup related
+
         /// <summary>
         /// Used to add a collision primitive to the collider behaviour
         /// </summary>
@@ -55,22 +62,23 @@ namespace GDLibrary.Components
         /// <param name="materialProperties">MaterialProperties</param>
         public virtual void AddPrimitive(Primitive primitive, MaterialProperties materialProperties)
         {
+            if (Collision == null)
+                throw new System.NullReferenceException("CollisionSkin is null! Did you add the Collider to the GameObject using AddComponent() before calling this method?");
+
             Collision?.AddPrimitive(primitive, materialProperties);
         }
 
         /// <summary>
         /// Must be called after we instanciate the new collider behaviour in order for the body to participate in the physics system
         /// </summary>
-        /// <param name="bImmovable"></param>
-        /// <param name="mass"></param>
-        public virtual void Enable(bool bImmovable, float mass)
+        public virtual void Enable(bool isImmovable, float mass)
         {
             //set whether the object can move
-            Body.Immovable = bImmovable;
+            Body.Immovable = isImmovable;
             //calculate the centre of mass
             Vector3 com = SetMass(mass);
             //adjust skin so that it corresponds to the 3D mesh as drawn on screen
-            Body.MoveTo(gameObject.Transform.LocalTranslation, Matrix.Identity);
+            Body.MoveTo(transform.LocalTranslation, Matrix.Identity);
             //set the centre of mass
             Collision.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
             //enable so that any applied forces (e.g. gravity) will affect the object
@@ -95,5 +103,24 @@ namespace GDLibrary.Components
         }
 
         #endregion Actions - Physics setup related
+
+        public override void Update()
+        {
+            //TODO - only update if body is active
+
+            transform.WorldMatrix
+                = Matrix.CreateScale(transform.LocalScale) *
+                    collision.GetPrimitiveLocal(0).Transform.Orientation *
+                        body.Orientation *
+                            transform.RotationMatrix *
+                                Matrix.CreateTranslation(body.Position);
+
+            //transform.WorldMatrix
+            //    = Matrix.Identity
+            //    *
+            //                    Matrix.CreateTranslation(body.Position);
+
+            //System.Diagnostics.Debug.WriteLine(body.Position.ToString());
+        }
     }
 }

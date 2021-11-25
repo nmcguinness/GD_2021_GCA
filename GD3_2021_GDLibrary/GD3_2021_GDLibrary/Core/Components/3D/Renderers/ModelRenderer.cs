@@ -7,6 +7,8 @@ namespace GDLibrary.Components
 {
     public class ModelRenderer : Renderer
     {
+        #region Fields
+
         /// <summary>
         /// Stores vertex, normal, uv data for the model
         /// </summary>
@@ -16,6 +18,10 @@ namespace GDLibrary.Components
         /// Stores bone transforms for the model (e.g. each mesh will normally have one bone)
         /// </summary>
         protected Matrix[] boneTransforms;
+
+        #endregion Fields
+
+        #region Properties
 
         public Model Model
         {
@@ -34,11 +40,18 @@ namespace GDLibrary.Components
                         boneTransforms = new Matrix[model.Bones.Count];
                         model.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
-                        //BUG - on clone
-                        //       SetBoundingVolume();
+                        //TODO - BUG - on clone
+                        //SetBoundingVolume();
                     }
                 }
             }
+        }
+
+        #endregion Properties
+
+        public ModelRenderer(Model model, Material material) : base(material)
+        {
+            Model = model;
         }
 
         public override void SetBoundingVolume()
@@ -89,10 +102,7 @@ namespace GDLibrary.Components
 
         public override object Clone()
         {
-            var clone = new ModelRenderer();
-            clone.Model = model;
-            clone.material = material.Clone() as Material;
-            return clone;
+            return new ModelRenderer(model, material.Clone() as Material);
         }
 
         #endregion Actions - Housekeeping

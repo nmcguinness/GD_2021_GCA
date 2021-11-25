@@ -191,10 +191,10 @@ namespace GDLibrary.Components
             isFrustumDirty = true;
         }
 
-        public override void Awake()
+        public override void Awake(GameObject gameObject)
         {
             //we call the base first otherwise it wont set the transform variable
-            base.Awake();
+            base.Awake(gameObject);
 
             //registers event handler when translation or rotation (which affect view) change
             transform.PropertyChanged += UpdateViewMatrix;

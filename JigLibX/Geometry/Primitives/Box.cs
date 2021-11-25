@@ -1,10 +1,12 @@
 #region Using Statements
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using JigLibX.Math;
 using JigLibX.Utils;
+
 #endregion
 
 namespace JigLibX.Geometry
@@ -14,8 +16,8 @@ namespace JigLibX.Geometry
     /// </summary>
     public class Box : Primitive
     {
-
         #region public struct Edge
+
         /// <summary>
         /// Edge just contains indexes into the points returned by GetCornerPoints.
         /// </summary>
@@ -25,6 +27,7 @@ namespace JigLibX.Geometry
             /// Ind0
             /// </summary>
             public BoxPointIndex Ind0;
+
             /// <summary>
             /// Ind1
             /// </summary>
@@ -41,9 +44,11 @@ namespace JigLibX.Geometry
                 this.Ind1 = ind1;
             }
         }
+
         #endregion
 
         #region public enum BoxPointIndex
+
         /// <summary>
         /// Indices into the points returned by GetCornerPoints
         /// </summary>
@@ -52,36 +57,44 @@ namespace JigLibX.Geometry
             /// <summary>
             /// BRD
             /// </summary>
-            BRD, 
+            BRD,
+
             /// <summary>
             /// BRU
             /// </summary>
-            BRU, 
+            BRU,
+
             /// <summary>
             /// BLD
             /// </summary>
-            BLD, 
+            BLD,
+
             /// <summary>
             /// BLU
             /// </summary>
             BLU,
+
             /// <summary>
             /// FRD
             /// </summary>
-            FRD, 
+            FRD,
+
             /// <summary>
             /// FRU
             /// </summary>
-            FRU, 
+            FRU,
+
             /// <summary>
             /// FLD
             /// </summary>
-            FLD, 
+            FLD,
+
             /// <summary>
             /// FLU
             /// </summary>
             FLU
         }
+
         #endregion
 
         internal Vector3 sideLengths;
@@ -90,7 +103,7 @@ namespace JigLibX.Geometry
         /// Must match with GetCornerPoints
         /// </summary>
         private static Edge[] edges = new Edge[12]
-            { 
+            {
                 new Edge(BoxPointIndex.BRD,BoxPointIndex.BRU), // origin-up
                 new Edge(BoxPointIndex.BRD,BoxPointIndex.BLD), // origin-left
                 new Edge(BoxPointIndex.BRD,BoxPointIndex.FRD), // origin-fwd
@@ -104,19 +117,25 @@ namespace JigLibX.Geometry
                 new Edge(BoxPointIndex.FRU,BoxPointIndex.FLU), // upfwdorigin-left
                 new Edge(BoxPointIndex.FLD,BoxPointIndex.FLU), // fwdleftorigin-up
             };
-        private Vector3[] outPoints = new Vector3[8];
 
+        private Vector3[] outPoints = new Vector3[8];
 
         /// <summary>
         /// Position/orientation are based on one corner the box. Sides are
         /// the full side lengths
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="orient"></param>
+        /// <param name="translation"></param>
+        /// <param name="rotation"></param>
         /// <param name="sideLengths"></param>
-        public Box(Vector3 pos, Matrix orient, Vector3 sideLengths) : base((int)PrimitiveType.Box)
+        public Box(Vector3 translation, Vector3 rotation, Vector3 sideLengths) : base((int)PrimitiveType.Box)
         {
-            this.transform = new Transform(pos, orient);
+            this.transform = new Transform(translation, Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z));
+            this.sideLengths = sideLengths;
+        }
+
+        public Box(Vector3 translation, Matrix orientation, Vector3 sideLengths) : base((int)PrimitiveType.Box)
+        {
+            this.transform = new Transform(translation, orientation);
             this.sideLengths = sideLengths;
         }
 
@@ -220,18 +239,18 @@ namespace JigLibX.Geometry
         }
 
         /// <summary>
-        /// Returns the vector representing the edge direction 
+        /// Returns the vector representing the edge direction
         /// </summary>
         /// <param name="i"></param>
         /// <returns>Vector3</returns>
         public Vector3 GetSide(int i)
         {
-            return JiggleUnsafe.Get(transform.Orientation, i) * 
+            return JiggleUnsafe.Get(transform.Orientation, i) *
                 JiggleUnsafe.Get(ref sideLengths, i);
         }
 
         /// <summary>
-        /// Returns the squared distance 
+        /// Returns the squared distance
         /// todo remove this/put it in distance fns
         /// </summary>
         /// <param name="closestBoxPoint"></param>
@@ -301,7 +320,7 @@ namespace JigLibX.Geometry
         {
             return (float)System.Math.Sqrt(GetSqDistanceToPoint(out closestBoxPoint, point));
         }
-        
+
         /// <summary>
         /// Gets the minimum and maximum extents of the box along the
         /// axis, relative to the centre of the box.
@@ -327,7 +346,7 @@ namespace JigLibX.Geometry
             float r = s + u + d;
             GetCentre(out right);
             float p;
-            Vector3.Dot(ref right,ref axis,out p);
+            Vector3.Dot(ref right, ref axis, out p);
             min = p - r;
             max = p + r;
         }
@@ -362,7 +381,7 @@ namespace JigLibX.Geometry
             min = p - r;
             max = p + r;
         }
-        
+
         /// <summary>
         /// Gets the corner points, populating pts
         /// </summary>
@@ -409,7 +428,7 @@ namespace JigLibX.Geometry
         {
             edgeIndices = new int[3];
             int ind = 0;
-            
+
             for (int i = 0; i < edges.Length; ++i)
             {
                 if ((edges[i].Ind0 == pt) || (edges[i].Ind1 == pt))
@@ -441,8 +460,8 @@ namespace JigLibX.Geometry
         /// </summary>
         public override Transform Transform
         {
-            get{return this.transform;}
-            set{this.transform = value;}
+            get { return this.transform; }
+            set { this.transform = value; }
         }
 
         /// <summary>
@@ -457,7 +476,7 @@ namespace JigLibX.Geometry
         {
             fracOut = float.MaxValue;
             posOut = normalOut = Vector3.Zero;
-            
+
             // algo taken from p674 of realting rendering
             // needs debugging
             float min = float.MinValue;
@@ -477,7 +496,9 @@ namespace JigLibX.Geometry
             int dir = 0;
 
             // BEN-OPTIMISATIOIN: Ugly inlining and variable reuse for marginal speed increase.
+
             #region "Original Code"
+
             /*
             Vector3[] matrixVec = new Vector3[3];
             matrixVec[0] = transform.Orientation.Right;
@@ -525,10 +546,11 @@ namespace JigLibX.Geometry
                 }
             }
             */
+
             #endregion
 
             #region "Faster code albeit scarier code!"
-            
+
             float e = Vector3.Dot(transform.Orientation.Right, p);
             float f = Vector3.Dot(transform.Orientation.Right, seg.Delta);
 
@@ -624,6 +646,7 @@ namespace JigLibX.Geometry
             {
                 return false;
             }
+
             #endregion
 
             if (min > 0.0f)
@@ -677,7 +700,6 @@ namespace JigLibX.Geometry
         /// <param name="inertiaTensor"></param>
         public override void GetMassProperties(PrimitiveProperties primitiveProperties, out float mass, out Vector3 centerOfMass, out Matrix inertiaTensor)
         {
-
             if (primitiveProperties.MassType == PrimitiveProperties.MassTypeEnum.Mass)
             {
                 mass = primitiveProperties.MassOrDensity;
@@ -708,7 +730,7 @@ namespace JigLibX.Geometry
             // todo is the order correct here? Does it matter?
 
             // Calculate the tensor in a frame at the CoM, but aligned with the world axes
-            inertiaTensor = Matrix.Transpose(transform.Orientation) * inertiaTensor  * transform.Orientation;
+            inertiaTensor = Matrix.Transpose(transform.Orientation) * inertiaTensor * transform.Orientation;
 
             // Transfer of axe theorem
             inertiaTensor.M11 = inertiaTensor.M11 + mass * (centerOfMass.Y * centerOfMass.Y + centerOfMass.Z * centerOfMass.Z);
@@ -718,8 +740,6 @@ namespace JigLibX.Geometry
             inertiaTensor.M12 = inertiaTensor.M21 = inertiaTensor.M12 - mass * centerOfMass.X * centerOfMass.Y;
             inertiaTensor.M23 = inertiaTensor.M32 = inertiaTensor.M23 - mass * centerOfMass.Y * centerOfMass.Z;
             inertiaTensor.M31 = inertiaTensor.M13 = inertiaTensor.M31 - mass * centerOfMass.Z * centerOfMass.X;
-         }
-
+        }
     }
-
 }
