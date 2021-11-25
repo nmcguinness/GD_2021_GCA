@@ -650,7 +650,7 @@ namespace GDApp
 
             for (int i = 5; i < 40; i += 5)
             {
-                //create the cube
+                //clone the archetypal cube
                 clone = cube.Clone() as GameObject;
                 clone.Name = "cube 1";
                 clone.Transform.Translate(0, 5 + i, 0);
