@@ -57,5 +57,6 @@
 - [ ] Add lighting engine
 - [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
+- [ ] Add opacity support
 
 

@@ -484,7 +484,7 @@ namespace GDApp
             #region Reusable - You can copy and re-use this code elsewhere, if required
 
             //re-use the code on the gfx card
-            var shader = new BasicShader(Application.Content, false, true);
+            var shader = new BasicShader(Application.Content, true, true);
             //re-use the vertices and indices of the primitive
             var mesh = new QuadMesh();
             //create an archetype that we can clone from
@@ -639,8 +639,8 @@ namespace GDApp
 
             //re-use the code on the gfx card
             var shader = new BasicShader(Application.Content, false, true);
-            //re-use the model
-            var model = modelDictionary["cube"];
+            //re-use the mesh
+            var mesh = new CubeMesh();
             //clone the cube
             var cube = new GameObject("cube", GameObjectType.Environment, false);
 
@@ -654,7 +654,7 @@ namespace GDApp
                 clone = cube.Clone() as GameObject;
                 clone.Name = "cube 1";
                 clone.Transform.Translate(0, 5 + i, 0);
-                clone.AddComponent(new ModelRenderer(model, new BasicMaterial("cube_material", shader, Color.White, 1, textureDictionary["crate1"])));
+                clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("cube_material", shader, Color.White, 1, textureDictionary["crate1"])));
 
                 //add Collision Surface(s)
                 collider = new Collider();
