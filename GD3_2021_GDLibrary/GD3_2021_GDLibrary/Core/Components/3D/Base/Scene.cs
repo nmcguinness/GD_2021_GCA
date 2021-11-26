@@ -26,6 +26,11 @@ namespace GDLibrary.Components
         #region Properties
 
         /// <summary>
+        /// Gets the gameobjectlist of all game objects in this scene
+        /// </summary>
+        public GameObjectList GameObjectList => gameObjects;
+
+        /// <summary>
         /// Gets a list of all renderers attached to game objects in this scene
         /// </summary>
         public List<Renderer> Renderers => gameObjects.Renderers;
@@ -39,6 +44,11 @@ namespace GDLibrary.Components
         /// Gets a list of all cameras in this scene
         /// </summary>
         public List<Camera> Cameras => gameObjects.Cameras;
+
+        /// <summary>
+        /// Gets a list of all cameras in this scene
+        /// </summary>
+        public List<Collider> Colliders => gameObjects.Colliders;
 
         #endregion Properties
 

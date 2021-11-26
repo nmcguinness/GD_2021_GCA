@@ -10,6 +10,7 @@
 - [x] Code additions in Week 6(Halloween)
 - [ ] UIProgressBarController using Events - Main::Update
 - [ ] ContentDictionary - Main::modelDictionary and Main::fontDictionary
+- [ ] UIMenuManager
 
 ### Bugs
 - [x] Fix Mouse delta on FPC
@@ -38,16 +39,19 @@
 - [x] Re-factor RenderManager and Camera (if necessary) to support multi-screen
 
 ### Tasks - Week 9
-- [x] Added support for pausing game components to support menu
-- [x] Added ui game objects and ui scene manager for onscreen elements
+- [x] Add support for pausing game components to support menu
+- [x] Add ui game objects and ui scene manager for onscreen elements
 - [x] Add Menu/UI support
-- [x] Added EventDispatcher
-- [x] Added and improved ContentDictionary with demo Main::modelDictionary and Main::fontDictionary
-- [x] Added support to UISceneManager for add/remove ui objects
+- [x] Add EventDispatcher
+- [x] Add and improved ContentDictionary with demo Main::modelDictionary and Main::fontDictionary
+- [x] Add support to UISceneManager for add/remove ui objects
 - [x] Enable lighting turn off for skybox
 - [x] Change GameObject::IsStatic to IsPersistent
+- [x] Check Transform2D::Clone() for UIObject clones
+- [x] Add lock camera to ground
+- [x] Add physics engine - Stage 1/3
+- [x] Add PhysicsDebugdrawer
 - [ ] Improve Camera and add collidable camera controller
-- [ ] Add physics engine
 - [ ] Add trianglemesh support
 - [ ] Add picking with mouse
 - [ ] Added an untested sound manager
@@ -58,5 +62,6 @@
 - [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
 - [ ] Add opacity support
+
 
 

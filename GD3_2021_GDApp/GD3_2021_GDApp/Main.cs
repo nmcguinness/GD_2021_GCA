@@ -43,6 +43,11 @@ namespace GDApp
         private UISceneManager uiSceneManager;
 
         /// <summary>
+        /// Updates and Draws all menu objects
+        /// </summary>
+        private UIMenuManager uiMenuManager;
+
+        /// <summary>
         /// Plays all 2D and 3D sounds
         /// </summary>
         private SoundManager soundManager;
@@ -107,6 +112,9 @@ namespace GDApp
             //create the ui scene manager to update and draw all ui scenes
             uiSceneManager = new UISceneManager(this, _spriteBatch);
 
+            //create the ui menu manager to update and draw all menu scenes
+            uiMenuManager = new UIMenuManager(this, _spriteBatch);
+
             //add support for playing sounds
             soundManager = new SoundManager(this);
 
@@ -154,6 +162,9 @@ namespace GDApp
 
             //add ui scene manager to update and drawn ui objects
             Components.Add(uiSceneManager);
+
+            //add ui menu manager to update and drawn menu objects
+            Components.Add(uiMenuManager);
 
             //add sound
             Components.Add(soundManager);
@@ -220,6 +231,8 @@ namespace GDApp
         }
 
         /******************************** Student Project-specific ********************************/
+        /******************************** Student Project-specific ********************************/
+        /******************************** Student Project-specific ********************************/
 
         #region Student/Group Specific Code
 
@@ -250,7 +263,10 @@ namespace GDApp
             Input.Mouse.Position = Screen.Instance.ScreenCentre;
 
             //turn on/off debug info
-            InitializeDebugUI(true);
+            InitializeDebugUI(true, true);
+
+            //to show the menu we must start paused for everything else!
+            //EventDispatcher.Raise(new EventData(EventCategoryType.Menu, EventActionType.OnPause));
 
             base.Initialize();
         }
@@ -328,13 +344,17 @@ namespace GDApp
 
             //environment
             textureDictionary.Add("grass", Content.Load<Texture2D>("Assets/Textures/Foliage/Ground/grass1"));
+            textureDictionary.Add("crate1", Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1"));
 
             //ui
             textureDictionary.Add("ui_progress_32_8", Content.Load<Texture2D>("Assets/Textures/UI/Controls/ui_progress_32_8"));
             textureDictionary.Add("progress_white", Content.Load<Texture2D>("Assets/Textures/UI/Controls/progress_white"));
 
-            //props
-            textureDictionary.Add("crate1", Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1"));
+            //menu
+            textureDictionary.Add("mainmenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/mainmenu"));
+            textureDictionary.Add("audiomenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/audiomenu"));
+            textureDictionary.Add("controlsmenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/controlsmenu"));
+            textureDictionary.Add("exitmenuwithtrans", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/exitmenuwithtrans"));
         }
 
         /// <summary>
@@ -363,7 +383,7 @@ namespace GDApp
 
             InitializeCameras(activeScene);
 
-            //  InitializeSkybox(activeScene, worldScale);
+            InitializeSkybox(activeScene, worldScale);
             //InitializeCubes(activeScene);
             //InitializeModels(activeScene);
 
@@ -378,9 +398,7 @@ namespace GDApp
         /// </summary>
         private void InitializeUI()
         {
-            //TODO
-            //InitializeGameMenu();
-
+            InitializeGameMenu();
             InitializeGameUI();
         }
 
@@ -389,6 +407,35 @@ namespace GDApp
         /// </summary>
         private void InitializeGameMenu()
         {
+            //a re-usable variable for each ui object
+            UIObject menuObject = null;
+
+            /************************** Main Menu Scene **************************/
+            //make the main menu scene
+            var mainMenuUIScene = new UIScene("main menu");
+
+            //main background
+            menuObject = new UITextureObject("main background", UIObjectType.Texture,
+                new Transform2D(Vector2.Zero, Vector2.One, 0),
+                0,
+                Color.White,
+                Vector2.Zero,
+                textureDictionary["mainmenu"]);
+
+            //add ui object to scene
+            mainMenuUIScene.Add(menuObject);
+
+            //add scene to the menu manager
+            uiMenuManager.Add(mainMenuUIScene);
+
+            /************************** Controls Menu Scene **************************/
+
+            /************************** Options Menu Scene **************************/
+
+            /************************** Exit Menu Scene **************************/
+
+            //finally we say...where do we start
+            uiMenuManager.SetActiveScene("main menu");
         }
 
         /// <summary>
@@ -459,17 +506,18 @@ namespace GDApp
         /// <summary>
         /// Adds component to draw debug info to the screen
         /// </summary>
-        private void InitializeDebugUI(bool showDebug)
+        private void InitializeDebugUI(bool showDebugInfo, bool showCollisionSkins = true)
         {
-            if (showDebug)
+            if (showDebugInfo)
             {
-                Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(
-                    this,
-                    _spriteBatch,
-                    fontDictionary["debug"],
+                Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(this,
+                    _spriteBatch, fontDictionary["debug"],
                     new Vector2(40, _graphics.PreferredBackBufferHeight - 40),
                     Color.White));
             }
+
+            if (showCollisionSkins)
+                Components.Add(new GDLibrary.Utilities.GDDebug.PhysicsDebugDrawer(this, Color.Red));
         }
 
         /******************************* Non-Collidables *******************************/

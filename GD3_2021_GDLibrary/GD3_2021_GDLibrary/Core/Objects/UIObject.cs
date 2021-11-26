@@ -38,37 +38,37 @@ namespace GDLibrary
         /// <summary>
         /// Unique identifier for each ui object - may be used for search, sort later
         /// </summary>
-        private string id;
+        protected string id;
 
         /// <summary>
         /// Friendly name for the current ui object
         /// </summary>
-        private string name;
+        protected string name;
 
         /// <summary>
         /// Set on first update of the component in UISceneManager::Update
         /// </summary>
-        private bool isRunning;
+        protected bool isRunning;
 
         /// <summary>
         /// Set in constructor to true. By default all components are enabled on instanciation
         /// </summary>
-        private bool isEnabled;
+        protected bool isEnabled;
 
         /// <summary>
         /// Drawn translation, rotation, and scale of ui object on screen
         /// </summary>
-        private Transform2D transform;
+        protected Transform2D transform;
 
         /// <summary>
         /// Depth used to sort ui objects on screen (0 = front-most, 1 = back-most)
         /// </summary>
-        private float layerDepth;
+        protected float layerDepth;
 
         /// <summary>
         /// Used to flip the text/texture
         /// </summary>
-        private SpriteEffects spriteEffects;
+        protected SpriteEffects spriteEffects;
 
         /// <summary>
         /// Blend color used for text/texture
@@ -79,7 +79,7 @@ namespace GDLibrary
         /// Origin of rotation for the ui object in texture space (i.e. [0,0] - [w,h])
         /// Useful to rotate textures around unusual origin points e.g. a speedometer needle
         /// </summary>
-        private Vector2 origin;
+        protected Vector2 origin;
 
         /// <summary>
         /// List of all attached components
@@ -227,34 +227,14 @@ namespace GDLibrary
 
         public virtual void Dispose()
         {
-            //TODO
-            //foreach (Component component in components)
-            //    component.Dispose();
+            //TODO - check dispose
+            foreach (UIComponent uiComponent in components)
+                uiComponent.Dispose();
         }
 
         public virtual object Clone()
         {
-            //TODO
             return null;
-            //var clone = new GameObject($"Clone - {Name}", gameObjectType);
-            //clone.ID = "GO-" + Guid.NewGuid();
-
-            //Component clonedComponent = null;
-            //Transform clonedTransform = null;
-
-            //foreach (Component component in components)
-            //{
-            //    clonedComponent = clone.AddComponent((Component)component.Clone());
-            //    clonedComponent.gameObject = clone;
-
-            //    clonedTransform = clonedComponent as Transform;
-
-            //    if (clonedTransform != null)
-            //        clonedComponent.transform = clonedTransform;
-            //}
-
-            //clone.IsStatic = this.isStatic;
-            //return clone;
         }
 
         #endregion Actions - Housekeeping
@@ -328,18 +308,18 @@ namespace GDLibrary
         /// <param name="depth"></param>
         /// <param name="activeTexture"></param>
         public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform,
-            float depth, Texture2D defaultTexture)
-            : this(name, uiObjectType, transform, depth,
+            float layerDepth, Texture2D defaultTexture)
+            : this(name, uiObjectType, transform, layerDepth,
             Color.White, SpriteEffects.None, Vector2.Zero, defaultTexture, null,
             new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
         {
         }
 
         public UITextureObject(string name, UIObjectType uiObjectType,
-            Transform2D transform, float depth,
+            Transform2D transform, float layerDepth,
             Color color, Vector2 origin,
             Texture2D defaultTexture)
-        : this(name, uiObjectType, transform, depth,
+        : this(name, uiObjectType, transform, layerDepth,
             color, SpriteEffects.None, origin, defaultTexture, null,
             new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
         {
@@ -358,11 +338,11 @@ namespace GDLibrary
         /// <param name="defaultTexture"></param>
         /// <param name="alternateTexture"></param>
         /// <param name="sourceRectangle"></param>
-        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
+        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
         Color color, SpriteEffects spriteEffects, Vector2 origin,
         Texture2D defaultTexture, Texture2D alternateTexture,
         Rectangle sourceRectangle)
-    : base(name, uiObjectType, transform, depth, color, spriteEffects, origin)
+    : base(name, uiObjectType, transform, layerDepth, color, spriteEffects, origin)
         {
             DefaultTexture = defaultTexture;
             AlternateTexture = alternateTexture;
@@ -394,36 +374,25 @@ namespace GDLibrary
 
         #region Actions - Housekeeping
 
-        public override void Dispose()
-        {
-            //TODO
-            //foreach (Component component in components)
-            //    component.Dispose();
-        }
-
         public override object Clone()
         {
-            //TODO
-            return null;
-            //var clone = new GameObject($"Clone - {Name}", gameObjectType);
-            //clone.ID = "GO-" + Guid.NewGuid();
+            var clone = new UITextureObject($"Clone - {name}",
+                uiObjectType,
+                transform.Clone() as Transform2D, //why do we explicitly call Clone()? (Hint: do we need shallow or deep copy?)
+                layerDepth,
+                 color, spriteEffects, origin,
+                defaultTexture, alternateTexture,
+                sourceRectangle);
+            clone.ID = "UIO-" + Guid.NewGuid();
 
-            //Component clonedComponent = null;
-            //Transform clonedTransform = null;
+            UIComponent clonedComponent = null;
+            foreach (UIComponent component in components)
+            {
+                clonedComponent = clone.AddComponent((UIComponent)component.Clone());
+                clonedComponent.uiObject = clone;
+            }
 
-            //foreach (Component component in components)
-            //{
-            //    clonedComponent = clone.AddComponent((Component)component.Clone());
-            //    clonedComponent.gameObject = clone;
-
-            //    clonedTransform = clonedComponent as Transform;
-
-            //    if (clonedTransform != null)
-            //        clonedComponent.transform = clonedTransform;
-            //}
-
-            //clone.IsStatic = this.isStatic;
-            //return clone;
+            return clone;
         }
 
         #endregion Actions - Housekeeping
@@ -463,18 +432,18 @@ namespace GDLibrary
         /// <param name="transform"></param>
         /// <param name="depth"></param>
         /// <param name="activeTexture"></param>
-        public UITextObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
+        public UITextObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
                    SpriteFont spriteFont, string text)
-                   : this(name, uiObjectType, transform, depth,
+                   : this(name, uiObjectType, transform, layerDepth,
                    Color.White, SpriteEffects.None, Vector2.Zero,
                    spriteFont, text)
         {
         }
 
-        public UITextObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
+        public UITextObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
             Color color, SpriteEffects spriteEffects, Vector2 origin,
             SpriteFont spriteFont, string text)
-        : base(name, uiObjectType, transform, depth, color, spriteEffects, origin)
+        : base(name, uiObjectType, transform, layerDepth, color, spriteEffects, origin)
         {
             SpriteFont = spriteFont;
             Text = text;
@@ -501,36 +470,25 @@ namespace GDLibrary
 
         #region Actions - Housekeeping
 
-        public override void Dispose()
-        {
-            //TODO
-            //foreach (Component component in components)
-            //    component.Dispose();
-        }
-
         public override object Clone()
         {
-            //TODO
-            return null;
-            //var clone = new GameObject($"Clone - {Name}", gameObjectType);
-            //clone.ID = "GO-" + Guid.NewGuid();
+            var clone = new UITextObject($"Clone - {name}",
+                     uiObjectType,
+                     transform.Clone() as Transform2D, //why do we explicitly call Clone()? (Hint: do we need shallow or deep copy?)
+                     layerDepth,
+                     color, spriteEffects, origin,
+                     spriteFont, text);
 
-            //Component clonedComponent = null;
-            //Transform clonedTransform = null;
+            clone.ID = "UIO-" + Guid.NewGuid();
 
-            //foreach (Component component in components)
-            //{
-            //    clonedComponent = clone.AddComponent((Component)component.Clone());
-            //    clonedComponent.gameObject = clone;
+            UIComponent clonedComponent = null;
+            foreach (UIComponent component in components)
+            {
+                clonedComponent = clone.AddComponent((UIComponent)component.Clone());
+                clonedComponent.uiObject = clone;
+            }
 
-            //    clonedTransform = clonedComponent as Transform;
-
-            //    if (clonedTransform != null)
-            //        clonedComponent.transform = clonedTransform;
-            //}
-
-            //clone.IsStatic = this.isStatic;
-            //return clone;
+            return clone;
         }
 
         #endregion Actions - Housekeeping
@@ -572,11 +530,12 @@ namespace GDLibrary
 
         #region Constructors
 
-        public UIButtonObject(string name, UIObjectType uiObjectType, Transform2D transform, float depth,
+        //TODO - add text Vector2 offset
+        public UIButtonObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
            Color color, SpriteEffects spriteEffects, Vector2 origin,
            Texture2D defaultTexture, Texture2D alternateTexture,
            Rectangle sourceRectangle, string text, SpriteFont font)
-       : base(name, uiObjectType, transform, depth,
+       : base(name, uiObjectType, transform, layerDepth,
            color, spriteEffects, origin,
            defaultTexture, alternateTexture,
            sourceRectangle)
@@ -584,7 +543,7 @@ namespace GDLibrary
             Text = text;
             Font = font;
 
-            //TODO - set bounding box
+            //TODO - check bounding box
             boundingBox = new Rectangle(0, 0,
                (int)(defaultTexture.Width * transform.LocalScale.X),
                 (int)(defaultTexture.Height * transform.LocalScale.Y));
@@ -615,36 +574,26 @@ namespace GDLibrary
 
         #region Actions - Housekeeping
 
-        public override void Dispose()
-        {
-            //TODO
-            //foreach (Component component in components)
-            //    component.Dispose();
-        }
-
         public override object Clone()
         {
-            //TODO
-            return null;
-            //var clone = new GameObject($"Clone - {Name}", gameObjectType);
-            //clone.ID = "GO-" + Guid.NewGuid();
+            var clone = new UIButtonObject($"Clone - {name}",
+                       uiObjectType,
+                       transform.Clone() as Transform2D,  //why do we explicitly call Clone()? (Hint: do we need shallow or deep copy?)
+                       layerDepth,
+                       color, spriteEffects, origin,
+                       defaultTexture, alternateTexture,
+                       sourceRectangle, text, font);
 
-            //Component clonedComponent = null;
-            //Transform clonedTransform = null;
+            clone.ID = "UIO-" + Guid.NewGuid();
 
-            //foreach (Component component in components)
-            //{
-            //    clonedComponent = clone.AddComponent((Component)component.Clone());
-            //    clonedComponent.gameObject = clone;
+            UIComponent clonedComponent = null;
+            foreach (UIComponent component in components)
+            {
+                clonedComponent = clone.AddComponent((UIComponent)component.Clone());
+                clonedComponent.uiObject = clone;
+            }
 
-            //    clonedTransform = clonedComponent as Transform;
-
-            //    if (clonedTransform != null)
-            //        clonedComponent.transform = clonedTransform;
-            //}
-
-            //clone.IsStatic = this.isStatic;
-            //return clone;
+            return clone;
         }
 
         #endregion Actions - Housekeeping
