@@ -517,7 +517,7 @@ namespace GDLibrary
         /// <summary>
         /// Collision bounding box for button
         /// </summary>
-        private Rectangle boundingBox;
+        private Rectangle bounds;
 
         private Color textColor;
         private Vector2 textOffset;
@@ -528,7 +528,7 @@ namespace GDLibrary
 
         public string Text { get => text; set => text = value.Trim(); }
         public SpriteFont Font { get => font; set => font = value; }
-        public Rectangle BoundingBox { get => boundingBox; set => boundingBox = value; }
+        public Rectangle Bounds { get => bounds; set => bounds = value; }
 
         #endregion Properties
 
@@ -552,7 +552,9 @@ namespace GDLibrary
             Font = font;
 
             //TODO - check bounding box
-            boundingBox = new Rectangle(0, 0,
+            bounds = new Rectangle(
+                (int)transform.LocalTranslation.X,
+                (int)transform.LocalTranslation.Y,
                (int)(defaultTexture.Width * transform.LocalScale.X),
                 (int)(defaultTexture.Height * transform.LocalScale.Y));
         }

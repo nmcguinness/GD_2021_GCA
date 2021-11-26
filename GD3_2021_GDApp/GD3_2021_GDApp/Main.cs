@@ -256,7 +256,7 @@ namespace GDApp
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 1920, 1080);
+            InitializeEngine("My Game Title Goes Here", 640, 480);
 
             //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
@@ -453,7 +453,7 @@ namespace GDApp
             var origin = new Vector2(btnTexture.Width / 2.0f, btnTexture.Height / 2.0f);
 
             var playBtn = new UIButtonObject("play_btn", UIObjectType.Button,
-                new Transform2D(new Vector2(960, 500), Vector2.One, 0),
+                new Transform2D(new Vector2(320, 240), Vector2.One, 0),
                 0,
                 Color.Red,
                 SpriteEffects.None,
@@ -717,7 +717,9 @@ namespace GDApp
             //add Collision Surface(s)
             collider = new Collider();
             ground.AddComponent(collider);
-            collider.AddPrimitive(new JigLibX.Geometry.Plane(ground.Transform.Up, ground.Transform.LocalTranslation), new MaterialProperties(0.8f, 0.8f, 0.7f));
+            collider.AddPrimitive(new JigLibX.Geometry.Plane(
+                ground.Transform.Up, ground.Transform.LocalTranslation),
+                new MaterialProperties(0.8f, 0.8f, 0.7f));
             collider.Enable(true, 1);
 
             //add To Scene Manager

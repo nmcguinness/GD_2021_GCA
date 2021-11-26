@@ -27,6 +27,24 @@ namespace GDLibrary.Managers
 
         public override void Update(GameTime gameTime)
         {
+            foreach (UIObject uiObject in activeUIScene.UiObjects)
+            {
+                var btnObject = uiObject as UIButtonObject;
+
+                if (btnObject != null)
+                {
+                    if (Input.Mouse.Bounds.Intersects(btnObject.Bounds))
+                    {
+                        if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+                        {
+                            System.Diagnostics.Debug.WriteLine("mouse over!!!");
+                            EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                                EventActionType.OnPlay));
+                        }
+                    }
+                }
+            }
+
             //loop through all the ui objects in the active scene
 
             //test if the mouse is over the ui button object
