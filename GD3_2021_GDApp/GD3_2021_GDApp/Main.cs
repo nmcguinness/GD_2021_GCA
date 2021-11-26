@@ -367,6 +367,7 @@ namespace GDApp
             textureDictionary.Add("audiomenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/audiomenu"));
             textureDictionary.Add("controlsmenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/controlsmenu"));
             textureDictionary.Add("exitmenuwithtrans", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/exitmenuwithtrans"));
+            textureDictionary.Add("genericbtn", Content.Load<Texture2D>("Assets/Textures/UI/Controls/genericbtn"));
         }
 
         /// <summary>
@@ -445,8 +446,24 @@ namespace GDApp
 
             /****************************/
 
-            var btnTexture = textureDictionary["btn"];
-            var playBtn = new UIButtonObject();
+            var btnTexture = textureDictionary["genericbtn"];
+            var sourceRectangle
+                = new Microsoft.Xna.Framework.Rectangle(0, 0,
+                btnTexture.Width, btnTexture.Height);
+            var origin = new Vector2(btnTexture.Width / 2.0f, btnTexture.Height / 2.0f);
+
+            var playBtn = new UIButtonObject("play_btn", UIObjectType.Button,
+                new Transform2D(new Vector2(960, 500), Vector2.One, 0),
+                0,
+                Color.Red,
+                SpriteEffects.None,
+                origin,
+                btnTexture,
+                null,
+                sourceRectangle,
+                "Play",
+                fontDictionary["menu"]);
+
             mainMenuUIScene.Add(playBtn);
 
             //add scene to the menu manager

@@ -14,7 +14,8 @@ namespace GDLibrary
         Text,
         Texture,
         Background,
-        Progress
+        Progress,
+        Button
     }
 
     /// <summary>
