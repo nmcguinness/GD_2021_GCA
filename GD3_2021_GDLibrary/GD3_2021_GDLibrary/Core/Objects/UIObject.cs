@@ -519,6 +519,9 @@ namespace GDLibrary
         /// </summary>
         private Rectangle boundingBox;
 
+        private Color textColor;
+        private Vector2 textOffset;
+
         #endregion Fields
 
         #region Properties
@@ -535,12 +538,16 @@ namespace GDLibrary
         public UIButtonObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
            Color color, SpriteEffects spriteEffects, Vector2 origin,
            Texture2D defaultTexture, Texture2D alternateTexture,
-           Rectangle sourceRectangle, string text, SpriteFont font)
+           Rectangle sourceRectangle, string text, SpriteFont font,
+           Color textColor, Vector2 textOffset)
        : base(name, uiObjectType, transform, layerDepth,
            color, spriteEffects, origin,
            defaultTexture, alternateTexture,
            sourceRectangle)
         {
+            this.textColor = textColor;
+            this.textOffset = textOffset;
+
             Text = text;
             Font = font;
 
@@ -562,8 +569,8 @@ namespace GDLibrary
             //draw text
             spriteBatch.DrawString(font,
                text,
-               Transform.LocalTranslation,
-               color,
+               Transform.LocalTranslation + textOffset,
+               textColor,
                Transform.RotationInDegrees,
                Origin,
                Transform.LocalScale,
@@ -583,7 +590,8 @@ namespace GDLibrary
                        layerDepth,
                        color, spriteEffects, origin,
                        defaultTexture, alternateTexture,
-                       sourceRectangle, text, font);
+                       sourceRectangle, text, font,
+                       textColor, textOffset);
 
             clone.ID = "UIO-" + Guid.NewGuid();
 

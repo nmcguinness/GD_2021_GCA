@@ -462,7 +462,9 @@ namespace GDApp
                 null,
                 sourceRectangle,
                 "Play",
-                fontDictionary["menu"]);
+                fontDictionary["menu"],
+                Color.Black,
+                new Vector2(100, 10));
 
             mainMenuUIScene.Add(playBtn);
 
