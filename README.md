@@ -8,8 +8,8 @@
 
 ### Explain
 - [x] Code additions in Week 6(Halloween)
-- [ ] UIProgressBarController using Events - Main::Update
-- [ ] ContentDictionary - Main::modelDictionary and Main::fontDictionary
+- [x] UIProgressBarController using Events - Main::Update
+- [x] ContentDictionary - Main::modelDictionary and Main::fontDictionary
 - [ ] UIMenuManager
 
 ### Bugs

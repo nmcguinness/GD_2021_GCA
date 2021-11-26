@@ -217,6 +217,17 @@ namespace GDApp
                     EventActionType.OnHealthDelta, parameters));
             }
 
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.P))
+            {
+                EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                          EventActionType.OnPause));
+            }
+            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.O))
+            {
+                EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                    EventActionType.OnPlay));
+            }
+
             base.Update(gameTime);
         }
 
@@ -266,7 +277,8 @@ namespace GDApp
             InitializeDebugUI(true, true);
 
             //to show the menu we must start paused for everything else!
-            //EventDispatcher.Raise(new EventData(EventCategoryType.Menu, EventActionType.OnPause));
+            EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
+                        EventActionType.OnPause));
 
             base.Initialize();
         }
@@ -415,15 +427,27 @@ namespace GDApp
             var mainMenuUIScene = new UIScene("main menu");
 
             //main background
-            menuObject = new UITextureObject("main background", UIObjectType.Texture,
-                new Transform2D(Vector2.Zero, Vector2.One, 0),
+            var texture = textureDictionary["mainmenu"];
+            var scale = new Vector2(
+               (float)_graphics.PreferredBackBufferWidth / texture.Width,
+               (float)_graphics.PreferredBackBufferHeight / texture.Height);
+
+            menuObject = new UITextureObject("main background",
+                UIObjectType.Texture,
+                new Transform2D(Vector2.Zero, scale, 0),
                 0,
                 Color.White,
                 Vector2.Zero,
-                textureDictionary["mainmenu"]);
+                texture);
 
             //add ui object to scene
             mainMenuUIScene.Add(menuObject);
+
+            /****************************/
+
+            var btnTexture = textureDictionary["btn"];
+            var playBtn = new UIButtonObject();
+            mainMenuUIScene.Add(playBtn);
 
             //add scene to the menu manager
             uiMenuManager.Add(mainMenuUIScene);

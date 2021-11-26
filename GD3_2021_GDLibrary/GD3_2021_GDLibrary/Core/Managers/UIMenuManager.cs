@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GDLibrary.Core;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GDLibrary.Managers
@@ -11,6 +12,17 @@ namespace GDLibrary.Managers
         public UIMenuManager(Game game, SpriteBatch spriteBatch)
             : base(game, spriteBatch)
         {
+        }
+
+        protected override void HandleEvent(EventData eventData)
+        {
+            if (eventData.EventCategoryType == EventCategoryType.Menu)
+            {
+                if (eventData.EventActionType == EventActionType.OnPause)
+                    statusType = StatusType.Drawn | StatusType.Updated;
+                else if (eventData.EventActionType == EventActionType.OnPlay)
+                    statusType = StatusType.Off;
+            }
         }
 
         public override void Update(GameTime gameTime)

@@ -74,7 +74,8 @@ namespace GDLibrary.Components.UI
                 var targetUIObjectName = eventData.Parameters[0] as string;
 
                 //is it for me?
-                if (targetUIObjectName != null && uiObject.Name.Equals(targetUIObjectName))
+                if (targetUIObjectName != null
+                    && uiObject.Name.Equals(targetUIObjectName))
                     CurrentValue = currentValue + (int)eventData.Parameters[1];
             }
         }

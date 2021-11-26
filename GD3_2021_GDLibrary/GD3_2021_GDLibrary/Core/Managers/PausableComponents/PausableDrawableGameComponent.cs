@@ -9,7 +9,7 @@ namespace GDLibrary.Core
     {
         #region Fields
 
-        private StatusType statusType;
+        protected StatusType statusType;
 
         #endregion Fields
 
