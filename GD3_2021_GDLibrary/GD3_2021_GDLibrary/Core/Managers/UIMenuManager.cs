@@ -7,7 +7,7 @@ namespace GDLibrary.Managers
     /// <summary>
     /// Stores a dictionary of MENU-SPECIFIC ui scenes and updates and draws the currently active scene
     /// </summary>
-    public class UIMenuManager : UISceneManager
+    public abstract class UIMenuManager : UISceneManager
     {
         public UIMenuManager(Game game, SpriteBatch spriteBatch)
             : base(game, spriteBatch)
@@ -35,23 +35,19 @@ namespace GDLibrary.Managers
                 {
                     if (Input.Mouse.Bounds.Intersects(btnObject.Bounds))
                     {
-                        if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
-                        {
-                            System.Diagnostics.Debug.WriteLine("mouse over!!!");
-                            EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
-                                EventActionType.OnPlay));
-                        }
+                        HandleMouseOver(btnObject);
+                    }
+
+                    if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+                    {
+                        HandleMouseClicked(btnObject);
                     }
                 }
             }
-
-            //loop through all the ui objects in the active scene
-
-            //test if the mouse is over the ui button object
-
-            //react if mouse over and/or mouse click over ui button
-
-            base.Update(gameTime);
         }
+
+        protected abstract void HandleMouseClicked(UIButtonObject btnObject);
+
+        protected abstract void HandleMouseOver(UIButtonObject btnObject);
     }
 }

@@ -244,164 +244,6 @@ namespace GDLibrary
     /// <summary>
     /// Draws a texture on screen
     /// </summary>
-    public class UITextureObject : UIObject
-    {
-        #region Fields
-
-        /// <summary>
-        /// Default texture shown for this object
-        /// </summary>
-        protected Texture2D defaultTexture;
-
-        /// <summary>
-        /// Alternate image may be used for hover/mouse click effects
-        /// </summary>
-        protected Texture2D alternateTexture;
-
-        /// <summary>
-        /// Used to control how much of the source image we draw (e.g. for a portion of an image as in a progress bar)
-        /// </summary>
-        protected Rectangle sourceRectangle;
-
-        /// <summary>
-        /// Sets current to be either active or alternate (e.g. used for hover over texture change)
-        /// </summary>
-        protected Texture2D currentTexture;
-
-        /// <summary>
-        /// Stores the original dimensions of the source rectangle for this texture
-        /// </summary>
-        protected Rectangle originalSourceRectangle;
-
-        #endregion Fields
-
-        #region Properties
-
-        public Texture2D DefaultTexture { get => defaultTexture; set => defaultTexture = value; }
-        public Texture2D AlternateTexture { get => alternateTexture; set => alternateTexture = value; }
-        public Rectangle SourceRectangle { get => sourceRectangle; set => sourceRectangle = value; }
-        public int SourceRectangleWidth { get => sourceRectangle.Width; set => sourceRectangle.Width = value; }
-        public int SourceRectangleHeight { get => sourceRectangle.Height; set => sourceRectangle.Height = value; }
-
-        public Rectangle OriginalSourceRectangle
-        {
-            get
-            {
-                return originalSourceRectangle;
-            }
-        }
-
-        public Texture2D CurrentTexture { get => currentTexture; set => currentTexture = value; }
-
-        #endregion Properties
-
-        #region Constructors
-
-        public void SetRectangle(int width, int height)
-        {
-            sourceRectangle = new Rectangle(0, 0, width, height);
-        }
-
-        /// <summary>
-        /// Construct a ui texture object when we draw WHITE BLEND, FULL, UNROTATED, ZERO-ORIGIN textures
-        /// </summary>
-        /// <param name="transform"></param>
-        /// <param name="depth"></param>
-        /// <param name="activeTexture"></param>
-        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform,
-            float layerDepth, Texture2D defaultTexture)
-            : this(name, uiObjectType, transform, layerDepth,
-            Color.White, SpriteEffects.None, Vector2.Zero, defaultTexture, null,
-            new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
-        {
-        }
-
-        public UITextureObject(string name, UIObjectType uiObjectType,
-            Transform2D transform, float layerDepth,
-            Color color, Vector2 origin,
-            Texture2D defaultTexture)
-        : this(name, uiObjectType, transform, layerDepth,
-            color, SpriteEffects.None, origin, defaultTexture, null,
-            new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
-        {
-        }
-
-        /// <summary>
-        /// Construct a ui texture object where we want to set all draw related settings (e.g. source rectangle, color, origin)
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="uiObjectType"></param>
-        /// <param name="transform"></param>
-        /// <param name="depth"></param>
-        /// <param name="color"></param>
-        /// <param name="spriteEffects"></param>
-        /// <param name="origin"></param>
-        /// <param name="defaultTexture"></param>
-        /// <param name="alternateTexture"></param>
-        /// <param name="sourceRectangle"></param>
-        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
-        Color color, SpriteEffects spriteEffects, Vector2 origin,
-        Texture2D defaultTexture, Texture2D alternateTexture,
-        Rectangle sourceRectangle)
-    : base(name, uiObjectType, transform, layerDepth, color, spriteEffects, origin)
-        {
-            DefaultTexture = defaultTexture;
-            AlternateTexture = alternateTexture;
-            //store the original source rectangle in case we change the source rectangle (i.e. UIProgressBarController)
-            originalSourceRectangle = SourceRectangle = sourceRectangle;
-
-            //sets the texture used by default in the Draw() below
-            CurrentTexture = defaultTexture;
-        }
-
-        #endregion Constructors
-
-        #region Actions - Draw
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(defaultTexture,
-                Transform.LocalTranslation,
-                sourceRectangle,
-                color,
-                Transform.RotationInDegrees,
-                Origin,
-                Transform.LocalScale,
-                SpriteEffects,
-                LayerDepth);
-        }
-
-        #endregion Actions - Draw
-
-        #region Actions - Housekeeping
-
-        public override object Clone()
-        {
-            var clone = new UITextureObject($"Clone - {name}",
-                uiObjectType,
-                transform.Clone() as Transform2D, //why do we explicitly call Clone()? (Hint: do we need shallow or deep copy?)
-                layerDepth,
-                 color, spriteEffects, origin,
-                defaultTexture, alternateTexture,
-                sourceRectangle);
-            clone.ID = "UIO-" + Guid.NewGuid();
-
-            UIComponent clonedComponent = null;
-            foreach (UIComponent component in components)
-            {
-                clonedComponent = clone.AddComponent((UIComponent)component.Clone());
-                clonedComponent.uiObject = clone;
-            }
-
-            return clone;
-        }
-
-        #endregion Actions - Housekeeping
-    }
-
-    /// <summary>
-    /// Draws a texture on screen
-    /// </summary>
     public class UITextObject : UIObject
     {
         #region Fields
@@ -495,13 +337,205 @@ namespace GDLibrary
         #endregion Actions - Housekeeping
     }
 
-    //TODO - UITextObject
+    /// <summary>
+    /// Draws a texture on screen
+    /// </summary>
+    public class UITextureObject : UIObject
+    {
+        #region Fields
+
+        /// <summary>
+        /// Default texture shown for this object
+        /// </summary>
+        protected Texture2D defaultTexture;
+
+        /// <summary>
+        /// Alternate image may be used for hover/mouse click effects
+        /// </summary>
+        protected Texture2D alternateTexture;
+
+        /// <summary>
+        /// Used to control how much of the source image we draw (e.g. for a portion of an image as in a progress bar)
+        /// </summary>
+        protected Rectangle sourceRectangle;
+
+        /// <summary>
+        /// Sets current to be either active or alternate (e.g. used for hover over texture change)
+        /// </summary>
+        protected Texture2D currentTexture;
+
+        /// <summary>
+        /// Stores the original dimensions of the source rectangle for this texture
+        /// </summary>
+        protected Rectangle originalSourceRectangle;
+
+        /// <summary>
+        /// Collision bounding box for button
+        /// </summary>
+        private Rectangle bounds;
+
+        #endregion Fields
+
+        #region Properties
+
+        public Texture2D DefaultTexture { get => defaultTexture; set => defaultTexture = value; }
+        public Texture2D AlternateTexture { get => alternateTexture; set => alternateTexture = value; }
+        public Rectangle SourceRectangle { get => sourceRectangle; set => sourceRectangle = value; }
+        public int SourceRectangleWidth { get => sourceRectangle.Width; set => sourceRectangle.Width = value; }
+        public int SourceRectangleHeight { get => sourceRectangle.Height; set => sourceRectangle.Height = value; }
+
+        public Rectangle OriginalSourceRectangle
+        {
+            get
+            {
+                return originalSourceRectangle;
+            }
+        }
+
+        public Texture2D CurrentTexture { get => currentTexture; set => currentTexture = value; }
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                var originalBounds = new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height);
+                var worldMatrix = Matrix.CreateTranslation(new Vector3(-origin, 0))
+                       * Matrix.CreateScale(new Vector3(transform.LocalScale, 1))
+                       * Matrix.CreateRotationZ(MathHelper.ToRadians(transform.RotationInDegrees))
+                       * Matrix.CreateTranslation(new Vector3(transform.LocalTranslation, 0));
+
+                bounds = originalBounds.Transform(worldMatrix);
+                return bounds;
+            }
+        }
+
+        #endregion Properties
+
+        #region Constructors
+
+        public void SetRectangle(int width, int height)
+        {
+            sourceRectangle = new Rectangle(0, 0, width, height);
+        }
+
+        /// <summary>
+        /// Construct a ui texture object when we draw WHITE BLEND, FULL, UNROTATED, ZERO-ORIGIN textures
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="depth"></param>
+        /// <param name="activeTexture"></param>
+        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform,
+            float layerDepth, Texture2D defaultTexture)
+            : this(name, uiObjectType, transform, layerDepth,
+            Color.White, SpriteEffects.None, Vector2.Zero, defaultTexture, null,
+            new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
+        {
+        }
+
+        public UITextureObject(string name, UIObjectType uiObjectType,
+            Transform2D transform, float layerDepth,
+            Color color, Vector2 origin,
+            Texture2D defaultTexture)
+        : this(name, uiObjectType, transform, layerDepth,
+            color, SpriteEffects.None, origin, defaultTexture, null,
+            new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height))
+        {
+        }
+
+        /// <summary>
+        /// Construct a ui texture object where we want to set all draw related settings (e.g. source rectangle, color, origin)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="uiObjectType"></param>
+        /// <param name="transform"></param>
+        /// <param name="depth"></param>
+        /// <param name="color"></param>
+        /// <param name="spriteEffects"></param>
+        /// <param name="origin"></param>
+        /// <param name="defaultTexture"></param>
+        /// <param name="alternateTexture"></param>
+        /// <param name="sourceRectangle"></param>
+        public UITextureObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
+        Color color, SpriteEffects spriteEffects, Vector2 origin,
+        Texture2D defaultTexture, Texture2D alternateTexture,
+        Rectangle sourceRectangle)
+    : base(name, uiObjectType, transform, layerDepth, color, spriteEffects, origin)
+        {
+            DefaultTexture = defaultTexture;
+            AlternateTexture = alternateTexture;
+            //store the original source rectangle in case we change the source rectangle (i.e. UIProgressBarController)
+            originalSourceRectangle = SourceRectangle = sourceRectangle;
+
+            //sets the texture used by default in the Draw() below
+            CurrentTexture = defaultTexture;
+
+            //TODO - check bounding box
+            bounds = new Rectangle(
+                (int)transform.LocalTranslation.X,
+                (int)transform.LocalTranslation.Y,
+               (int)(defaultTexture.Width * transform.LocalScale.X),
+                (int)(defaultTexture.Height * transform.LocalScale.Y));
+        }
+
+        #endregion Constructors
+
+        #region Actions - Draw
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(defaultTexture,
+                Transform.LocalTranslation,
+                sourceRectangle,
+                color,
+                Transform.RotationInDegrees,
+                Origin,
+                Transform.LocalScale,
+                SpriteEffects,
+                LayerDepth);
+        }
+
+        #endregion Actions - Draw
+
+        #region Actions - Housekeeping
+
+        public override object Clone()
+        {
+            var clone = new UITextureObject($"Clone - {name}",
+                uiObjectType,
+                transform.Clone() as Transform2D, //why do we explicitly call Clone()? (Hint: do we need shallow or deep copy?)
+                layerDepth,
+                 color, spriteEffects, origin,
+                defaultTexture, alternateTexture,
+                sourceRectangle);
+            clone.ID = "UIO-" + Guid.NewGuid();
+
+            UIComponent clonedComponent = null;
+            foreach (UIComponent component in components)
+            {
+                clonedComponent = clone.AddComponent((UIComponent)component.Clone());
+                clonedComponent.uiObject = clone;
+            }
+
+            return clone;
+        }
+
+        #endregion Actions - Housekeeping
+    }
 
     /// <summary>
     /// Draws a button (i.e. text and texture) on screen
     /// </summary>
     public class UIButtonObject : UITextureObject
     {
+        #region Statics
+
+        /// <summary>
+        /// Used to ensure text layer is always 95% of texture layer i.e. closer to 0
+        /// </summary>
+        private static float TEXT_LAYER_DEPTH_MULTIPLIER = 0.95f;
+
+        #endregion Statics
+
         #region Fields
 
         /// <summary>
@@ -510,14 +544,14 @@ namespace GDLibrary
         private string text;
 
         /// <summary>
+        /// Origin for the text dependent on string entered and font used
+        /// </summary>
+        private Vector2 textOrigin;
+
+        /// <summary>
         /// Font for button text
         /// </summary>
         private SpriteFont font;
-
-        /// <summary>
-        /// Collision bounding box for button
-        /// </summary>
-        private Rectangle bounds;
 
         private Color textColor;
         private Vector2 textOffset;
@@ -526,15 +560,41 @@ namespace GDLibrary
 
         #region Properties
 
-        public string Text { get => text; set => text = value.Trim(); }
+        public string Text
+        {
+            get
+            {
+                return text;
+            }
+
+            set
+            {
+                value = value.Trim();
+
+                text = (value.Length >= 0) ? value : "Default";
+
+                textOrigin = font.MeasureString(text) / 2.0f;
+            }
+        }
+
         public SpriteFont Font { get => font; set => font = value; }
-        public Rectangle Bounds { get => bounds; set => bounds = value; }
 
         #endregion Properties
 
         #region Constructors
 
-        //TODO - add text Vector2 offset
+        public UIButtonObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
+          Color color, Vector2 origin, Texture2D defaultTexture,
+          string text, SpriteFont font, Color textColor)
+      : this(name, uiObjectType, transform, layerDepth,
+           color, SpriteEffects.None, origin,
+           defaultTexture, null,
+           new Rectangle(0, 0, defaultTexture.Width, defaultTexture.Height),
+            text, font,
+           textColor, Vector2.Zero)
+        {
+        }
+
         public UIButtonObject(string name, UIObjectType uiObjectType, Transform2D transform, float layerDepth,
            Color color, SpriteEffects spriteEffects, Vector2 origin,
            Texture2D defaultTexture, Texture2D alternateTexture,
@@ -547,16 +607,8 @@ namespace GDLibrary
         {
             this.textColor = textColor;
             this.textOffset = textOffset;
-
-            Text = text;
             Font = font;
-
-            //TODO - check bounding box
-            bounds = new Rectangle(
-                (int)transform.LocalTranslation.X,
-                (int)transform.LocalTranslation.Y,
-               (int)(defaultTexture.Width * transform.LocalScale.X),
-                (int)(defaultTexture.Height * transform.LocalScale.Y));
+            Text = text;
         }
 
         #endregion Constructors
@@ -574,10 +626,10 @@ namespace GDLibrary
                Transform.LocalTranslation + textOffset,
                textColor,
                Transform.RotationInDegrees,
-               Origin,
+               textOrigin,
                Transform.LocalScale,
                SpriteEffects,
-               LayerDepth * 0.9f); //ensures text is in front of texture (remember sorts from 1 (back) to 0 (front))
+               LayerDepth * TEXT_LAYER_DEPTH_MULTIPLIER); //ensures text is in front of texture (remember sorts from 1 (back) to 0 (front))
         }
 
         #endregion Actions - Draw

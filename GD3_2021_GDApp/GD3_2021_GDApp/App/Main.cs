@@ -45,7 +45,7 @@ namespace GDApp
         /// <summary>
         /// Updates and Draws all menu objects
         /// </summary>
-        private UIMenuManager uiMenuManager;
+        private MyMenuManager uiMenuManager;
 
         /// <summary>
         /// Plays all 2D and 3D sounds
@@ -113,7 +113,7 @@ namespace GDApp
             uiSceneManager = new UISceneManager(this, _spriteBatch);
 
             //create the ui menu manager to update and draw all menu scenes
-            uiMenuManager = new UIMenuManager(this, _spriteBatch);
+            uiMenuManager = new MyMenuManager(this, _spriteBatch);
 
             //add support for playing sounds
             soundManager = new SoundManager(this);
@@ -256,7 +256,9 @@ namespace GDApp
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //data, input, scene manager
-            InitializeEngine("My Game Title Goes Here", 640, 480);
+            InitializeEngine(AppData.GAME_TITLE_NAME,
+                AppData.GAME_RESOLUTION_WIDTH,
+                AppData.GAME_RESOLUTION_HEIGHT);
 
             //load structures that store assets (e.g. textures, sounds) or archetypes (e.g. Quad game object)
             InitializeDictionaries();
@@ -423,9 +425,13 @@ namespace GDApp
             //a re-usable variable for each ui object
             UIObject menuObject = null;
 
+            #region Main Menu
+
             /************************** Main Menu Scene **************************/
             //make the main menu scene
-            var mainMenuUIScene = new UIScene("main menu");
+            var mainMenuUIScene = new UIScene(AppData.MENU_MAIN_NAME);
+
+            /**************************** Background Image ****************************/
 
             //main background
             var texture = textureDictionary["mainmenu"];
@@ -444,7 +450,7 @@ namespace GDApp
             //add ui object to scene
             mainMenuUIScene.Add(menuObject);
 
-            /****************************/
+            /**************************** Play Button ****************************/
 
             var btnTexture = textureDictionary["genericbtn"];
             var sourceRectangle
@@ -452,8 +458,8 @@ namespace GDApp
                 btnTexture.Width, btnTexture.Height);
             var origin = new Vector2(btnTexture.Width / 2.0f, btnTexture.Height / 2.0f);
 
-            var playBtn = new UIButtonObject("play_btn", UIObjectType.Button,
-                new Transform2D(new Vector2(320, 240), Vector2.One, 0),
+            var playBtn = new UIButtonObject(AppData.MENU_PLAY_BTN_NAME, UIObjectType.Button,
+                new Transform2D(AppData.MENU_PLAY_BTN_POSITION, 0.5f * Vector2.One, 0),
                 0,
                 Color.Red,
                 SpriteEffects.None,
@@ -464,9 +470,28 @@ namespace GDApp
                 "Play",
                 fontDictionary["menu"],
                 Color.Black,
-                new Vector2(100, 10));
+                Vector2.Zero);
 
             mainMenuUIScene.Add(playBtn);
+
+            /**************************** Exit Button ****************************/
+
+            //same button texture so we can re-use texture, sourceRectangle and origin
+
+            //use a simple/smaller version of the UIButtonObject constructor
+            var exitBtn = new UIButtonObject(AppData.MENU_EXIT_BTN_NAME, UIObjectType.Button,
+                new Transform2D(AppData.MENU_EXIT_BTN_POSITION, 0.5f * Vector2.One, 0),
+                0,
+                Color.Green,
+                origin,
+                btnTexture,
+                "Exit",
+                fontDictionary["menu"],
+                Color.Black);
+
+            mainMenuUIScene.Add(exitBtn);
+
+            #endregion Main Menu
 
             //add scene to the menu manager
             uiMenuManager.Add(mainMenuUIScene);
@@ -487,7 +512,7 @@ namespace GDApp
         private void InitializeGameUI()
         {
             //create the scene
-            var mainGameUIScene = new UIScene("main game ui");
+            var mainGameUIScene = new UIScene(AppData.UI_SCENE_MAIN_NAME);
 
             #region Add Health Bar
 
@@ -541,7 +566,7 @@ namespace GDApp
             uiSceneManager.Add(mainGameUIScene);
 
             //set the active scene
-            uiSceneManager.SetActiveScene("main game ui");
+            uiSceneManager.SetActiveScene(AppData.UI_SCENE_MAIN_NAME);
 
             #endregion Add Scene To Manager & Set Active Scene
         }

@@ -2,6 +2,7 @@
 using GDLibrary.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace GDLibrary.Managers
@@ -77,13 +78,13 @@ namespace GDLibrary.Managers
         public bool SetActiveScene(string uiSceneName)
         {
             UIScene scene = Find(uiSceneName);
-            if (scene != null)
-            {
-                activeUIScene = scene;
-                activeUISceneName = uiSceneName;
-                return true;
-            }
-            return false;
+
+            if (scene == null)
+                throw new NullReferenceException($"No scene [{uiSceneName}] exists!");
+
+            activeUIScene = scene;
+            activeUISceneName = uiSceneName;
+            return true;
         }
 
         public void Add(UIScene uiScene)

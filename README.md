@@ -51,10 +51,15 @@
 - [x] Add lock camera to ground
 - [x] Add physics engine - Stage 1/3
 - [x] Add PhysicsDebugdrawer
-- [ ] Improve Camera and add collidable camera controller
+
+### Tasks - Week 10
+- [x] Inherit from UIMenuManager to implement app specific menu responses in MyMenuManager
+- [x] Add correctly calculated Bounds on UITextureObject and UIButtonObject
+- [x] Test layerDepth on UI objects
 - [ ] Add trianglemesh support
 - [ ] Add picking with mouse
 - [ ] Added an untested sound manager
+- [ ] Improve Camera and add collidable camera controller
 - [ ] Add support for removing/adding objects to the scene manager through events
 - [ ] Add support for removing/adding objects to the ui scene manager through events
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
