@@ -629,7 +629,7 @@ namespace GDLibrary
                textOrigin,
                Transform.LocalScale,
                SpriteEffects,
-               LayerDepth * TEXT_LAYER_DEPTH_MULTIPLIER); //ensures text is in front of texture (remember sorts from 1 (back) to 0 (front))
+               Math.Max(1, LayerDepth * TEXT_LAYER_DEPTH_MULTIPLIER)); //ensures text is in front of texture (remember sorts from 1 (back) to 0 (front))
         }
 
         #endregion Actions - Draw
