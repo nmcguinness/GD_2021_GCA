@@ -451,7 +451,7 @@ namespace GDApp
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
                 new Transform2D(Vector2.Zero, scale, 0),
-                1,
+                0,
                 Color.White,
                 Vector2.Zero,
                 texture);
