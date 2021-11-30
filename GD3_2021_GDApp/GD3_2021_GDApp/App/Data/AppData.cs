@@ -24,8 +24,11 @@ namespace GDApp
         public const string MENU_BACK_BTN_NAME = "Back";
         public const string MENU_EXIT_BTN_NAME = "Exit";
 
-        public static readonly Vector2 MENU_PLAY_BTN_POSITION = new Vector2(320, 240);
-        public static readonly Vector2 MENU_EXIT_BTN_POSITION = new Vector2(320, 280);
+        public static readonly Vector2 MENU_PLAY_BTN_POSITION
+            = new Vector2(320, 240);
+
+        public static readonly Vector2 MENU_EXIT_BTN_POSITION
+            = new Vector2(320, 280);
 
         #endregion UI & Menu Constants
 

@@ -56,8 +56,11 @@
 - [x] Inherit from UIMenuManager to implement app specific menu responses in MyMenuManager
 - [x] Add correctly calculated Bounds on UITextureObject and UIButtonObject
 - [x] Test layerDepth on UI objects
+- [ ] Test SoundManager
 - [ ] Add trianglemesh support
+- [ ] Add opacity support
 - [ ] Add picking with mouse
+ 
 - [ ] Added an untested sound manager
 - [ ] Improve Camera and add collidable camera controller
 - [ ] Add support for removing/adding objects to the scene manager through events
@@ -66,7 +69,7 @@
 - [ ] Add lighting engine
 - [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
-- [ ] Add opacity support
+
 
 
 

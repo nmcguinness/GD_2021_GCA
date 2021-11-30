@@ -36,11 +36,11 @@ namespace GDLibrary.Managers
                     if (Input.Mouse.Bounds.Intersects(btnObject.Bounds))
                     {
                         HandleMouseOver(btnObject);
-                    }
 
-                    if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
-                    {
-                        HandleMouseClicked(btnObject);
+                        if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+                        {
+                            HandleMouseClicked(btnObject);
+                        }
                     }
                 }
             }

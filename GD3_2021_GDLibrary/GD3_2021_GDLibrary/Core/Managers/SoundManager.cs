@@ -192,6 +192,12 @@ namespace GDLibrary.Managers
                     eventData.Parameters[1] as AudioListener,
                         eventData.Parameters[2] as AudioEmitter);
             }
+            else if (eventData.EventActionType
+                == EventActionType.OnVolumeDelta)
+            {
+                SetMasterVolume((int)eventData.Parameters[0]);
+            }
+
             //add more if statements for each method that we want to support with events
 
             //if we always want the SoundManager to be available then comment this line out

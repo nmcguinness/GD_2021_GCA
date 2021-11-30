@@ -16,6 +16,7 @@ using JigLibX.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 namespace GDApp
@@ -228,6 +229,13 @@ namespace GDApp
                     EventActionType.OnPlay));
             }
 
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+            {
+                object[] parameters = { "smokealarm" };
+                EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
+                    EventActionType.OnPlay2D, parameters));
+            }
+
             base.Update(gameTime);
         }
 
@@ -329,15 +337,16 @@ namespace GDApp
         /// </summary>
         private void LoadSounds()
         {
-            //for example...
-            //soundManager.Add(new GDLibrary.Managers.Cue("smokealarm",
-            //    Content.Load<SoundEffect>("Assets/Sounds/Effects/smokealarm1"),
-            //    SoundCategoryType.Alarm, new Vector3(1, 0, 0), false));
+            var soundEffect =
+                Content.Load<SoundEffect>("Assets/Sounds/Effects/smokealarm1");
 
-            //object[] parameters = { "smokealarm"};
-
-            //EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
-            //    EventActionType.OnPlay, parameters));
+            //add the new sound effect
+            soundManager.Add(new GDLibrary.Managers.Cue(
+                "smokealarm",
+                soundEffect,
+                SoundCategoryType.Alarm,
+                new Vector3(1, 0, 0),
+                false));
         }
 
         /// <summary>
@@ -503,7 +512,7 @@ namespace GDApp
             /************************** Exit Menu Scene **************************/
 
             //finally we say...where do we start
-            uiMenuManager.SetActiveScene("main menu");
+            uiMenuManager.SetActiveScene(AppData.MENU_MAIN_NAME);
         }
 
         /// <summary>
