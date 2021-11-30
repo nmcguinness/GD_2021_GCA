@@ -145,7 +145,7 @@ namespace GDLibrary.Managers
             //is this component paused because of the menu?
             if (IsDrawn)
             {
-                spriteBatch.Begin(SpriteSortMode.BackToFront,
+                spriteBatch.Begin(SpriteSortMode.FrontToBack,
                     BlendState.AlphaBlend, samplerState, null);
                 activeUIScene?.Draw(spriteBatch);
                 spriteBatch.End();

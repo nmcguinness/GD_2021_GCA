@@ -27,8 +27,11 @@ namespace GDApp
         public static readonly Vector2 MENU_PLAY_BTN_POSITION
             = new Vector2(320, 240);
 
-        public static readonly Vector2 MENU_EXIT_BTN_POSITION
+        public static readonly Vector2 MENU_CONTROLS_BTN_POSITION
             = new Vector2(320, 280);
+
+        public static readonly Vector2 MENU_EXIT_BTN_POSITION
+            = new Vector2(320, 320);
 
         #endregion UI & Menu Constants
 

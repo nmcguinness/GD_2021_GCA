@@ -451,7 +451,7 @@ namespace GDApp
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
                 new Transform2D(Vector2.Zero, scale, 0),
-                0,
+                1,
                 Color.White,
                 Vector2.Zero,
                 texture);
@@ -468,8 +468,9 @@ namespace GDApp
             var origin = new Vector2(btnTexture.Width / 2.0f, btnTexture.Height / 2.0f);
 
             var playBtn = new UIButtonObject(AppData.MENU_PLAY_BTN_NAME, UIObjectType.Button,
-                new Transform2D(AppData.MENU_PLAY_BTN_POSITION, 0.5f * Vector2.One, 0),
-                0,
+                new Transform2D(AppData.MENU_PLAY_BTN_POSITION,
+                0.5f * Vector2.One, 0),
+                0.1f,
                 Color.Red,
                 SpriteEffects.None,
                 origin,
@@ -483,6 +484,22 @@ namespace GDApp
 
             mainMenuUIScene.Add(playBtn);
 
+            /**************************** Controls Button ****************************/
+
+            //same button texture so we can re-use texture, sourceRectangle and origin
+
+            var controlsBtn = new UIButtonObject(AppData.MENU_CONTROLS_BTN_NAME, UIObjectType.Button,
+                new Transform2D(AppData.MENU_CONTROLS_BTN_POSITION, 0.5f * Vector2.One, 0),
+                0.1f,
+                Color.Green,
+                origin,
+                btnTexture,
+                "Controls",
+                fontDictionary["menu"],
+                Color.Black);
+
+            mainMenuUIScene.Add(controlsBtn);
+
             /**************************** Exit Button ****************************/
 
             //same button texture so we can re-use texture, sourceRectangle and origin
@@ -490,8 +507,8 @@ namespace GDApp
             //use a simple/smaller version of the UIButtonObject constructor
             var exitBtn = new UIButtonObject(AppData.MENU_EXIT_BTN_NAME, UIObjectType.Button,
                 new Transform2D(AppData.MENU_EXIT_BTN_POSITION, 0.5f * Vector2.One, 0),
-                0,
-                Color.Green,
+                0.1f,
+                Color.Blue,
                 origin,
                 btnTexture,
                 "Exit",

@@ -530,9 +530,9 @@ namespace GDLibrary
         #region Statics
 
         /// <summary>
-        /// Used to ensure text layer is always 95% of texture layer i.e. closer to 0
+        /// Used to ensure text layer is always 105% of texture layer i.e. closer to 0
         /// </summary>
-        private static float TEXT_LAYER_DEPTH_MULTIPLIER = 0.95f;
+        private static float TEXT_LAYER_DEPTH_MULTIPLIER = 1.05f;
 
         #endregion Statics
 
@@ -623,7 +623,7 @@ namespace GDLibrary
             //draw text
             spriteBatch.DrawString(font,
                text,
-               Transform.LocalTranslation + textOffset,
+               Transform.LocalTranslation,
                textColor,
                Transform.RotationInDegrees,
                textOrigin,

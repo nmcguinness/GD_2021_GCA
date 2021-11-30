@@ -98,6 +98,7 @@ namespace GDLibrary.Components.UI
         {
             foreach (UIObject uiObject in uiObjects)
             {
+                //TODO - add IsRunning also?
                 if (uiObject.IsEnabled)
                     uiObject.Draw(spriteBatch);
             }
