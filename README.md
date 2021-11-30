@@ -56,7 +56,11 @@
 - [x] Inherit from UIMenuManager to implement app specific menu responses in MyMenuManager
 - [x] Add correctly calculated Bounds on UITextureObject and UIButtonObject
 - [x] Test layerDepth on UI objects
-- [ ] Test SoundManager
+- [x] Fix button text not rendering when 2+ buttons
+- [x] Test SoundManager
+- [ ] Add support for PhysicsManager pause
+- [ ] Add support for rendering scene in menu background
+- [ ] Add support for transparent menu items
 - [ ] Add trianglemesh support
 - [ ] Add opacity support
 - [ ] Add picking with mouse

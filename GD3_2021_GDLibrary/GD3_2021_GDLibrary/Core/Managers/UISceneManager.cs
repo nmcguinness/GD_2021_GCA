@@ -38,7 +38,7 @@ namespace GDLibrary.Managers
 
             //add point filtering to prevent smearing of textures as a result of filter averaging
             samplerState = new SamplerState();
-            samplerState.Filter = TextureFilter.Point;
+            samplerState.Filter = TextureFilter.Linear;
         }
 
         #endregion Constructors
