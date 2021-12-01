@@ -22,6 +22,7 @@ namespace GDLibrary.Managers
         private List<Scene> scenes;
         private int sceneToLoad;
         private int activeSceneIndex;
+        private bool initialUpdate;
 
         #endregion Fields
 
@@ -77,8 +78,10 @@ namespace GDLibrary.Managers
         public override void Update(GameTime gameTime)
         {
             //is this component paused because of the menu?
-            if (IsUpdated)
+            if (IsUpdated || !initialUpdate)
             {
+                initialUpdate = true;
+
                 //if no active scene and no scene to load then exit
                 if (activeSceneIndex == -1 && sceneToLoad == -1)
                     return;

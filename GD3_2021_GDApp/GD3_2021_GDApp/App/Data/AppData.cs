@@ -8,8 +8,8 @@ namespace GDApp
         #region Game Level Constants
 
         public const string GAME_TITLE_NAME = "My Game Title Goes Here";
-        public const int GAME_RESOLUTION_WIDTH = 640;
-        public const int GAME_RESOLUTION_HEIGHT = 480;
+        public const int GAME_RESOLUTION_WIDTH = 1920;
+        public const int GAME_RESOLUTION_HEIGHT = 1080;
 
         #endregion Game Level Constants
 
@@ -25,29 +25,29 @@ namespace GDApp
         public const string MENU_EXIT_BTN_NAME = "Exit";
 
         public static readonly Vector2 MENU_PLAY_BTN_POSITION
-            = new Vector2(320, 240);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 240);
 
         public static readonly Vector2 MENU_CONTROLS_BTN_POSITION
-            = new Vector2(320, 280);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 280);
 
         public static readonly Vector2 MENU_EXIT_BTN_POSITION
-            = new Vector2(320, 320);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 320);
 
         #endregion UI & Menu Constants
 
         #region Input Key Mappings
 
-        public static readonly Keys[] KeysOne = { Keys.W, Keys.S, Keys.A, Keys.D };
-        public static readonly Keys[] KeysTwo = { Keys.U, Keys.J, Keys.H, Keys.K };
+        public static readonly Keys[] KEYS_ONE = { Keys.W, Keys.S, Keys.A, Keys.D };
+        public static readonly Keys[] KEYS_TWO = { Keys.U, Keys.J, Keys.H, Keys.K };
 
         #endregion Input Key Mappings
 
         #region Movement Constants
 
-        public const float moveSpeed = 0.1f;
-        public const float strafeSpeedMultiplier = 0.75f;
-        public const float strafeSpeed = strafeSpeedMultiplier * moveSpeed;
-        public const float rotateSpeed = 0.01f;
+        public const float PLAYER_MOVE_SPEED = 0.1f;
+        private const float PLAYER_STRAFE_SPEED_MULTIPLIER = 0.75f;
+        public const float PLAYER_STRAFE_SPEED = PLAYER_STRAFE_SPEED_MULTIPLIER * PLAYER_MOVE_SPEED;
+        public const float PLAYER_ROTATE_SPEED = 0.01f;
 
         #endregion Movement Constants
 

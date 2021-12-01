@@ -18,6 +18,7 @@ namespace GDLibrary.Managers
         protected GraphicsDevice graphicsDevice;
         protected IRenderScene sceneRenderer;
         protected bool isMultiCamera;
+        private bool isPausableOverridden;
         protected List<Camera> activeSceneCameras;
 
         #endregion Fields
@@ -48,7 +49,11 @@ namespace GDLibrary.Managers
 
         #region Constructors
 
-        public RenderManager(Game game, IRenderScene sceneRenderer, bool isMultiCamera = false) : base(game)
+        public RenderManager(Game game, IRenderScene sceneRenderer) : this(game, sceneRenderer, false, false)
+        {
+        }
+
+        public RenderManager(Game game, IRenderScene sceneRenderer, bool isMultiCamera = false, bool isPausableOverridden = false) : base(game)
         {
             //cache this de-reference to save us some CPU cycles since its called often in Render below
             graphicsDevice = Application.GraphicsDevice;
@@ -57,7 +62,10 @@ namespace GDLibrary.Managers
             SceneRenderer = sceneRenderer;
 
             //sets whether we are drawing multiple cameras
-            IsMultiCamera = isMultiCamera;
+            this.isMultiCamera = isMultiCamera;
+
+            //this overrides pausing so that render manager is drawn during menu scene
+            this.isPausableOverridden = isPausableOverridden;
         }
 
         #endregion Constructors
@@ -67,7 +75,7 @@ namespace GDLibrary.Managers
         public override void Draw(GameTime gameTime)
         {
             //is this component paused because of the menu?
-            if (IsDrawn)
+            if (IsDrawn || isPausableOverridden)
             {
                 if (isMultiCamera)
                 {

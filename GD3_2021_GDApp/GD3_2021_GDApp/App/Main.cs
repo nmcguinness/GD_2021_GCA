@@ -128,7 +128,7 @@ namespace GDApp
             Application.PhysicsManager = physicsManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
-            renderManager = new RenderManager(this, new ForwardRenderer(), false);
+            renderManager = new RenderManager(this, new ForwardRenderer(), false, true);
 
             //instanciate screen (singleton) and set resolution etc
             Screen.GetInstance().Set(width, height, true, true);
@@ -444,16 +444,15 @@ namespace GDApp
 
             //main background
             var texture = textureDictionary["mainmenu"];
-            var scale = new Vector2(
-               (float)_graphics.PreferredBackBufferWidth / texture.Width,
-               (float)_graphics.PreferredBackBufferHeight / texture.Height);
+            //get how much we need to scale background to fit screen, then downsizes a little so we can see game behind background
+            var scale = _graphics.GetScaleForTexture(texture, new Vector2(0.9f, 0.9f));
 
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
-                new Transform2D(Vector2.Zero, scale, 0),
+                new Transform2D(Screen.Instance.ScreenCentre, scale, 0),
                 0,
-                Color.White,
-                Vector2.Zero,
+                new Color(255, 255, 255, 200),
+                texture.GetOriginAsCenter(),
                 texture);
 
             //add ui object to scene

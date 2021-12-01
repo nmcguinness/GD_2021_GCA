@@ -10,7 +10,7 @@
 - [x] Code additions in Week 6(Halloween)
 - [x] UIProgressBarController using Events - Main::Update
 - [x] ContentDictionary - Main::modelDictionary and Main::fontDictionary
-- [ ] UIMenuManager
+- [x] UIMenuManager
 
 ### Bugs
 - [x] Fix Mouse delta on FPC
