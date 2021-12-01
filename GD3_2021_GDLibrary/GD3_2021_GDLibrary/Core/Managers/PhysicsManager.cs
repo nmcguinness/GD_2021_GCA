@@ -205,18 +205,21 @@ namespace GDLibrary.Managers
 
         public override void Update(GameTime gameTime)
         {
-            //TODO - change to Time.Instance
-            timeStep = (float)gameTime.ElapsedGameTime.Ticks / System.TimeSpan.TicksPerSecond;
+            if (IsUpdated)
+            {
+                //TODO - change to Time.Instance
+                timeStep = (float)gameTime.ElapsedGameTime.Ticks / System.TimeSpan.TicksPerSecond;
 
-            //if the time between updates indicates a FPS of close to 60 fps or less then update CD/CR engine
-            if (timeStep < 1.0f / 60.0f)
-            {
-                physicSystem.Integrate(timeStep);
-            }
-            else
-            {
-                //else fix at 60 updates per second
-                physicSystem.Integrate(1.0f / 60.0f);
+                //if the time between updates indicates a FPS of close to 60 fps or less then update CD/CR engine
+                if (timeStep < 1.0f / 60.0f)
+                {
+                    physicSystem.Integrate(timeStep);
+                }
+                else
+                {
+                    //else fix at 60 updates per second
+                    physicSystem.Integrate(1.0f / 60.0f);
+                }
             }
         }
 
