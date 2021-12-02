@@ -8,6 +8,8 @@ namespace GDApp.App.State
     /// </summary>
     public class MyStateManager : PausableGameComponent
     {
+        //      private List<string> inventory;
+
         public MyStateManager(Game game)
             : base(game)
         {
@@ -16,6 +18,8 @@ namespace GDApp.App.State
         protected override void SubscribeToEvents()
         {
             //add more events here...
+            EventDispatcher.Subscribe(EventCategoryType.Player,
+                HandleEvent);
 
             //dont forget to call base otherwise no play/pause support
             base.SubscribeToEvents();
@@ -24,7 +28,10 @@ namespace GDApp.App.State
         protected override void HandleEvent(EventData eventData)
         {
             //add more event handlers here...
-
+            if (eventData.EventActionType == EventActionType.OnPickup)
+            {
+                var objectName = eventData.Parameters[0] as string;
+            }
             //dont forget to call base otherwise no play/pause support
             base.HandleEvent(eventData);
         }

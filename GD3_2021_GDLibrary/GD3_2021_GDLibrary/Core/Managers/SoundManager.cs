@@ -176,8 +176,18 @@ namespace GDLibrary.Managers
         {
             EventDispatcher.Subscribe(EventCategoryType.Sound, HandleEvent);
 
+            EventDispatcher.Subscribe(EventCategoryType.Player,
+                HandlePlayerEvents);
+
             //if we always want the SoundManager to be available then comment this line out
             // base.SubscribeToEvents();
+        }
+
+        private void HandlePlayerEvents(EventData eventData)
+        {
+            if (eventData.EventActionType == EventActionType.OnPickup)
+            {
+            }
         }
 
         protected override void HandleEvent(EventData eventData)

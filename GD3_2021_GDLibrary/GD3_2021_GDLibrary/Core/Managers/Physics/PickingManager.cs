@@ -41,10 +41,29 @@ namespace GDLibrary.Managers
             Vector3 pos;
             Vector3 normal;
 
-            pickedObject = Input.Mouse.GetPickedObject(Camera.Main, pickStartDistance, pickEndDistance, out pos, out normal) as GameObject;
+            pickedObject =
+                Input.Mouse.GetPickedObject(Camera.Main,
+                pickStartDistance, pickEndDistance,
+                out pos, out normal) as GameObject;
+
             if (collisionPredicate(pickedObject))
             {
-                System.Diagnostics.Debug.WriteLine($"{pickedObject.Name} - {pickedObject.ID}");
+                var behaviour = pickedObject.GetComponent<PickupBehaviour>();
+
+                System.Diagnostics.Debug.WriteLine($"{behaviour.Desc} " +
+                    $"- {behaviour.Value}");
+
+                ////OnRemove
+                ////OnPlay3D/2D
+
+                //object[] parameters = { pickedObject };
+                ////OnPickup
+                //EventDispatcher.Raise(new EventData(
+                //    EventCategoryType.GameObject,
+                //    EventActionType.OnRemoveObject,
+                //    parameters));
+
+                //System.Diagnostics.Debug.WriteLine($"{pickedObject.Name} - {pickedObject.ID}");
             }
         }
     }

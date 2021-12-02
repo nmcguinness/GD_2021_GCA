@@ -127,15 +127,17 @@ namespace GDApp
 
             //picking support using physics engine
             //this predicate lets us say ignore all the other collidable objects except interactables and consumables
-            Predicate<GameObject> collisionPredicate = (collidableObject) =>
+            Predicate<GameObject> collisionPredicate =
+                (collidableObject) =>
             {
                 if (collidableObject != null)
-                    return collidableObject.GameObjectType == GameObjectType.Interactable
+                    return collidableObject.GameObjectType
+                    == GameObjectType.Interactable
                     || collidableObject.GameObjectType == GameObjectType.Consumable;
 
                 return false;
             };
-            pickingManager = new PickingManager(this, 0, 100, collisionPredicate);
+            pickingManager = new PickingManager(this, 2, 100, collisionPredicate);
 
             //initialize global application data
             Application.Main = this;
@@ -468,7 +470,8 @@ namespace GDApp
             //main background
             var texture = textureDictionary["mainmenu"];
             //get how much we need to scale background to fit screen, then downsizes a little so we can see game behind background
-            var scale = _graphics.GetScaleForTexture(texture, new Vector2(0.8f, 0.8f));
+            var scale = _graphics.GetScaleForTexture(texture,
+                new Vector2(0.8f, 0.8f));
 
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
@@ -816,7 +819,8 @@ namespace GDApp
             var shader = new BasicShader(Application.Content, false, true);
 
             //create the sphere
-            var sphereArchetype = new GameObject("sphere", GameObjectType.Interactable, true);
+            var sphereArchetype = new GameObject("sphere",
+                GameObjectType.Interactable, true);
 
             #endregion Reusable - You can copy and re-use this code elsewhere, if required
 
@@ -898,6 +902,9 @@ namespace GDApp
                 clone.AddComponent(new MeshRenderer(mesh,
                     new BasicMaterial("cube_material", shader,
                     Color.White, 1, textureDictionary["crate1"])));
+
+                //add desc and value to a pickup
+                clone.AddComponent(new PickupBehaviour("ammo pack", 15));
 
                 //add Collision Surface(s)
                 collider = new Collider();

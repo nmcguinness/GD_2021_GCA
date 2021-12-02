@@ -23,7 +23,11 @@ namespace GDLibrary.Components.UI
             if (uiButtonObject != null)
             {
                 if (uiButtonObject.Bounds.Contains(Input.Mouse.Bounds))
+                {
                     uiButtonObject.Color = colorActive;
+
+                    //EventDispatcher.Raise();
+                }
                 else
                     uiButtonObject.Color = colorInactive;
             }
