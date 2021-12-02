@@ -8,8 +8,8 @@ namespace GDApp
         #region Game Level Constants
 
         public const string GAME_TITLE_NAME = "My Game Title Goes Here";
-        public const int GAME_RESOLUTION_WIDTH = 1920;
-        public const int GAME_RESOLUTION_HEIGHT = 1080;
+        public const int GAME_RESOLUTION_WIDTH = 640;
+        public const int GAME_RESOLUTION_HEIGHT = 480;
 
         #endregion Game Level Constants
 

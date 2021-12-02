@@ -56,8 +56,9 @@ namespace GDLibrary.Components
         protected override void HandleMouseInput()
         {
             rotation = Vector3.Zero;
-            rotation.Y -= Input.Mouse.Delta.X * rotationSpeed * Time.Instance.DeltaTimeMs;
-            rotation.X -= Input.Mouse.Delta.Y * rotationSpeed * Time.Instance.DeltaTimeMs;
+            var delta = Input.Mouse.Delta;
+            rotation.Y -= delta.X * rotationSpeed * Time.Instance.DeltaTimeMs;
+            rotation.X -= delta.Y * rotationSpeed * Time.Instance.DeltaTimeMs;
             transform.Rotate(ref rotation);  //converts value type to a reference
         }
 

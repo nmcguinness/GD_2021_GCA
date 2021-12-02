@@ -446,7 +446,7 @@ namespace GDApp
         private void InitializeUI()
         {
             InitializeGameMenu();
-            // InitializeGameUI();
+            InitializeGameUI();
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace GDApp
             //main background
             var texture = textureDictionary["mainmenu"];
             //get how much we need to scale background to fit screen, then downsizes a little so we can see game behind background
-            var scale = _graphics.GetScaleForTexture(texture, new Vector2(0.9f, 0.9f));
+            var scale = _graphics.GetScaleForTexture(texture, new Vector2(0.8f, 0.8f));
 
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
@@ -493,7 +493,7 @@ namespace GDApp
                 new Transform2D(AppData.MENU_PLAY_BTN_POSITION,
                 0.5f * Vector2.One, 0),
                 0.1f,
-                Color.Red,
+                Color.White,
                 SpriteEffects.None,
                 origin,
                 btnTexture,
@@ -504,6 +504,9 @@ namespace GDApp
                 Color.Black,
                 Vector2.Zero);
 
+            //demo button color change
+            playBtn.AddComponent(new UIColorMouseOverBehaviour(Color.Orange, Color.White));
+
             mainMenuUIScene.Add(playBtn);
 
             /**************************** Controls Button ****************************/
@@ -513,12 +516,15 @@ namespace GDApp
             var controlsBtn = new UIButtonObject(AppData.MENU_CONTROLS_BTN_NAME, UIObjectType.Button,
                 new Transform2D(AppData.MENU_CONTROLS_BTN_POSITION, 0.5f * Vector2.One, 0),
                 0.1f,
-                Color.Green,
+                Color.White,
                 origin,
                 btnTexture,
                 "Controls",
                 fontDictionary["menu"],
                 Color.Black);
+
+            //demo button color change
+            controlsBtn.AddComponent(new UIColorMouseOverBehaviour(Color.Orange, Color.White));
 
             mainMenuUIScene.Add(controlsBtn);
 
