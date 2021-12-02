@@ -137,7 +137,11 @@ namespace GDLibrary.Managers
         {
             //is this component paused because of the menu?
             if (IsUpdated)
+            {
+                //TODO - apply batch remove
+
                 activeUIScene?.Update();
+            }
         }
 
         public override void Draw(GameTime gameTime)

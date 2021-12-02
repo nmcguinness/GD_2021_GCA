@@ -80,6 +80,8 @@ namespace GDLibrary.Managers
             //is this component paused because of the menu?
             if (IsUpdated || !initialUpdate)
             {
+                //TODO - apply batch remove
+
                 initialUpdate = true;
 
                 //if no active scene and no scene to load then exit
@@ -95,8 +97,6 @@ namespace GDLibrary.Managers
 
                     //set scene to load as new scene
                     activeSceneIndex = sceneToLoad;
-
-                    //TODO - nullify camera and disable UI
 
                     //set scene as current in globally accessible static in Scene
                     Scene.Current = scenes[activeSceneIndex];

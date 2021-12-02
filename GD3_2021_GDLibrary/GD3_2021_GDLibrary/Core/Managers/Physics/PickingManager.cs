@@ -10,7 +10,7 @@ namespace GDLibrary.Managers
         private float pickStartDistance;
         private float pickEndDistance;
         private Predicate<GameObject> collisionPredicate;
-        private GameObject currentPickedObject;
+        private GameObject pickedObject;
 
         public PickingManager(Game game,
            float pickStartDistance, float pickEndDistance,
@@ -25,9 +25,8 @@ namespace GDLibrary.Managers
         public override void Update(GameTime gameTime)
         {
             if (IsUpdated)
-            {
                 HandleMouse(gameTime);
-            }
+
             base.Update(gameTime);
         }
 
@@ -42,9 +41,10 @@ namespace GDLibrary.Managers
             Vector3 pos;
             Vector3 normal;
 
-            currentPickedObject = Input.Mouse.GetPickedObject(Camera.Main, pickStartDistance, pickEndDistance, out pos, out normal) as GameObject;
-            if (currentPickedObject != null)
+            pickedObject = Input.Mouse.GetPickedObject(Camera.Main, pickStartDistance, pickEndDistance, out pos, out normal) as GameObject;
+            if (collisionPredicate(pickedObject))
             {
+                System.Diagnostics.Debug.WriteLine($"{pickedObject.Name} - {pickedObject.ID}");
             }
         }
     }
