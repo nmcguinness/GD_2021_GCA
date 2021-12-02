@@ -11,7 +11,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Components\2D\Base\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Core\Components\2D\Controllers\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Components\2D\Behaviours\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Components\3D\Behaviours\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\Components\3D\Camera\" />
@@ -31,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\2D\Base\UIBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\2D\Base\Transform2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\2D\Base\UIComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Components\2D\Behaviours\UIColorMouseOverBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\3D\Base\Collider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\3D\Behaviours\CurveBehaviour.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\2D\Behaviours\UIExpandFadeBehaviour.cs" />

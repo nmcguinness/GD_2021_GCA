@@ -11,6 +11,7 @@ using GDLibrary.Inputs;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Renderers;
+using GDLibrary.Utilities;
 using JigLibX.Collision;
 using JigLibX.Geometry;
 using Microsoft.Xna.Framework;
@@ -78,7 +79,9 @@ namespace GDApp
         /// </summary>
         private ContentDictionary<Model> modelDictionary;
 
+        //temps
         private Scene activeScene;
+
         private UITextObject nameTextObj;
         private Collider collider;
 
@@ -320,6 +323,8 @@ namespace GDApp
             //notice with the ContentDictionary we dont have to worry about Load() or a name (its assigned from pathname)
             modelDictionary.Add("Assets/Models/sphere");
             modelDictionary.Add("Assets/Models/cube");
+            modelDictionary.Add("Assets/Models/teapot");
+            modelDictionary.Add("Assets/Models/monkey1");
         }
 
         /// <summary>
@@ -423,7 +428,7 @@ namespace GDApp
         private void InitializeUI()
         {
             InitializeGameMenu();
-            InitializeGameUI();
+            // InitializeGameUI();
         }
 
         /// <summary>
@@ -507,12 +512,15 @@ namespace GDApp
             var exitBtn = new UIButtonObject(AppData.MENU_EXIT_BTN_NAME, UIObjectType.Button,
                 new Transform2D(AppData.MENU_EXIT_BTN_POSITION, 0.5f * Vector2.One, 0),
                 0.1f,
-                Color.Blue,
+                Color.Orange,
                 origin,
                 btnTexture,
                 "Exit",
                 fontDictionary["menu"],
                 Color.Black);
+
+            //demo button color change
+            exitBtn.AddComponent(new UIColorMouseOverBehaviour(Color.Orange, Color.White));
 
             mainMenuUIScene.Add(exitBtn);
 
@@ -751,14 +759,36 @@ namespace GDApp
 
         private void InitializeCollidableTriangleMeshes(Scene level)
         {
-            //   throw new System.NotImplementedException();
+            ////re-use the code on the gfx card, if we want to draw multiple objects using Clone
+            //var shader = new BasicShader(Application.Content, false, true);
+
+            ////create the teapot
+            //var complexModel = new GameObject("teapot", GameObjectType.Environment, true);
+            //complexModel.Transform.SetTranslation(0, 5, 0);
+            ////        complexModel.Transform.SetScale(0.4f, 0.4f, 0.4f);
+            //complexModel.AddComponent(new ModelRenderer(
+            //    modelDictionary["monkey1"],
+            //    new BasicMaterial("teapot_material", shader,
+            //    Color.White, 1, textureDictionary["mona lisa"])));
+
+            ////add Collision Surface(s)
+            //collider = new Collider();
+            //complexModel.AddComponent(collider);
+            //collider.AddPrimitive(
+            //    CollisionUtility.GetTriangleMesh(modelDictionary["monkey1"],
+            //    new Vector3(0, 5, 0), new Vector3(90, 0, 0), new Vector3(0.5f, 0.5f, 0.5f)),
+            //    new MaterialProperties(0.8f, 0.8f, 0.7f));
+            //collider.Enable(true, 1);
+
+            ////add To Scene Manager
+            //level.Add(complexModel);
         }
 
         private void InitializeCollidableModels(Scene level)
         {
             #region Reusable - You can copy and re-use this code elsewhere, if required
 
-            //re-use the code on the gfx card
+            //re-use the code on the gfx card, if we want to draw multiple objects using Clone
             var shader = new BasicShader(Application.Content, false, true);
 
             //create the sphere
@@ -774,7 +804,8 @@ namespace GDApp
                 clone.Name = $"sphere - {i}";
                 clone.Transform.SetTranslation(5 + i / 10f, 5 + 4 * i, 0);
                 clone.AddComponent(new ModelRenderer(modelDictionary["sphere"],
-                    new BasicMaterial("sphere_material", shader, Color.White, 1, textureDictionary["checkerboard"])));
+                    new BasicMaterial("sphere_material",
+                    shader, Color.White, 1, textureDictionary["checkerboard"])));
 
                 //add Collision Surface(s)
                 collider = new Collider();
@@ -793,7 +824,7 @@ namespace GDApp
         {
             #region Reusable - You can copy and re-use this code elsewhere, if required
 
-            //re-use the code on the gfx card
+            //re-use the code on the gfx card, if we want to draw multiple objects using Clone
             var shader = new BasicShader(Application.Content, false, true);
             //re-use the vertices and indices of the model
             var mesh = new QuadMesh();
@@ -823,7 +854,7 @@ namespace GDApp
         {
             #region Reusable - You can copy and re-use this code elsewhere, if required
 
-            //re-use the code on the gfx card
+            //re-use the code on the gfx card, if we want to draw multiple objects using Clone
             var shader = new BasicShader(Application.Content, false, true);
             //re-use the mesh
             var mesh = new CubeMesh();
@@ -840,7 +871,9 @@ namespace GDApp
                 clone = cube.Clone() as GameObject;
                 clone.Name = "cube 1";
                 clone.Transform.Translate(0, 5 + i, 0);
-                clone.AddComponent(new MeshRenderer(mesh, new BasicMaterial("cube_material", shader, Color.White, 1, textureDictionary["crate1"])));
+                clone.AddComponent(new MeshRenderer(mesh,
+                    new BasicMaterial("cube_material", shader,
+                    Color.White, 1, textureDictionary["crate1"])));
 
                 //add Collision Surface(s)
                 collider = new Collider();

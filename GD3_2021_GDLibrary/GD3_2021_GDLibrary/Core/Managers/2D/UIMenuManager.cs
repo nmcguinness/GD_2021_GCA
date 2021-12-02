@@ -27,6 +27,9 @@ namespace GDLibrary.Managers
 
         public override void Update(GameTime gameTime)
         {
+            //call this first to update an components attached to the menu objects
+            base.Update(gameTime);
+
             foreach (UIObject uiObject in activeUIScene.UiObjects)
             {
                 var btnObject = uiObject as UIButtonObject;

@@ -114,13 +114,6 @@ namespace GDLibrary.Components
                         body.Orientation *
                             transform.RotationMatrix *
                                 Matrix.CreateTranslation(body.Position);
-
-            //transform.WorldMatrix
-            //    = Matrix.Identity
-            //    *
-            //                    Matrix.CreateTranslation(body.Position);
-
-            //System.Diagnostics.Debug.WriteLine(body.Position.ToString());
         }
     }
 }
