@@ -15,11 +15,10 @@
 ### Bugs
 - [x] Fix Mouse delta on FPC
 - [x] GameObject Clone texture sharing - fixed by simplifying creation of Renderer, Mesh, and Shader
-- [ ] Fix camera drift on no mouse movement
 - [x] Alpha fade on ui text
-- [ ] Bug on collider not following Transform rotation
 - [x] Fix button text not rendering when 2+ buttons
-
+- [ ] Fix camera drift on no mouse movement
+- [ ] Bug on collider not following Transform rotation
 
 ### Tasks - Week 7
 - [x] Add Clone to components

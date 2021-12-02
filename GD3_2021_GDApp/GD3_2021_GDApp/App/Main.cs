@@ -18,6 +18,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
+using System;
 using System.Collections.Generic;
 
 namespace GDApp
@@ -53,6 +54,8 @@ namespace GDApp
         /// Plays all 2D and 3D sounds
         /// </summary>
         private SoundManager soundManager;
+
+        private PickingManager pickingManager;
 
         /// <summary>
         /// Handles all system wide events between entities
@@ -122,6 +125,18 @@ namespace GDApp
             //add support for playing sounds
             soundManager = new SoundManager(this);
 
+            //picking support using physics engine
+            //this predicate lets us say ignore all the other collidable objects except interactables and consumables
+            Predicate<GameObject> collisionPredicate = (collidableObject) =>
+            {
+                if (collidableObject != null)
+                    return collidableObject.GameObjectType == GameObjectType.Interactable
+                    || collidableObject.GameObjectType == GameObjectType.Consumable;
+
+                return false;
+            };
+            pickingManager = new PickingManager(this, 0, 100, collisionPredicate);
+
             //initialize global application data
             Application.Main = this;
             Application.Content = Content;
@@ -157,6 +172,9 @@ namespace GDApp
 
             //add physics manager to enable CD/CR and physics
             Components.Add(physicsManager);
+
+            //add support for picking using physics engine
+            Components.Add(pickingManager);
 
             //add scene manager to update game objects
             Components.Add(sceneManager);
@@ -792,7 +810,7 @@ namespace GDApp
             var shader = new BasicShader(Application.Content, false, true);
 
             //create the sphere
-            var sphereArchetype = new GameObject("sphere", GameObjectType.Environment, true);
+            var sphereArchetype = new GameObject("sphere", GameObjectType.Interactable, true);
 
             #endregion Reusable - You can copy and re-use this code elsewhere, if required
 
@@ -859,7 +877,7 @@ namespace GDApp
             //re-use the mesh
             var mesh = new CubeMesh();
             //clone the cube
-            var cube = new GameObject("cube", GameObjectType.Environment, false);
+            var cube = new GameObject("cube", GameObjectType.Consumable, false);
 
             #endregion Reusable - You can copy and re-use this code elsewhere, if required
 

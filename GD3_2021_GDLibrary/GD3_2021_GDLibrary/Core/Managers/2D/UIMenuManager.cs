@@ -30,19 +30,23 @@ namespace GDLibrary.Managers
             //call this first to update an components attached to the menu objects
             base.Update(gameTime);
 
-            foreach (UIObject uiObject in activeUIScene.UiObjects)
+            //if your game keeps on reacting to ui buttons in-game then ensure we disable this functionality when in game
+            if (IsUpdated)
             {
-                var btnObject = uiObject as UIButtonObject;
-
-                if (btnObject != null)
+                foreach (UIObject uiObject in activeUIScene.UiObjects)
                 {
-                    if (Input.Mouse.Bounds.Intersects(btnObject.Bounds))
-                    {
-                        HandleMouseOver(btnObject);
+                    var btnObject = uiObject as UIButtonObject;
 
-                        if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+                    if (btnObject != null)
+                    {
+                        if (Input.Mouse.Bounds.Intersects(btnObject.Bounds))
                         {
-                            HandleMouseClicked(btnObject);
+                            HandleMouseOver(btnObject);
+
+                            if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+                            {
+                                HandleMouseClicked(btnObject);
+                            }
                         }
                     }
                 }
