@@ -24,14 +24,15 @@ namespace GDApp
         public const string MENU_BACK_BTN_NAME = "Back";
         public const string MENU_EXIT_BTN_NAME = "Exit";
 
+        //set button positions dynamically from resolution
         public static readonly Vector2 MENU_PLAY_BTN_POSITION
-            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 240);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT / 2.0f);
 
         public static readonly Vector2 MENU_CONTROLS_BTN_POSITION
-            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 280);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT / 2.0f + 40);
 
         public static readonly Vector2 MENU_EXIT_BTN_POSITION
-            = new Vector2(GAME_RESOLUTION_WIDTH / 2, 320);
+            = new Vector2(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT / 2.0f + 80);
 
         #endregion UI & Menu Constants
 

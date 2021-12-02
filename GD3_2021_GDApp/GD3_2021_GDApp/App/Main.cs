@@ -449,10 +449,10 @@ namespace GDApp
 
             menuObject = new UITextureObject("main background",
                 UIObjectType.Texture,
-                new Transform2D(Screen.Instance.ScreenCentre, scale, 0),
+                new Transform2D(Screen.Instance.ScreenCentre, scale, 0), //sets position as center of screen
                 0,
                 new Color(255, 255, 255, 200),
-                texture.GetOriginAsCenter(),
+                texture.GetOriginAtCenter(), //if we want to position image on screen center then we need to set origin as texture center
                 texture);
 
             //add ui object to scene
@@ -744,6 +744,49 @@ namespace GDApp
         {
             InitializeCollidableGround(level, worldScale);
             InitializeCollidableCubes(level);
+
+            InitializeCollidableModels(level);
+            InitializeCollidableTriangleMeshes(level);
+        }
+
+        private void InitializeCollidableTriangleMeshes(Scene level)
+        {
+            //   throw new System.NotImplementedException();
+        }
+
+        private void InitializeCollidableModels(Scene level)
+        {
+            #region Reusable - You can copy and re-use this code elsewhere, if required
+
+            //re-use the code on the gfx card
+            var shader = new BasicShader(Application.Content, false, true);
+
+            //create the sphere
+            var sphereArchetype = new GameObject("sphere", GameObjectType.Environment, true);
+
+            #endregion Reusable - You can copy and re-use this code elsewhere, if required
+
+            GameObject clone = null;
+
+            for (int i = 0; i < 5; i++)
+            {
+                clone = sphereArchetype.Clone() as GameObject;
+                clone.Name = $"sphere - {i}";
+                clone.Transform.SetTranslation(5 + i / 10f, 5 + 4 * i, 0);
+                clone.AddComponent(new ModelRenderer(modelDictionary["sphere"],
+                    new BasicMaterial("sphere_material", shader, Color.White, 1, textureDictionary["checkerboard"])));
+
+                //add Collision Surface(s)
+                collider = new Collider();
+                clone.AddComponent(collider);
+                collider.AddPrimitive(new JigLibX.Geometry.Sphere(
+                   sphereArchetype.Transform.LocalTranslation, 1),
+                    new MaterialProperties(0.8f, 0.8f, 0.7f));
+                collider.Enable(false, 1);
+
+                //add To Scene Manager
+                level.Add(clone);
+            }
         }
 
         private void InitializeCollidableGround(Scene level, float worldScale)
@@ -762,7 +805,7 @@ namespace GDApp
             ground.Transform.SetRotation(-90, 0, 0);
             ground.Transform.SetScale(worldScale, worldScale, 1);
             ground.AddComponent(new MeshRenderer(mesh, new BasicMaterial("grass_material", shader, Color.White, 1, textureDictionary["grass"])));
-            level.Add(ground);
+            //level.Add(ground);
 
             //add Collision Surface(s)
             collider = new Collider();

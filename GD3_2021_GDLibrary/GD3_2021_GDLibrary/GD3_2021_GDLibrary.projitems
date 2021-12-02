@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Events\EventDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\ColorExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\GraphicsDeviceManagerExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\ModelExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Extensions\RectangleExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Pausable\PausableDrawableGameComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Components\Pausable\PausableGameComponent.cs" />

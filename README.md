@@ -16,8 +16,10 @@
 - [x] Fix Mouse delta on FPC
 - [x] GameObject Clone texture sharing - fixed by simplifying creation of Renderer, Mesh, and Shader
 - [ ] Fix camera drift on no mouse movement
-- [ ] Alpha fade on ui text
+- [x] Alpha fade on ui text
 - [ ] Bug on collider not following Transform rotation
+- [x] Fix button text not rendering when 2+ buttons
+
 
 ### Tasks - Week 7
 - [x] Add Clone to components
@@ -56,22 +58,20 @@
 - [x] Inherit from UIMenuManager to implement app specific menu responses in MyMenuManager
 - [x] Add correctly calculated Bounds on UITextureObject and UIButtonObject
 - [x] Test layerDepth on UI objects
-- [x] Fix button text not rendering when 2+ buttons
 - [x] Test SoundManager
-- [ ] Add support for PhysicsManager pause
-- [ ] Add support for rendering scene in menu background
-- [ ] Add support for transparent menu items
+- [x] Add support for PhysicsManager pause
+- [x] Add support for rendering scene in menu background
+- [x] Add support for transparent menu items
+- [ ] Add events to SoundManager for pause, volume etc
 - [ ] Add trianglemesh support
-- [ ] Add opacity support
 - [ ] Add picking with mouse
- 
-- [ ] Added an untested sound manager
 - [ ] Improve Camera and add collidable camera controller
 - [ ] Add support for removing/adding objects to the scene manager through events
 - [ ] Add support for removing/adding objects to the ui scene manager through events
+- [ ] Add AnimationController
+
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
-- [ ] Add AnimationController
 - [ ] Add parenting to GameObject and UIObject
 
 

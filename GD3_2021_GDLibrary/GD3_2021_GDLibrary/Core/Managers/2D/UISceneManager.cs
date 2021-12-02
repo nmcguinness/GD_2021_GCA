@@ -146,7 +146,7 @@ namespace GDLibrary.Managers
             if (IsDrawn)
             {
                 spriteBatch.Begin(SpriteSortMode.FrontToBack,
-                    BlendState.NonPremultiplied, samplerState, null);
+                    BlendState.NonPremultiplied, samplerState, null, null, null, null);
                 activeUIScene?.Draw(spriteBatch);
                 spriteBatch.End();
             }
