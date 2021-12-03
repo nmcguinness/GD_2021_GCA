@@ -64,7 +64,8 @@
 - [x] Add picking with mouse
 - [x] Add support for handling collisions in Collider
 - [x] Add events to SoundManager for pause, volume etc
-- [x] Add support for removing/adding objects to the scene manager through events
+- [x] Add support for adding objects to the scene manager through events
+- [x] TO TEST - Add support for removing objects to the scene manager through events 
 
 - [ ] Add support for removing/adding objects to the ui scene manager through events
 - [ ] Improve Camera and add collidable camera controller
