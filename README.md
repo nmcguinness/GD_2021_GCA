@@ -61,14 +61,15 @@
 - [x] Add support for PhysicsManager pause
 - [x] Add support for rendering scene in menu background
 - [x] Add support for transparent menu items
-- [ ] Add events to SoundManager for pause, volume etc
-- [ ] Add trianglemesh support
-- [ ] Add picking with mouse
-- [ ] Improve Camera and add collidable camera controller
-- [ ] Add support for removing/adding objects to the scene manager through events
-- [ ] Add support for removing/adding objects to the ui scene manager through events
-- [ ] Add AnimationController
+- [x] Add picking with mouse
+- [x] Add support for handling collisions in Collider
+- [x] Add events to SoundManager for pause, volume etc
+- [x] Add support for removing/adding objects to the scene manager through events
 
+- [ ] Add support for removing/adding objects to the ui scene manager through events
+- [ ] Improve Camera and add collidable camera controller
+- [ ] Add trianglemesh support - IN BUT BUGGY
+- [ ] Add AnimationController
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add parenting to GameObject and UIObject

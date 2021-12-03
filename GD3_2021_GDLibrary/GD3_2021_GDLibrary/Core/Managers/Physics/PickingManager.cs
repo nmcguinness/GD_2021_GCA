@@ -50,8 +50,8 @@ namespace GDLibrary.Managers
             {
                 var behaviour = pickedObject.GetComponent<PickupBehaviour>();
 
-                System.Diagnostics.Debug.WriteLine($"{behaviour.Desc} " +
-                    $"- {behaviour.Value}");
+                if (behaviour != null)
+                    System.Diagnostics.Debug.WriteLine($"{behaviour.Desc} - {behaviour.Value}");
 
                 ////OnRemove
                 ////OnPlay3D/2D

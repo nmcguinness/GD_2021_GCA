@@ -258,6 +258,12 @@ namespace GDApp
                 EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
                     EventActionType.OnPlay2D, parameters));
             }
+            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                object[] parameters = { "smokealarm" };
+                EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
+                    EventActionType.OnStop, parameters));
+            }
 
             base.Update(gameTime);
         }
@@ -345,6 +351,8 @@ namespace GDApp
             modelDictionary.Add("Assets/Models/cube");
             modelDictionary.Add("Assets/Models/teapot");
             modelDictionary.Add("Assets/Models/monkey1");
+
+            modelDictionary.Add("Assets/Models/elevator_untextured");
         }
 
         /// <summary>
@@ -819,8 +827,7 @@ namespace GDApp
             var shader = new BasicShader(Application.Content, false, true);
 
             //create the sphere
-            var sphereArchetype = new GameObject("sphere",
-                GameObjectType.Interactable, true);
+            var sphereArchetype = new GameObject("sphere", GameObjectType.Interactable, true);
 
             #endregion Reusable - You can copy and re-use this code elsewhere, if required
 
@@ -830,8 +837,10 @@ namespace GDApp
             {
                 clone = sphereArchetype.Clone() as GameObject;
                 clone.Name = $"sphere - {i}";
+
                 clone.Transform.SetTranslation(5 + i / 10f, 5 + 4 * i, 0);
-                clone.AddComponent(new ModelRenderer(modelDictionary["sphere"],
+                clone.AddComponent(new ModelRenderer(
+                    modelDictionary["sphere"],
                     new BasicMaterial("sphere_material",
                     shader, Color.White, 1, textureDictionary["checkerboard"])));
 
@@ -893,7 +902,7 @@ namespace GDApp
 
             GameObject clone = null;
 
-            for (int i = 5; i < 40; i += 5)
+            for (int i = 5; i < 6; i += 5)
             {
                 //clone the archetypal cube
                 clone = cube.Clone() as GameObject;
@@ -903,11 +912,11 @@ namespace GDApp
                     new BasicMaterial("cube_material", shader,
                     Color.White, 1, textureDictionary["crate1"])));
 
-                //add desc and value to a pickup
+                //add desc and value to a pickup used when we collect/remove/collide with it
                 clone.AddComponent(new PickupBehaviour("ammo pack", 15));
 
                 //add Collision Surface(s)
-                collider = new Collider();
+                collider = new MyPlayerCollider();
                 clone.AddComponent(collider);
                 collider.AddPrimitive(new Box(
                     cube.Transform.LocalTranslation,

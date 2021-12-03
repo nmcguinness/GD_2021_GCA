@@ -231,7 +231,7 @@ namespace GDLibrary.Inputs
                 new Segment(camera.Transform.LocalTranslation + startDistance * Vector3.Normalize(ray), ray * endDistance), pred);
 
             if (skin != null && skin.Owner != null)
-                return skin.Owner.ExternalData as GameObject;
+                return skin.Owner.Parent as GameObject;
 
             return null;
         }
