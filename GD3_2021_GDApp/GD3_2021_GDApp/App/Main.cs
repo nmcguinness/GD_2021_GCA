@@ -525,7 +525,8 @@ namespace GDApp
                 Vector2.Zero);
 
             //demo button color change
-            playBtn.AddComponent(new UIColorMouseOverBehaviour(Color.Orange, Color.White));
+            var comp = new UIColorMouseOverBehaviour(Color.Orange, Color.White);
+            playBtn.AddComponent(comp);
 
             mainMenuUIScene.Add(playBtn);
 

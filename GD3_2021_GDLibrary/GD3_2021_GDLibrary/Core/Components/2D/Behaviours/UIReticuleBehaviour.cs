@@ -1,13 +1,18 @@
 ﻿using GDLibrary.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace GDLibrary.Components.UI
 {
     public class UIReticuleBehaviour : UIBehaviour
     {
+        private Texture2D originalDefaultTexture;
+
         public override void Awake()
         {
+            originalDefaultTexture = (uiObject as UITextureObject).DefaultTexture;
+
             Input.Mouse.SetMouseVisible(false);
 
             EventDispatcher.Subscribe(EventCategoryType.Picking, HandlePickedObject);
@@ -17,14 +22,18 @@ namespace GDLibrary.Components.UI
 
         private void HandlePickedObject(EventData eventData)
         {
+            var uiTextureObject = uiObject as UITextureObject;
+
             switch (eventData.EventActionType)
             {
                 case EventActionType.OnObjectPicked:
                     uiObject.Color = Color.Red;
+                    uiTextureObject.DefaultTexture = uiTextureObject.AlternateTexture;
                     break;
 
                 case EventActionType.OnNoObjectPicked:
                     uiObject.Color = Color.White;
+                    uiTextureObject.DefaultTexture = originalDefaultTexture;
                     break;
 
                 default:
