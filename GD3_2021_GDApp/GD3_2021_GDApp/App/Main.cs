@@ -104,6 +104,9 @@ namespace GDApp
         /// </summary>
         private void InitializeEngine(string gameTitle, int width, int height)
         {
+            //disable v-sync
+            // this.IsFixedTimeStep = false;
+
             //set game title
             Window.Title = gameTitle;
 
@@ -412,6 +415,12 @@ namespace GDApp
             textureDictionary.Add("controlsmenu", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/controlsmenu"));
             textureDictionary.Add("exitmenuwithtrans", Content.Load<Texture2D>("Assets/Textures/UI/Backgrounds/exitmenuwithtrans"));
             textureDictionary.Add("genericbtn", Content.Load<Texture2D>("Assets/Textures/UI/Controls/genericbtn"));
+
+            //reticule
+            textureDictionary.Add("reticuleOpen",
+      Content.Load<Texture2D>("Assets/Textures/UI/Controls/reticuleOpen"));
+            textureDictionary.Add("reticuleDefault",
+          Content.Load<Texture2D>("Assets/Textures/UI/Controls/reticuleDefault"));
         }
 
         /// <summary>
@@ -628,6 +637,26 @@ namespace GDApp
 
             #endregion Add Text
 
+            var defaultTexture = textureDictionary["reticuleDefault"];
+            var alternateTexture = textureDictionary["reticuleOpen"];
+            origin = defaultTexture.GetOriginAtCenter();
+
+            var reticule = new UITextureObject("reticule",
+                     UIObjectType.Texture,
+                new Transform2D(Vector2.Zero, Vector2.One, 0),
+                0,
+                Color.White,
+                SpriteEffects.None,
+                origin,
+                defaultTexture,
+                alternateTexture,
+                new Microsoft.Xna.Framework.Rectangle(0, 0,
+                defaultTexture.Width, defaultTexture.Height));
+
+            reticule.AddComponent(new UIReticuleBehaviour());
+
+            mainGameUIScene.Add(reticule);
+
             #region Add Scene To Manager & Set Active Scene
 
             //add the ui scene to the manager
@@ -737,7 +766,8 @@ namespace GDApp
             //here is where we can set a smaller viewport e.g. for split screen
             //e.g. new Viewport(0, 0, _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight)
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            camera.AddComponent(new FirstPersonController(0.05f, 0.025f, 0.00009f));
+            camera.AddComponent(new FirstPersonController(0.05f, 0.025f,
+                new Vector2(0.006f, 0.004f)));
 
             //set initial position
             camera.Transform.SetTranslation(0, 2, 10);
@@ -845,7 +875,7 @@ namespace GDApp
                     shader, Color.White, 1, textureDictionary["checkerboard"])));
 
                 //add Collision Surface(s)
-                collider = new Collider();
+                collider = new Collider(false, true);
                 clone.AddComponent(collider);
                 collider.AddPrimitive(new JigLibX.Geometry.Sphere(
                    sphereArchetype.Transform.LocalTranslation, 1),

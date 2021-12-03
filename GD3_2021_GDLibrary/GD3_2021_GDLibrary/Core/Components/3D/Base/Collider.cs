@@ -22,6 +22,7 @@ namespace GDLibrary.Components
         /// Holds the primitive (e.g. sphere, capsule, box) which tests for collisions
         /// </summary>
         private CollisionSkin collision;
+
         private bool isHandlingCollision;
         private bool isTrigger;
 
@@ -77,7 +78,8 @@ namespace GDLibrary.Components
         /// <param name="collider"></param>
         /// <param name="collidee"></param>
         /// <returns>True if collidee is not a trigger, otherwise false</returns>
-        protected virtual bool HandleCollision(CollisionSkin collider, CollisionSkin collidee)
+        protected virtual bool HandleCollision(CollisionSkin collider,
+            CollisionSkin collidee)
         {
             //get the game object that we just collided with
             HandleResponse(collidee.Owner.Parent as GameObject);

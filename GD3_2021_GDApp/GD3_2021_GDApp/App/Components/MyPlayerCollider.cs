@@ -22,7 +22,7 @@ namespace GDApp
 
         protected override void HandleResponse(GameObject collideeGameObject)
         {
-            System.Diagnostics.Debug.WriteLine($"{collideeGameObject.Name}");
+            //    System.Diagnostics.Debug.WriteLine($"{collideeGameObject.Name}");
 
             //if interactable then...
 

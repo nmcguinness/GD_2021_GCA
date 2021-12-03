@@ -73,6 +73,7 @@ namespace GDLibrary.Managers
             sceneToLoad = -1;
             activeSceneIndex = -1;
         }
+
         protected override void SubscribeToEvents()
         {
             //handle add/remove events
@@ -111,7 +112,7 @@ namespace GDLibrary.Managers
             //is this component paused because of the menu?
             if (IsUpdated || !initialUpdate)
             {
-                //TODO - apply batch remove
+                //apply batch remove
                 PerformBatchRemove();
 
                 initialUpdate = true;

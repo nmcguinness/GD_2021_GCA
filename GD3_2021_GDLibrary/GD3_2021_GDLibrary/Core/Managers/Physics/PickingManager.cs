@@ -32,8 +32,25 @@ namespace GDLibrary.Managers
 
         protected virtual void HandleMouse(GameTime gameTime)
         {
-            if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
-                GetPickedObject();
+            //       if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Left))
+            GetPickedObject();
+
+            //predicate was matched and i should notify
+            if (pickedObject != null)
+            {
+                object[] parameters = { pickedObject };
+                EventDispatcher.Raise(new EventData(EventCategoryType.Picking,
+                    EventActionType.OnObjectPicked, parameters));
+
+                if (Input.Mouse.WasJustClicked(Inputs.MouseButton.Right))
+                    EventDispatcher.Raise(new EventData(EventCategoryType.GameObject,
+                        EventActionType.OnRemoveObject, parameters));
+            }
+            else
+            {
+                EventDispatcher.Raise(new EventData(EventCategoryType.Picking,
+                 EventActionType.OnNoObjectPicked));
+            }
         }
 
         private void GetPickedObject()
@@ -65,6 +82,8 @@ namespace GDLibrary.Managers
 
                 //System.Diagnostics.Debug.WriteLine($"{pickedObject.Name} - {pickedObject.ID}");
             }
+            else
+                pickedObject = null;
         }
     }
 }

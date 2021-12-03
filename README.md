@@ -17,7 +17,7 @@
 - [x] GameObject Clone texture sharing - fixed by simplifying creation of Renderer, Mesh, and Shader
 - [x] Alpha fade on ui text
 - [x] Fix button text not rendering when 2+ buttons
-- [ ] Fix camera drift on no mouse movement
+- [x] Fix camera drift on no mouse movement
 - [ ] Bug on collider not following Transform rotation
 
 ### Tasks - Week 7
@@ -65,15 +65,16 @@
 - [x] Add support for handling collisions in Collider
 - [x] Add events to SoundManager for pause, volume etc
 - [x] Add support for adding objects to the scene manager through events
-- [x] TO TEST - Add support for removing objects to the scene manager through events 
+- [x] Add support for removing/adding objects to the ui scene manager through events
+- [x] Add support for removing/adding objects to the ui scene manager through events
 
-- [ ] Add support for removing/adding objects to the ui scene manager through events
-- [ ] Improve Camera and add collidable camera controller
+- [ ] Add collidable camera controller
 - [ ] Add trianglemesh support - IN BUT BUGGY
 - [ ] Add AnimationController
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add parenting to GameObject and UIObject
+- [x] TO TEST - Add support for removing objects to the scene manager through events 
 
 
 
