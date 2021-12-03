@@ -1,13 +1,13 @@
 ﻿using GDLibrary.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace GDLibrary.Components.UI
 {
     public class UIReticuleBehaviour : UIBehaviour
     {
         private Texture2D originalDefaultTexture;
+        private float reticuleRotation;
 
         public override void Awake()
         {
@@ -29,11 +29,13 @@ namespace GDLibrary.Components.UI
                 case EventActionType.OnObjectPicked:
                     uiObject.Color = Color.Red;
                     uiTextureObject.DefaultTexture = uiTextureObject.AlternateTexture;
+                    uiObject.Transform.RotationInDegrees = reticuleRotation;
                     break;
 
                 case EventActionType.OnNoObjectPicked:
                     uiObject.Color = Color.White;
                     uiTextureObject.DefaultTexture = originalDefaultTexture;
+                    uiObject.Transform.RotationInDegrees = 0;
                     break;
 
                 default:
@@ -57,6 +59,9 @@ namespace GDLibrary.Components.UI
         public override void Update()
         {
             uiObject.Transform.LocalTranslation = Input.Mouse.Position;
+
+            reticuleRotation += 1 / 60.0f;
+
             base.Update();
         }
     }
