@@ -104,9 +104,6 @@ namespace GDApp
         /// </summary>
         private void InitializeEngine(string gameTitle, int width, int height)
         {
-            //disable v-sync
-            // this.IsFixedTimeStep = false;
-
             //set game title
             Window.Title = gameTitle;
 
@@ -255,18 +252,21 @@ namespace GDApp
                     EventActionType.OnPlay));
             }
 
-            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Space))
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.F1))
             {
                 object[] parameters = { "smokealarm" };
                 EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
                     EventActionType.OnPlay2D, parameters));
             }
-            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            else if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.F2))
             {
                 object[] parameters = { "smokealarm" };
                 EventDispatcher.Raise(new EventData(EventCategoryType.Sound,
                     EventActionType.OnStop, parameters));
             }
+
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.C))
+                activeScene.CycleCameras();
 
             base.Update(gameTime);
         }
@@ -319,8 +319,7 @@ namespace GDApp
             InitializeDebugUI(true, true);
 
             //to show the menu we must start paused for everything else!
-            EventDispatcher.Raise(new EventData(EventCategoryType.Menu,
-                        EventActionType.OnPause));
+            EventDispatcher.Raise(new EventData(EventCategoryType.Menu, EventActionType.OnPause));
 
             base.Initialize();
         }
@@ -354,8 +353,6 @@ namespace GDApp
             modelDictionary.Add("Assets/Models/cube");
             modelDictionary.Add("Assets/Models/teapot");
             modelDictionary.Add("Assets/Models/monkey1");
-
-            modelDictionary.Add("Assets/Models/elevator_untextured");
         }
 
         /// <summary>
@@ -450,6 +447,8 @@ namespace GDApp
             InitializeCameras(activeScene);
 
             InitializeSkybox(activeScene, worldScale);
+
+            //remove because now we are interested only in collidable things!
             //InitializeCubes(activeScene);
             //InitializeModels(activeScene);
 
@@ -678,7 +677,7 @@ namespace GDApp
             {
                 Components.Add(new GDLibrary.Utilities.GDDebug.PerfUtility(this,
                     _spriteBatch, fontDictionary["debug"],
-                    new Vector2(40, _graphics.PreferredBackBufferHeight - 40),
+                    new Vector2(40, _graphics.PreferredBackBufferHeight - 80),
                     Color.White));
             }
 
@@ -758,17 +757,18 @@ namespace GDApp
         /// <param name="level"></param>
         private void InitializeCameras(Scene level)
         {
-            #region First Person Camera
+            #region First Person Camera - Non Collidable
 
             //add camera game object
-            var camera = new GameObject("main camera", GameObjectType.Camera);
+            var camera = new GameObject(AppData.CAMERA_FIRSTPERSON_NONCOLLIDABLE_NAME, GameObjectType.Camera);
 
             //add components
             //here is where we can set a smaller viewport e.g. for split screen
             //e.g. new Viewport(0, 0, _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight)
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
-            camera.AddComponent(new FirstPersonController(0.05f, 0.025f,
-                new Vector2(0.006f, 0.004f)));
+
+            //add controller to actually move the noncollidable camera
+            camera.AddComponent(new FirstPersonController(0.05f, 0.025f, new Vector2(0.006f, 0.004f)));
 
             //set initial position
             camera.Transform.SetTranslation(0, 2, 10);
@@ -776,21 +776,21 @@ namespace GDApp
             //add to level
             level.Add(camera);
 
-            #endregion First Person Camera
+            #endregion First Person Camera - Non Collidable
 
-            #region Curve Camera
+            #region Curve Camera - Non Collidable
 
             //add curve for camera translation
             var translationCurve = new Curve3D(CurveLoopType.Cycle);
-            translationCurve.Add(new Vector3(0, 1, 10), 0);
-            translationCurve.Add(new Vector3(0, 6, 15), 1000);
-            translationCurve.Add(new Vector3(0, 1, 20), 2000);
-            translationCurve.Add(new Vector3(0, -6, 25), 3000);
-            translationCurve.Add(new Vector3(0, 1, 30), 4000);
-            translationCurve.Add(new Vector3(0, 1, 10), 6000);
+            translationCurve.Add(new Vector3(0, 2, 10), 0);
+            translationCurve.Add(new Vector3(0, 8, 15), 1000);
+            translationCurve.Add(new Vector3(0, 8, 20), 2000);
+            translationCurve.Add(new Vector3(0, 6, 25), 3000);
+            translationCurve.Add(new Vector3(0, 4, 25), 4000);
+            translationCurve.Add(new Vector3(0, 2, 10), 6000);
 
             //add camera game object
-            var curveCamera = new GameObject("curve camera", GameObjectType.Camera);
+            var curveCamera = new GameObject(AppData.CAMERA_CURVE_NONCOLLIDABLE_NAME, GameObjectType.Camera);
 
             //add components
             curveCamera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
@@ -800,10 +800,37 @@ namespace GDApp
             //add to level
             level.Add(curveCamera);
 
-            #endregion Curve Camera
+            #endregion Curve Camera - Non Collidable
 
-            //set theMain camera, if we dont call this then the first camera added will be the Main
-            level.SetMainCamera("main camera");
+            #region First Person Camera - Collidable
+
+            //add camera game object
+            camera = new GameObject(AppData.CAMERA_FIRSTPERSON_COLLIDABLE_NAME, GameObjectType.Camera);
+
+            //set initial position - important to set before the collider as collider capsule feeds off this position
+            camera.Transform.SetTranslation(0, 10, 40);
+
+            //add components
+            camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
+
+            var collider = new CharacterCollider(2, 2, true, false);
+            camera.AddComponent(collider);
+            collider.AddPrimitive(new Capsule(camera.Transform.LocalTranslation,
+                Matrix.CreateRotationX(MathHelper.PiOver2), 1, 2),
+                new MaterialProperties(0.2f, 0.8f, 0.7f));
+            collider.Enable(false, 2);
+
+            //add controller to actually move the collidable camera
+            camera.AddComponent(new MyCollidableFirstPersonController(12,
+                0.5f, 0.3f, new Vector2(0.006f, 0.004f)));
+
+            //add to level
+            level.Add(camera);
+
+            #endregion First Person Camera - Collidable
+
+            //set the main camera, if we dont call this then the first camera added will be the Main
+            level.SetMainCamera(AppData.CAMERA_FIRSTPERSON_COLLIDABLE_NAME);
 
             //allows us to scale time on all game objects that based movement on Time
             // Time.Instance.TimeScale = 0.1f;
@@ -820,7 +847,7 @@ namespace GDApp
             InitializeCollidableCubes(level);
 
             InitializeCollidableModels(level);
-            InitializeCollidableTriangleMeshes(level);
+            //InitializeCollidableTriangleMeshes(level);
         }
 
         private void InitializeCollidableTriangleMeshes(Scene level)
@@ -876,7 +903,7 @@ namespace GDApp
                     shader, Color.White, 1, textureDictionary["checkerboard"])));
 
                 //add Collision Surface(s)
-                collider = new Collider(false, true);
+                collider = new Collider(false, false);
                 clone.AddComponent(collider);
                 collider.AddPrimitive(new JigLibX.Geometry.Sphere(
                    sphereArchetype.Transform.LocalTranslation, 1),
@@ -900,11 +927,10 @@ namespace GDApp
             #endregion Reusable - You can copy and re-use this code elsewhere, if required
 
             //create the ground
-            var ground = new GameObject("ground", GameObjectType.Environment, true);
+            var ground = new GameObject("ground", GameObjectType.Ground, true);
             ground.Transform.SetRotation(-90, 0, 0);
             ground.Transform.SetScale(worldScale, worldScale, 1);
             ground.AddComponent(new MeshRenderer(mesh, new BasicMaterial("grass_material", shader, Color.White, 1, textureDictionary["grass"])));
-            //level.Add(ground);
 
             //add Collision Surface(s)
             collider = new Collider();
@@ -933,7 +959,7 @@ namespace GDApp
 
             GameObject clone = null;
 
-            for (int i = 5; i < 6; i += 5)
+            for (int i = 5; i < 40; i += 5)
             {
                 //clone the archetypal cube
                 clone = cube.Clone() as GameObject;

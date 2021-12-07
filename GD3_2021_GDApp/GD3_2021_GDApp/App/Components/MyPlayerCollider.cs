@@ -23,7 +23,9 @@ namespace GDApp
         protected override void HandleResponse(GameObject collideeGameObject)
         {
             //    System.Diagnostics.Debug.WriteLine($"{collideeGameObject.Name}");
-
+            //if (collideeGameObject.GameObjectType == GameObjectType.Platform)
+            //{
+            //}
             //if interactable then...
 
             //else if consumable then...
