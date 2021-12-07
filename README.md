@@ -69,6 +69,7 @@
 - [x] Add support for removing/adding objects to the ui scene manager through events
 - [x] Add collidable camera controller
 
+- [ ] Add support for transparent objects
 - [ ] Add trianglemesh support - IN BUT BUGGY
 - [ ] Add AnimationController
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
