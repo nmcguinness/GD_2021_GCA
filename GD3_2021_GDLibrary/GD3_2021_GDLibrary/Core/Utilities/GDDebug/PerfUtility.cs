@@ -74,6 +74,10 @@ namespace GDLibrary.Utilities.GDDebug
                 spriteBatch.DrawString(spriteFont, $"FPS [{fpsCountToShow}]", fpsTextPosition, fpsTextColor);
                 spriteBatch.DrawString(spriteFont, $"Camera [{Camera.Main.GameObject.Name}, {translation}]", fpsTextPosition + new Vector2(0, 20), fpsTextColor);
                 spriteBatch.DrawString(spriteFont, $"Draw Calls [{Application.SceneManager.ActiveScene.Renderers.Count}]", fpsTextPosition + new Vector2(0, 40), fpsTextColor);
+                //
+                //
+                //
+
                 spriteBatch.End();
             }
         }

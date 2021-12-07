@@ -18,6 +18,7 @@ namespace GDApp
 #if HI_RES
         public const int GAME_RESOLUTION_WIDTH = 1920;
         public const int GAME_RESOLUTION_HEIGHT = 1080;
+
 #else
         public const int GAME_RESOLUTION_WIDTH = 640;
         public const int GAME_RESOLUTION_HEIGHT = 480;

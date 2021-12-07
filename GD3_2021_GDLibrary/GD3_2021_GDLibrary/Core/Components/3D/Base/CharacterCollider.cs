@@ -74,11 +74,10 @@ namespace GDLibrary.Components
             Body.MoveTo(transform.LocalTranslation, Matrix.Identity);
             //set the centre of mass
             Collision.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-
-            //      base.Enable(isImmovable, mass);
+            //constraining the collision surface
             Body.SetBodyInvInertia(0.0f, 0.0f, 0.0f);
+            //preventing the physics engine from marking this object as velocity == 0
             Body.AllowFreezing = false;
-
             //enable so that any applied forces (e.g. gravity) will affect the object
             Body.EnableBody();
         }

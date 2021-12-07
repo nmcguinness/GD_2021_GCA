@@ -1,8 +1,5 @@
 ﻿using GDLibrary;
 using GDLibrary.Components;
-using GDLibrary.Core;
-using JigLibX.Collision;
-using System;
 
 namespace GDApp
 {

@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GDLibrary;
+using GDLibrary.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace GDLibrary.Components
+namespace GDApp
 {
     /// <summary>
     /// Adds collidable 1st person controller to camera using keyboard and mouse input
@@ -74,9 +76,9 @@ namespace GDLibrary.Components
 
         private void HandleMove()
         {
-            if (Input.Keys.IsPressed(Keys.W))
+            if (Input.Keys.IsPressed(Keys.W))//&& Input.Keys.IsPressed(Keys.LeftControl))
             {
-                restrictedLook = transform.Up;
+                restrictedLook = transform.Up; //we use Up instead of Forward
                 restrictedLook.Y = 0;
                 characterBody.Velocity -= moveSpeed * restrictedLook * Time.Instance.DeltaTimeMs;
             }

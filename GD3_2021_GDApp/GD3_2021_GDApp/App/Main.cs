@@ -55,6 +55,7 @@ namespace GDApp
         /// </summary>
         private SoundManager soundManager;
 
+        private MyStateManager stateManager;
         private PickingManager pickingManager;
 
         /// <summary>
@@ -125,6 +126,9 @@ namespace GDApp
             //add support for playing sounds
             soundManager = new SoundManager(this);
 
+            //this will check win/lose logic
+            stateManager = new MyStateManager(this);
+
             //picking support using physics engine
             //this predicate lets us say ignore all the other collidable objects except interactables and consumables
             Predicate<GameObject> collisionPredicate =
@@ -146,6 +150,7 @@ namespace GDApp
             Application.GraphicsDeviceManager = _graphics;
             Application.SceneManager = sceneManager;
             Application.PhysicsManager = physicsManager;
+            Application.StateManager = stateManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
             renderManager = new RenderManager(this, new ForwardRenderer(), false, true);
@@ -192,6 +197,9 @@ namespace GDApp
 
             //add sound
             Components.Add(soundManager);
+
+            //add state
+            Components.Add(stateManager);
         }
 
         /// <summary>
@@ -266,7 +274,7 @@ namespace GDApp
             }
 
             if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.C))
-                activeScene.CycleCameras();
+                Application.SceneManager.ActiveScene.CycleCameras();
 
             base.Update(gameTime);
         }
@@ -813,16 +821,19 @@ namespace GDApp
             //add components
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
 
-            var collider = new CharacterCollider(2, 2, true, false);
+            //adding a collidable surface that enables acceleration, jumping
+            //var collider = new CharacterCollider(2, 2, true, false);
+
+            var collider = new MyHeroCollider(2, 2, true, false);
             camera.AddComponent(collider);
             collider.AddPrimitive(new Capsule(camera.Transform.LocalTranslation,
-                Matrix.CreateRotationX(MathHelper.PiOver2), 1, 2),
+                Matrix.CreateRotationX(MathHelper.PiOver2), 1, 3.6f),
                 new MaterialProperties(0.2f, 0.8f, 0.7f));
             collider.Enable(false, 2);
 
             //add controller to actually move the collidable camera
             camera.AddComponent(new MyCollidableFirstPersonController(12,
-                0.5f, 0.3f, new Vector2(0.006f, 0.004f)));
+                        0.5f, 0.3f, new Vector2(0.006f, 0.004f)));
 
             //add to level
             level.Add(camera);

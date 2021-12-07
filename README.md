@@ -72,6 +72,7 @@
 - [ ] Add support for transparent objects
 - [ ] Add trianglemesh support - IN BUT BUGGY
 - [ ] Add AnimationController
+ 
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add parenting to GameObject and UIObject
