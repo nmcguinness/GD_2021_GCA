@@ -67,14 +67,14 @@
 - [x] Add support for adding objects to the scene manager through events
 - [x] Add support for removing/adding objects to the ui scene manager through events
 - [x] Add support for removing/adding objects to the ui scene manager through events
+- [x] Add collidable camera controller
 
-- [ ] Add collidable camera controller
 - [ ] Add trianglemesh support - IN BUT BUGGY
 - [ ] Add AnimationController
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add parenting to GameObject and UIObject
-- [x] TO TEST - Add support for removing objects to the scene manager through events 
+
 
 
 
