@@ -74,7 +74,8 @@
         /// Used when we pick something with the physics system e.g. a ray pick
         /// </summary>
         Picking,
-        Inventory
+        Inventory,
+        Video
 
         //add more here...
     }
