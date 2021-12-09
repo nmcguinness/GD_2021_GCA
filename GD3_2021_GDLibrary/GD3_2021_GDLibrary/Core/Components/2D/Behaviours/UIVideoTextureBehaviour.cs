@@ -24,14 +24,16 @@ namespace GDLibrary.Components.UI
         /// </summary>
         private UITextureObject uiTextureObject;
 
+        private float timeSinceLastFrameUpdateMS;
+
         #endregion Fields
 
         public UIVideoTextureBehaviour(VideoCue videoCue)
         {
             this.videoCue = videoCue;
-            videoPlayer = new VideoPlayer();
-            videoPlayer.IsLooped = videoCue.IsLooped;
+            videoPlayer = new VideoPlayer(); ;
             videoPlayer.IsMuted = videoCue.IsMuted;
+            videoPlayer.Volume = videoCue.IsMuted ? 0 : videoCue.Volume;
 
             //subscribe to events that will affect the state of this behaviour
             SubscribeToEvents();
@@ -49,27 +51,41 @@ namespace GDLibrary.Components.UI
 
         protected virtual void HandleEvent(EventData eventData)
         {
+            var targetUIObjectName = eventData.Parameters[0] as string;
+
+            //if no parameter or the event isnt meant for me then exit
+            if (targetUIObjectName == null || !targetUIObjectName.Equals(uiObject.Name))
+                return;
+
             switch (eventData.EventActionType)
             {
                 case EventActionType.OnPlay:
+                    videoPlayer?.Play(videoCue.Video);
                     break;
 
                 case EventActionType.OnPause:
+                    videoPlayer?.Pause();
                     break;
 
                 case EventActionType.OnResume:
+                    videoPlayer?.Resume();
                     break;
 
                 case EventActionType.OnStop:
+                    videoPlayer?.Stop();
                     break;
 
                 case EventActionType.OnMute:
+                    videoPlayer.Volume = 0;
                     break;
 
                 case EventActionType.OnUnMute:
+                    videoPlayer.Volume = videoCue.Volume;
                     break;
 
                 case EventActionType.OnVolumeSet:
+                    //make sure that we send volume in the object parameters!
+                    videoPlayer.Volume = (float)eventData.Parameters[1];
                     break;
 
                 default:
@@ -87,9 +103,18 @@ namespace GDLibrary.Components.UI
 
         public override void Update()
         {
-            //update texture
-            if (videoPlayer.State == MediaState.Playing)
+            timeSinceLastFrameUpdateMS += Time.Instance.DeltaTimeMs;
+
+            //if time to update frame and we are playing
+            if (timeSinceLastFrameUpdateMS >= videoCue.FrameUpdateRateMS && videoPlayer.State == MediaState.Playing)
+            {
+                timeSinceLastFrameUpdateMS -= videoCue.FrameUpdateRateMS;
                 uiTextureObject.DefaultTexture = videoPlayer.GetTexture();
+            }
+
+            //is finished and supposed to loop then restart
+            if (videoCue.IsLooped && videoPlayer.State == MediaState.Stopped)
+                videoPlayer.Play(videoCue.Video);
         }
 
         protected override void OnDisabled()

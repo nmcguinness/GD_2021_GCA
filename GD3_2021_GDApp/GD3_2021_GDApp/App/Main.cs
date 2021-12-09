@@ -83,6 +83,11 @@ namespace GDApp
         /// </summary>
         private ContentDictionary<Model> modelDictionary;
 
+        /// <summary>
+        /// Quick lookup for all videos used within the game by texture behaviours
+        /// </summary>
+        private ContentDictionary<Video> videoDictionary;
+
         //temps
         private Scene activeScene;
 
@@ -276,6 +281,13 @@ namespace GDApp
             if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.C))
                 Application.SceneManager.ActiveScene.CycleCameras();
 
+            if (Input.Keys.WasJustPressed(Microsoft.Xna.Framework.Input.Keys.V))
+            {
+                object[] parameters = { "main menu video" };
+                EventDispatcher.Raise(new EventData(EventCategoryType.Video,
+                    EventActionType.OnPlay, parameters));
+            }
+
             base.Update(gameTime);
         }
 
@@ -341,14 +353,26 @@ namespace GDApp
             //why not try the new and improved ContentDictionary instead of a basic Dictionary?
             fontDictionary = new ContentDictionary<SpriteFont>();
             modelDictionary = new ContentDictionary<Model>();
+
+            //stores videos
+            videoDictionary = new ContentDictionary<Video>();
         }
 
         private void LoadAssets()
         {
             LoadModels();
             LoadTextures();
+            LoadVideos();
             LoadSounds();
             LoadFonts();
+        }
+
+        /// <summary>
+        /// Loads video content used by UIVideoTextureBehaviour
+        /// </summary>
+        private void LoadVideos()
+        {
+            videoDictionary.Add("Assets/Video/main_menu_video");
         }
 
         /// <summary>
@@ -433,11 +457,10 @@ namespace GDApp
         /// </summary>
         protected override void UnloadContent()
         {
-            //TODO - add graceful dispose for content
-
             //remove all models used for the game and free RAM
             modelDictionary?.Dispose();
             fontDictionary?.Dispose();
+            videoDictionary?.Dispose();
 
             base.UnloadContent();
         }
@@ -645,6 +668,8 @@ namespace GDApp
 
             #endregion Add Text
 
+            #region Add Reticule
+
             var defaultTexture = textureDictionary["reticuleDefault"];
             var alternateTexture = textureDictionary["reticuleOpen"];
             origin = defaultTexture.GetOriginAtCenter();
@@ -664,6 +689,35 @@ namespace GDApp
             reticule.AddComponent(new UIReticuleBehaviour());
 
             mainGameUIScene.Add(reticule);
+
+            #endregion Add Reticule
+
+            #region Add Video UI Texture
+
+            //add a health bar in the centre of the game window
+            texture = textureDictionary["checkerboard"]; //any texture given we will replace it
+            position = new Vector2(200, 200);
+
+            var video = videoDictionary["main_menu_video"];
+            origin = new Vector2(video.Width / 2, video.Height / 2);
+
+            //create the UI element
+            var videoTextureObj = new UITextureObject("main menu video",
+                UIObjectType.Texture,
+                new Transform2D(position, new Vector2(0.1f, 0.1f), 0),
+                0,
+                Color.White,
+                origin,
+                texture);
+
+            //add a video behaviou
+            videoTextureObj.AddComponent(new UIVideoTextureBehaviour(
+                new VideoCue(video, 0, false, true)));
+
+            //add the ui element to the scene
+            mainGameUIScene.Add(videoTextureObj);
+
+            #endregion Add Video UI Texture
 
             #region Add Scene To Manager & Set Active Scene
 
@@ -822,9 +876,8 @@ namespace GDApp
             camera.AddComponent(new Camera(_graphics.GraphicsDevice.Viewport));
 
             //adding a collidable surface that enables acceleration, jumping
-            //var collider = new CharacterCollider(2, 2, true, false);
+            var collider = new CharacterCollider(2, 2, true, false);
 
-            var collider = new MyHeroCollider(2, 2, true, false);
             camera.AddComponent(collider);
             collider.AddPrimitive(new Capsule(camera.Transform.LocalTranslation,
                 Matrix.CreateRotationX(MathHelper.PiOver2), 1, 3.6f),

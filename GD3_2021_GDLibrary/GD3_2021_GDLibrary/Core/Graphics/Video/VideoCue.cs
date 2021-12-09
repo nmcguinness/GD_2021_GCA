@@ -11,11 +11,6 @@ namespace GDLibrary
         #region Fields
 
         /// <summary>
-        /// A unique name for the video
-        /// </summary>
-        private string name;
-
-        /// <summary>
         /// Unique auto generated id
         /// </summary>
         private string id;
@@ -24,6 +19,11 @@ namespace GDLibrary
         /// A user defined video file in supported format
         /// </summary>
         private Video video;
+
+        /// <summary>
+        /// Video volume [0-1]
+        /// </summary>
+        private float volume;
 
         /// <summary>
         /// Get/set looping
@@ -36,29 +36,43 @@ namespace GDLibrary
         private bool isMuted;
 
         /// <summary>
-        /// Time from which to begin playing the video
+        /// Time between each frame update in MS
         /// </summary>
-        private TimeSpan playPosition;
+        private int frameUpdateRateMS;
 
         #endregion Fields
 
         #region Properties
 
-        public string Name { get => name; set => name = value.Length != 0 ? value.Trim() : "Default_Name"; }
+        public string Name { get => video.FileName; }
         public string Id { get => id; }
         public Video Video { get => video; set => video = value; }
         public bool IsLooped { get => isLooped; set => isLooped = value; }
         public bool IsMuted { get => isMuted; set => isMuted = value; }
-        public TimeSpan PlayPosition { get => playPosition; set => playPosition = value; }
+        public TimeSpan Duration { get => video.Duration; }
+        public float Volume { get => volume; set => volume = value >= 0 && value <= 1 ? value : 0.5f; }
+
+        public int FrameUpdateRateMS
+        {
+            get
+            {
+                return frameUpdateRateMS;
+            }
+        }
 
         #endregion Properties
 
-        public VideoCue(string name, Video video, TimeSpan playPosition, bool isLooped = false, bool isMuted = false)
+        public VideoCue(Video video)
+           : this(video, 1, false, false)
         {
-            Name = name;
-            this.id = $"VC-" + Guid.NewGuid();
+        }
+
+        public VideoCue(Video video, float volume = 1, bool isLooped = false, bool isMuted = false)
+        {
+            id = $"VC-" + Guid.NewGuid();
             this.video = video;
-            this.playPosition = playPosition;
+            frameUpdateRateMS = (int)Math.Ceiling(1000.0f / video.FramesPerSecond);
+            Volume = volume;
             this.isLooped = isLooped;
             this.isMuted = isMuted;
         }

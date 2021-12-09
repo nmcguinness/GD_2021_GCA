@@ -520,3 +520,8 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/UI/Controls/ui_progress_32_8.png
 
+#begin Assets/Video/main_menu_video.avi
+/importer:H264Importer
+/processor:VideoProcessor
+/build:Assets/Video/main_menu_video.avi
+

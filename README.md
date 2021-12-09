@@ -19,6 +19,7 @@
 - [x] Fix button text not rendering when 2+ buttons
 - [x] Fix camera drift on no mouse movement
 - [ ] Bug on collider not following Transform rotation
+- [ ] Check for bugs on video controller
 
 ### Tasks - Week 7
 - [x] Add Clone to components
@@ -69,10 +70,13 @@
 - [x] Add support for removing/adding objects to the ui scene manager through events
 - [x] Add collidable camera controller
 
+
 - [ ] Add support for transparent objects
 - [ ] Add trianglemesh support - IN BUT BUGGY
 - [ ] Add AnimationController
- 
+- [ ] Add video controller for GameObjects
+- [ ] Add timer scheduler
+- [ ] Add RailCamera demo
 - [ ] Add Tween functions see [Easing Functions](https://easings.net/)
 - [ ] Add lighting engine
 - [ ] Add parenting to GameObject and UIObject
