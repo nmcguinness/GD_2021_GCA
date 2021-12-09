@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Physics\PickingManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\SoundManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\2D\UIMenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Timers\TimerManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\GDDebug\PhysicsDebugDrawer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\Collision\CollisionUtility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\String\StringUtility.cs" />
