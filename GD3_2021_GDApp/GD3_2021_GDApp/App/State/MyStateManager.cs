@@ -37,6 +37,8 @@ namespace GDApp
             if (eventData.EventActionType == EventActionType.OnAddInventory)
             {
                 //add something to list
+                string newThing = eventData.Parameters[0] as string; //"sword"
+                inventory.Add(newThing);
             }
             else if (eventData.EventActionType == EventActionType.OnRemoveInventory)
             {
@@ -64,7 +66,7 @@ namespace GDApp
                 timeSinceLastStateCheck -= 500;
 
                 //do we need to periodically check something like win/lose state?
-                if (inventory.Contains("key"))
+                if (inventory.Contains("sword"))
                 {
                 }
 

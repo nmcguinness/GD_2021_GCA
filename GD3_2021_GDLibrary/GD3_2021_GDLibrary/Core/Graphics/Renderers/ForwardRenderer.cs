@@ -42,16 +42,16 @@ namespace GDLibrary.Renderers
             rasterizerStateTransparent = new RasterizerState();
             rasterizerStateTransparent.CullMode = CullMode.None;
 
+            //Remember this code from our initial aliasing problems with the Sky box?
+            //enable anti-aliasing along the edges of the quad i.e. to remove jagged edges to the primitive
+            Application.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+
             //set depth and blend state
             SetGraphicsStates(false);
         }
 
         public virtual void SetGraphicsStates(bool isOpaque)
         {
-            //Remember this code from our initial aliasing problems with the Sky box?
-            //enable anti-aliasing along the edges of the quad i.e. to remove jagged edges to the primitive
-            Application.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-
             if (isOpaque)
             {
                 //set the appropriate state for opaque objects
@@ -79,11 +79,6 @@ namespace GDLibrary.Renderers
             if (scene == null)
                 scene = Application.SceneManager.ActiveScene;
 
-            //set depth and blend state
-            graphicsDevice.DepthStencilState = DepthStencilState.Default;
-
-            // graphicsDevice.RasterizerState = rasterizerStateTransparent;
-
             //set viewport
             graphicsDevice.Viewport = camera.Viewport;
 
@@ -97,6 +92,11 @@ namespace GDLibrary.Renderers
 
                 if (material == null || renderer == null)
                     throw new NullReferenceException("This game object has no material and/or renderer!");
+
+                if (material.Alpha == 1)
+                    SetGraphicsStates(true);
+                else
+                    SetGraphicsStates(false);
 
                 //access the shader (e.g. BasicEffect) for this rendered game object
                 shader = material.Shader;

@@ -171,11 +171,11 @@ namespace GDApp
 
             //************* add all input components to component list so that they will be updated and/or drawn ***********/
 
-            //add event dispatcher
-            Components.Add(eventDispatcher);
-
             //add time support
             Components.Add(Time.GetInstance(this));
+
+            //add event dispatcher
+            Components.Add(eventDispatcher);
 
             //add input support
             Components.Add(Input.Keys);
@@ -336,7 +336,7 @@ namespace GDApp
             Input.Mouse.Position = Screen.Instance.ScreenCentre;
 
             //turn on/off debug info
-            InitializeDebugUI(true, true);
+            InitializeDebugUI(true, false);
 
             //to show the menu we must start paused for everything else!
             EventDispatcher.Raise(new EventData(EventCategoryType.Menu, EventActionType.OnPause));
@@ -1037,7 +1037,7 @@ namespace GDApp
                 clone.Transform.Translate(5, 4f * (1 + i), 0);
                 clone.AddComponent(new MeshRenderer(mesh,
                     new BasicMaterial("cube_material", shader,
-                    Color.White, 1, textureDictionary["crate1"])));
+                    Color.White, 0.4f, textureDictionary["crate1"])));
 
                 //add desc and value to a pickup used when we collect/remove/collide with it
                 clone.AddComponent(new PickupBehaviour("ammo pack", 15));
