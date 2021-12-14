@@ -78,15 +78,15 @@ namespace GDApp
         {
             if (Input.Keys.IsPressed(Keys.W))//&& Input.Keys.IsPressed(Keys.LeftControl))
             {
-                restrictedLook = transform.Up; //we use Up instead of Forward
+                restrictedLook = transform.Forward; //we use Up instead of Forward
                 restrictedLook.Y = 0;
-                characterBody.Velocity -= moveSpeed * restrictedLook * Time.Instance.DeltaTimeMs;
+                characterBody.Velocity += moveSpeed * restrictedLook * Time.Instance.DeltaTimeMs;
             }
             else if (Input.Keys.IsPressed(Keys.S))
             {
-                restrictedLook = transform.Up;
+                restrictedLook = transform.Forward;
                 restrictedLook.Y = 0;
-                characterBody.Velocity += moveSpeed * restrictedLook * Time.Instance.DeltaTimeMs;
+                characterBody.Velocity -= moveSpeed * restrictedLook * Time.Instance.DeltaTimeMs;
             }
             else
             {

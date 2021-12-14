@@ -6,6 +6,7 @@ namespace GDLibrary
     /// <summary>
     /// Encapsulates the properties of a playable video
     /// </summary>
+    /// <see cref="http://rbwhitaker.wikidot.com/video-playback"/>
     public class VideoCue
     {
         #region Fields
@@ -64,6 +65,12 @@ namespace GDLibrary
 
         public VideoCue(Video video)
            : this(video, 1, false, false)
+        {
+        }
+
+        //REFACTOR - remove isMuted in next iteration
+        public VideoCue(Video video, float volume = 1, bool isLooped = false)
+            : this(video, volume, isLooped, volume == 0)
         {
         }
 

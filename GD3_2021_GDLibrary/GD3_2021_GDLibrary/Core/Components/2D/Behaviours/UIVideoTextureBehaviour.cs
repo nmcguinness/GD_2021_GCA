@@ -1,6 +1,8 @@
 ﻿using GDLibrary.Core;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.IO;
 
 namespace GDLibrary.Components.UI
 {
@@ -103,13 +105,17 @@ namespace GDLibrary.Components.UI
 
         public override void Update()
         {
-            timeSinceLastFrameUpdateMS += Time.Instance.DeltaTimeMs;
-
-            //if time to update frame and we are playing
-            if (timeSinceLastFrameUpdateMS >= videoCue.FrameUpdateRateMS && videoPlayer.State == MediaState.Playing)
+            if (videoPlayer.State == MediaState.Playing)
             {
-                timeSinceLastFrameUpdateMS -= videoCue.FrameUpdateRateMS;
-                uiTextureObject.DefaultTexture = videoPlayer.GetTexture();
+                timeSinceLastFrameUpdateMS += Time.Instance.DeltaTimeMs;
+
+                //if time to update frame and we are playing
+                if (timeSinceLastFrameUpdateMS >= videoCue.FrameUpdateRateMS)
+                {
+                    Texture2D texture = videoPlayer.GetTexture();
+                    timeSinceLastFrameUpdateMS -= videoCue.FrameUpdateRateMS;
+                    uiTextureObject.DefaultTexture = texture;
+                }
             }
 
             //is finished and supposed to loop then restart

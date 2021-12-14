@@ -108,7 +108,7 @@ namespace GDLibrary.Renderers
                 shader.Pass(renderer);
 
                 //draw scene contents
-                renderer.Draw(graphicsDevice);
+                renderer.Draw(graphicsDevice, shader.Effect);
             }
 
             //render post processing
