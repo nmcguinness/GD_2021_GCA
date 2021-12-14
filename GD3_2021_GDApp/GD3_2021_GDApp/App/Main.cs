@@ -1042,8 +1042,11 @@ namespace GDApp
                 //add desc and value to a pickup used when we collect/remove/collide with it
                 clone.AddComponent(new PickupBehaviour("ammo pack", 15));
 
+                //new ColorChangeBehaviour(red, yellow, 0, 0.5f);
+
                 //add Collision Surface(s)
                 collider = new MyPlayerCollider();
+
                 clone.AddComponent(collider);
                 collider.AddPrimitive(new Box(
                     clone.Transform.LocalTranslation,

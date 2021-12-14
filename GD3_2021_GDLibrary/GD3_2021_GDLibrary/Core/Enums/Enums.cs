@@ -74,8 +74,15 @@
         /// Used when we pick something with the physics system e.g. a ray pick
         /// </summary>
         Picking,
+
         Inventory,
-        Video
+        Video,
+
+        /// <summary>
+        /// Anything after here is a demo specific to some project needs i.e. you might not need it
+        /// </summary>
+        /// <see cref="GDLibrary.Components.ColorChangeBehaviour"/>
+        MaterialChange
 
         //add more here...
     }
@@ -123,6 +130,12 @@
         OnVolumeChange,
         OnRemoveInventory,
         OnAddInventory,
+
+        /// <summary>
+        /// Anything after here is a demo specific to some project needs i.e. you might not need it
+        /// </summary>
+        /// <see cref="GDLibrary.Components.ColorChangeBehaviour"/>
+        OnMouseClick,
 
         //add more here...
     }
