@@ -93,6 +93,7 @@ namespace GDLibrary.Renderers
                 if (material == null || renderer == null)
                     throw new NullReferenceException("This game object has no material and/or renderer!");
 
+                //set transparent or opaque based on object alpha
                 SetGraphicsStates(material.Alpha == 1);
 
                 //access the shader (e.g. BasicEffect) for this rendered game object
