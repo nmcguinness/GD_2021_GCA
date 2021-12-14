@@ -694,28 +694,28 @@ namespace GDApp
 
             #region Add Video UI Texture
 
-            //add a health bar in the centre of the game window
-            texture = textureDictionary["checkerboard"]; //any texture given we will replace it
-            position = new Vector2(300, 300);
+            ////add a health bar in the centre of the game window
+            //texture = textureDictionary["checkerboard"]; //any texture given we will replace it
+            //position = new Vector2(300, 300);
 
-            var video = videoDictionary["main_menu_video"];
-            origin = new Vector2(video.Width / 2, video.Height / 2);
+            //var video = videoDictionary["main_menu_video"];
+            //origin = new Vector2(video.Width / 2, video.Height / 2);
 
-            //create the UI element
-            var videoTextureObj = new UITextureObject("main menu video",
-                UIObjectType.Texture,
-                new Transform2D(position, new Vector2(0.2f, 0.2f), 0),
-                0,
-                Color.White,
-                origin,
-                texture);
+            ////create the UI element
+            //var videoTextureObj = new UITextureObject("main menu video",
+            //    UIObjectType.Texture,
+            //    new Transform2D(position, new Vector2(0.2f, 0.2f), 0),
+            //    0,
+            //    Color.White,
+            //    origin,
+            //    texture);
 
-            //add a video behaviou
-            videoTextureObj.AddComponent(new UIVideoTextureBehaviour(
-                new VideoCue(video, 0, false)));
+            ////add a video behaviou
+            //videoTextureObj.AddComponent(new UIVideoTextureBehaviour(
+            //    new VideoCue(video, 0, false)));
 
-            //add the ui element to the scene
-            mainGameUIScene.Add(videoTextureObj);
+            ////add the ui element to the scene
+            //mainGameUIScene.Add(videoTextureObj);
 
             #endregion Add Video UI Texture
 
