@@ -108,10 +108,6 @@ namespace GDLibrary.Renderers
                 //draw scene contents
                 renderer.Draw(graphicsDevice, shader.Effect);
             }
-
-            //render post processing
-
-            //render ui
         }
     }
 }
