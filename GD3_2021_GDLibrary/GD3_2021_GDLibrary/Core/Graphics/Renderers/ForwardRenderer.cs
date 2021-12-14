@@ -85,6 +85,9 @@ namespace GDLibrary.Renderers
             //render game objects
             var length = scene.Renderers.Count;
 
+            //sort by alpha
+            //   scene.Renderers.Sort((x, y) => y.Material.Alpha.CompareTo(x.Material.Alpha));
+
             for (var i = 0; i < length; i++)
             {
                 renderer = scene.Renderers[i];
@@ -94,7 +97,27 @@ namespace GDLibrary.Renderers
                     throw new NullReferenceException("This game object has no material and/or renderer!");
 
                 //set transparent or opaque based on object alpha
-                SetGraphicsStates(material.Alpha == 1);
+                if (material.Alpha >= 1)
+                {
+                    //set the appropriate state for opaque objects
+                    Application.GraphicsDevice.RasterizerState = rasterizerStateOpaque;
+
+                    //disable to see what happens when we disable depth buffering - look at the boxes
+                    Application.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                }
+                else
+                {
+                    //set the appropriate state for transparent objects
+                    Application.GraphicsDevice.RasterizerState = rasterizerStateTransparent;
+
+                    //enable alpha blending for transparent objects i.e. trees
+                    Application.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+                    //disable to see what happens when we disable depth buffering - look at the boxes
+                    Application.GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
+                }
+
+                //   SetGraphicsStates(material.Alpha < 1);
 
                 //access the shader (e.g. BasicEffect) for this rendered game object
                 shader = material.Shader;

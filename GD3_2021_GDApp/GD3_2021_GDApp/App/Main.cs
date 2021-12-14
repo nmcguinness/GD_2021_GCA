@@ -1042,7 +1042,8 @@ namespace GDApp
                 //add desc and value to a pickup used when we collect/remove/collide with it
                 clone.AddComponent(new PickupBehaviour("ammo pack", 15));
 
-                //new ColorChangeBehaviour(red, yellow, 0, 0.5f);
+                //add demo alpha change behaviour
+                clone.AddComponent(new ColorLerpBehaviour(Color.White, Color.Red, 0.1f));
 
                 //add Collision Surface(s)
                 collider = new MyPlayerCollider();
@@ -1051,7 +1052,7 @@ namespace GDApp
                 collider.AddPrimitive(new Box(
                     clone.Transform.LocalTranslation,
                     clone.Transform.LocalRotation,
-                    clone.Transform.LocalScale),
+                    clone.Transform.LocalScale * 1.01f), //make the colliders a fraction larger so that transparent boxes dont sit exactly on the ground and we end up with flicker or z-fighting
                     new MaterialProperties(0.8f, 0.8f, 0.7f));
                 collider.Enable(false, 10);
                 //add To Scene Manager
