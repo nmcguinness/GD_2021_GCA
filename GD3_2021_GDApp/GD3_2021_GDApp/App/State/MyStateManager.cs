@@ -28,8 +28,33 @@ namespace GDApp
             EventDispatcher.Subscribe(EventCategoryType.Inventory,
                 HandleInventory);
 
+            EventDispatcher.Subscribe(EventCategoryType.GameState,
+              HandleGameState);
+
             //dont forget to call base otherwise no play/pause support
             base.SubscribeToEvents();
+        }
+
+        private void HandleGameState(EventData eventData)
+        {
+            //the code below is a demo of responding to a win or lose game event that shows a UI scene and then shows main scene
+            if (eventData.EventActionType == EventActionType.OnWin)
+            {
+                //Application.UISceneManager.SetActiveScene(AppData.WinScene);
+                //count time, when X ms have elapsed
+                //https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=net-6.0
+                //var  aTimer = new System.Timers.Timer(2000);
+                //aTimer.Elapsed += ShowMainMenu;
+                //aTimer.AutoReset = false;
+                //aTimer.Enabled = true;
+                //Application.UISceneManager.SetActiveScene(AppData.MainMenuScene);
+            }
+            else if (eventData.EventActionType == EventActionType.OnWin)
+            {
+                //Application.UISceneManager.SetActiveScene(AppData.LoseScene);
+                ////count time, when X ms have elapsed
+                //Application.UISceneManager.SetActiveScene(AppData.MainMenuScene);
+            }
         }
 
         private void HandleInventory(EventData eventData)

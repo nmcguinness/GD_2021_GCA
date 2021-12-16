@@ -82,7 +82,8 @@
         /// Anything after here is a demo specific to some project needs i.e. you might not need it
         /// </summary>
         /// <see cref="GDLibrary.Components.ColorChangeBehaviour"/>
-        MaterialChange
+        MaterialChange,
+        GameState
 
         //add more here...
     }

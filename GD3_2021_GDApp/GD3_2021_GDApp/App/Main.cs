@@ -156,6 +156,7 @@ namespace GDApp
             Application.SceneManager = sceneManager;
             Application.PhysicsManager = physicsManager;
             Application.StateManager = stateManager;
+            Application.UISceneManager = uiSceneManager;
 
             //instanciate render manager to render all drawn game objects using preferred renderer (e.g. forward, backward)
             renderManager = new RenderManager(this, new ForwardRenderer(), false, true);

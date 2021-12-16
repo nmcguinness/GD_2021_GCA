@@ -16,6 +16,9 @@ namespace GDApp
         {
             if (parentGameObject.GameObjectType == GameObjectType.Consumable)
             {
+                //    EventDispatcher.Raise(new EventData(EventCategoryType.GameState,
+                //       EventActionType.OnWin));
+
                 System.Diagnostics.Debug.WriteLine(parentGameObject?.Name);
 
                 object[] parameters = { parentGameObject };
